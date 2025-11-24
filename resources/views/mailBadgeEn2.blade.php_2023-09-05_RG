@@ -1,0 +1,54 @@
+@extends(session('controlButtons') ? 'layouts.general' : 'layouts.mail')
+
+@section('title', __('mailBadge.title'))
+
+@section('content')
+
+    <div class="bd-callout bd-callout-info">
+        <p><strong>Dear {{ $details['recipientLastName'] . ' ' . $details['recipientFirstName'] }} Earner,</strong></p>
+
+        <p>You have earned a Badge "{{ $details['badgeName'] }}" from {{ $details['issuerName'] }}, that we attach below.</p>
+
+        <p>You have been awarded for:</p>
+        
+        <p>{{ $details['badgeCriteria'] }}</p>
+        
+        <p>You can collect and store your Open Badges on <a href="http://dcp.discovet.eu:3000/abc">DisCoPLAYER</a> webpage after a quick registration. You can then embed it with &lt;embed&gt; code or you can also upload it to your Linked-In profile.</p>
+        
+        <p>Congratulations!</p>
+        
+        <p>The DCP Team says thank you on behalf of {{ $details['issuerName'] }} <br>
+            <a href="mailto:dcp@mti.bme.hu">dcp@mti.bme.hu</a>
+
+        </p>
+        <p>&nbsp;</p>
+    </div>
+
+
+    @if (session('controlButtons'))
+        @if (session('whatRole') == 'assistant')
+            <p class="text-center ">
+                <a class="btn btn-primary" href="/assertions/{{ $details['id'] }}/assistantsend3" role="button">Send byS
+                    e-mail+</a>
+            </p>
+
+            <h2 class="section-title"><span>
+                    <p class="text-center"><a href="{{ env('APP_URL') }}/backtoassistantcompany" class="btn btn-action">Back
+                            to
+                            Company
+                            page</a></p>
+                </span></h2>
+        @else
+            <p class="text-center ">
+                <a class="btn btn-primary" href="/assertions/{{ $details['id'] }}/send3" role="button">Send by
+                    e-mail+</a>
+            </p>
+
+            <h2 class="section-title"><span>
+                    <p class="text-center"><a href="{{ env('APP_URL') }}/backtocompany" class="btn btn-action">Back to
+                            Company
+                            page</a></p>
+                </span></h2>
+        @endif
+    @endif
+@endsection

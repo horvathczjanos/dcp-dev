@@ -1,0 +1,110 @@
+@extends('layouts.general')
+
+@section('title', __('hello.edit_user_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.edit_user_title') }} </strong></p>
+
+    <form method="POST" action="./../../updateUserByAdmin" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        {{-- Name of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_name') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_name_text" class="form-label">user name</label>
+            <textarea style="resize: none;" name="user_name_text" class="form-control" id="user_name_text" rows="1" required>{{ $user->name }}</textarea>
+        </div>
+
+
+
+        {{-- email of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_email') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">user e-mail</label>
+            <textarea style="resize: none;" name="user_email_text" class="form-control" id="user_email_text" rows="1"
+                required>{{ $user->email }}</textarea>
+        </div>
+
+
+        {{-- roles of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_roles') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">user roles</label>
+
+            <?php
+            $generalRoles = ['issuer', 'assistant','earner', 'verifier', 'admin'];
+            ?>
+
+            @if (count($user->roles))
+                @foreach ($generalRoles as $role)
+                
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ $role }}" id="{{ $role }}"
+                            name="{{ $role }}" @if (in_array($role, $user->roles)) Checked @endif />
+                        <label class="form-check-label" for="flexCheckChecked">{{ $role }}</label>
+                    </div>
+                @endforeach
+            @else
+                @foreach ($generalRoles as $role)
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ $role }}"
+                            id="{{ $role }}" name="{{ $role }}" />
+                        <label class="form-check-label" for="flexCheckChecked">{{ $role }}</label>
+                    </div>
+                @endforeach
+
+
+            @endif
+        </div>
+
+
+        {{-- Update button --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.update_user_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-primary" value="{{ __('hello.update_user_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../../manageUsers" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+
+@endsection

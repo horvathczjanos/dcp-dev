@@ -1,0 +1,33 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Tus insignias',
+    'earner_badgeboard_num-o-badges' => 'Número de insignias',
+    'earner_badgeboard_add-new-btn' => 'Agregar nueva insignia',
+    'earner_badgeboard_search-btn' => 'Búsqueda',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Nombre',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Nombre',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Tiempo de carga',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Tiempo de carga',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Tiempo para emitir',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Tiempo para emitir',
+    'earner_badgeboard_sum_th_badge' => 'Insignia',
+    'earner_badgeboard_sum_th_short-info' => 'Breve descripción',
+    'earner_badgeboard_sum_th_functions' => 'Funciones',
+    'earner_badgeboard_sum_si_uploadedat' => 'Cargado en fecha',
+    'earner_badgeboard_btn_delete' => 'Borrar',
+    'earner_badgeboard_delete-tooltip' => 'La insignia se eliminará de la lista.',
+    'earner_badgeboard_btn_edit' => 'Editar',
+    'earner_badgeboard_edit-tooltip' => 'Edita o agrega detalles a tu insignia y permite la verificación',
+    'earner_badgeboard_btn_info' => 'Información',
+    'earner_badgeboard_info-tooltip' => 'Proporcionar información detallada sobre la insignia.',
+    'earner_badgeboard_btn_print' => 'Imprimir',
+    'earner_badgeboard_print-tooltip' => 'Guarda una versión imprimible de la insignia como archivo PDF',
+    'earner_badgeboard_btn_check' => 'Verificar',
+    'earner_badgeboard_check-tooltip' => 'Comprobar la integridad y validez de la credencial',
+    'earner_badgeboard_btn_cert' => 'Cert.',
+    'earner_badgeboard_cert-tooltip' => 'Guarda un certificado imprimible basado en la credencial como archivo PDF',
+    'earner_badgeboard_backtohome' => 'Volver a la página principal',
+
+];

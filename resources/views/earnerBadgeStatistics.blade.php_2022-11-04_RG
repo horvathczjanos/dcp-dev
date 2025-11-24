@@ -1,0 +1,43 @@
+@extends('layouts.general')
+
+@section('title', 'Earner badge Statistics page')
+
+
+@section('content')
+    <h1>Earner badge Statistics page</h1>
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p><strong>Number of uploader earner users: </strong>{{ $numberofuploaderearnerusers }}<br />
+                <strong>Number of uploaded earner badges: </strong>{{ $numberofbadges }}
+            </p>
+        </div>
+    </div>
+
+    @foreach ($users as $user)
+        <div class="row">
+            <div class="col-4">
+                <p> {{ $user['name'] }} </p>
+            </div>
+            <div class="col-8">
+                <p> {{ $user['earnerbadgeID'] }} <br />
+                    <strong>Uploaded at:</strong> {{ $user['created_at'] }}
+                    <br />
+
+                    <a href=" {{ $user['earnerBadgeInfoURL'] }} " target="_blank" rel="noopener noreferrer"><img
+                            src=" {{ $user['earnerBadgeURL'] }} " width="75px" /></a>
+
+                    <br />
+                    {{ $user['badgename'] }}.
+                </p>
+            </div>
+        </div>
+        <hr />
+    @endforeach
+
+
+    <h2 class="section-title"><span>
+            {{-- <p class="text-center"><a href="./../../earnerMain" class="btn btn-action">Back to Earner main page</a></p> --}}
+            <p class="text-center"><a href=" {{ url()->previous() }}" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+@endsection

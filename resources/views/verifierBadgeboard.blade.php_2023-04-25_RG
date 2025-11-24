@@ -1,0 +1,64 @@
+@extends('layouts.general')
+
+@section('title', 'Verifier badge page')
+
+
+@section('content')
+    <h1>Verifier badge page</h1>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.all_verifierbadges_information') }}</b>
+                {{ $numberofverifierbadges }}
+            </p>
+
+            <p><a class="btn btn-primary" href="{{ env('APP_URL') }}/addVerifierBadge" role="button">Add new badge to
+                    list</a>
+                <a class="btn btn-primary" href="{{ env('APP_URL') }}/lookupEarnerBadges" role="button">Look up badges</a>
+                <a class="btn btn-primary" href="{{ env('APP_URL') }}/searchForVET" role="button">Search for VET</a>
+                <a class="btn btn-primary" href="{{ env('APP_URL') }}/lookupIssuers" role="button">Look up Issuers in DCP</a>
+            </p>
+        </div>
+    </div>
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Badge</th>
+                <th scope="col">Name of badge</th>
+                <th scope="col">Date of issuing</th>
+                <th scope="col">Date of uploading</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($verifierbadges as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+
+                    <td scope="col"><a href="{{ env('APP_URL') }}/verifierbadges/{{ $item['verifierbadgeID'] }}/badge"
+                            target="_blank" rel="noopener noreferrer"><img
+                                src="{{ env('APP_URL') }}/verifierbadges/{{ $item['verifierbadgeID'] }}/badge"
+                                width="100px" alt="badge image"></a></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ $item['created_at'] }}</td>
+                    <td><a class="btn btn-primary" href="verifierbadges/{{ $item['verifierbadgeID'] }}/delete"
+                            role="button">Delete</a>
+                        {{-- <a class="btn btn-primary" href="verifierbadges/{{ $item['verifierbadgeID'] }}/info"
+                            role="button" target="_blank">Info</a> --}}
+                    </td>
+
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/abc" class="btn btn-action">Back to Service Page</a></p>
+        </span></h2>
+@endsection

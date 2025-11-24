@@ -1,0 +1,32 @@
+<?php
+
+return [
+
+    'inst_title' => 'Intézmény',
+    'inst_issuer-name' => '',
+    'inst_issuer-url' => 'URL',
+    'inst_issuer-email' => 'E-mail',
+    'inst_issuer-id' => 'Kibocsátó azonosítója',
+    'inst_issuer-custom-fields' => 'Választható mezők',
+    'inst_new-class-btn' => 'Új kitűző sablon',
+    'inst_bulk-upload-btn' => 'Jóváhagyás előtti tömeges feltöltés',
+    'inst_create-pre-assrt-btn' => 'Kibocsátandó kitűzők jóváhagyásra',
+    'inst_show-pre-assrt-btn' => 'Jóváhagyásra váró kibocsátandó kitűzők (mind)',
+    'inst_show-assrt-btn' => 'Valamennyi kiállított kitűző mutatása',
+    'inst_badge-classes-title' => 'Kitűző sablonok (legutóbbi legelöl)',
+    'inst_bc-sum-th-name' => 'Név',
+    'inst_bc-sum-th-date' => 'Készítés időpontja',
+    'inst_bc-sum-th-func' => 'Funkciók',
+    'inst_bc_btn-info' => 'Információ',
+    'inst_bc_btn-stack' => 'Más kitűzőhöz kapcsolódik-e',
+    'inst_bc_btn-set-type' => 'Típus meghatározása',
+    'inst_assrt-title' => 'Kiállított kitűzők (legutolsó 10)',
+    'inst_assrt-sum-th-name' => 'A kitűző sablon neve',
+    'inst_assrt-sum-th-rcp' => 'A kitűzőt megszerző neve',
+    'inst_assrt-sum-th-date' => 'A kiállítás napja',
+    'inst_assrt_sum-th-ids' => 'Azonosító',
+    'inst_assrt_bc-id-lbl' => 'A kitűző sablon azonosítója',
+    'inst_assrt_assrt-id-lbl' => 'A kiállítás azonosítója',
+    'inst_back' => 'Vissza a kibocsátó főoldalára',
+
+];

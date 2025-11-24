@@ -1,0 +1,27 @@
+@extends('layouts.general')
+
+@section('title', 'Admin dashboard page')
+
+
+@section('content')
+    <h1>Admin dashboard page</h1>
+
+    <br />
+    <br />
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+
+            <p><a class="btn btn-primary" href="./../earnerStatistics" role="button">Earner badge Statistics</a></p>
+            <p><a class="btn btn-primary" href="./../manageIssuers" role="button">Manage Issuers</a></p>
+            <p><a class="btn btn-primary" href="./../manageUsers" role="button">Manage Users</a></p>
+        </div>
+    </div>
+
+
+    <br />
+    <br />
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="abc" class="btn btn-action">Back to Service Page</a></p>
+        </span></h2>
+@endsection

@@ -1,0 +1,56 @@
+@extends('layouts.general')
+
+@section('title', 'Earner badge lookup page')
+
+
+@section('content')
+    <h1>Earner badge lookup page</h1>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.lookup_earnerbadges_information') }}</b>
+                {{ $numberoflookedupearnerbadges }}
+            </p>
+
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Badge</th>
+                <th scope="col">Short Info</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($earnerbadges as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+
+                    <td scope="col"><a
+                            href="{{ env('APP_URL') }}/earnerbadges/{{ $item['earnerbadgeID'] }}/badge"
+                            target="_blank" rel="noopener noreferrer"><img
+                                src="{{ env('APP_URL') }}/earnerbadges/{{ $item['earnerbadgeID'] }}/badge"
+                                width="100px" alt="badge image"></a></td>
+                    <td style="width:350px">
+                        <strong>{{ App\Models\User::where('id', '=', $item['earnerID'])->first()->name }}</strong><br />{{ $item['description'] }}<br>{{ $item['created_at'] }}
+                    </td>
+                    <td> <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/info" role="button"
+                            target="_blank">Info</a>
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/check"
+                            role="button">Check</a>
+                      {{--  <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/endorse"
+                            role="button">Endorse</a> --}}
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../verifierMain" class="btn btn-action">Back to Verifier main page</a></p>
+        </span></h2>
+@endsection

@@ -1,0 +1,29 @@
+<?php
+
+return [
+
+    'abc_title' => 'Lomu izvēles lappuse',
+    'roles' => 'Izvēlies lomu',
+    'earner_name' => 'Saņēmējs',
+    'earner-tooltip' => 'Kā saņēmējs vari savākt, pārvaldīt un dalīt savas nozīmītes',
+    'issuer_name' => 'Izdevējs',
+    'issuer-tooltip' => 'Kā izdevējs vari izsniegt nozīmītes saviem kolēģiem un izglītojamajiem',
+    'verifier_name' => 'Pārbaudītājs',
+    'verifier-tooltip' => '',
+    'admin_name' => 'Administrators',
+    'admin-tooltip' => '',
+    'assistant_name' => 'Asistents',
+    'assistant-tooltip' => '',
+    'enter' => 'Ieiet',
+    'issuer_short_description' => 'Šeit vari izdot nozīmītes.',
+    'earner_short_description' => 'Šeit vari saņemt savas nozīmītes.',
+    'verifier_short_description' => 'Vari pārbaudīt savu nozīmīti.',
+    'admin_short_description' => 'Tikai administratoram!',
+    'assistant_short_description' => 'Sagatavo apgalvojumus izdevējam!',
+    'greetings1' => 'Laipni lūgti DIScoPLAYER vietnē,',
+    'greetings2' => 'kur varat saņemt savas digitālās nozīmītes, kā Saņēmējs reģistrēt savu uzņēmumu vai organizāciju, izdot nozīmītes (kā Izdevējs) vai pārbaudīt nozīmītes, vai tās ir derīgas (kā Pārbaudītājs).',
+    'contact' => 'At present you can register as an Earner by sending an e-mail to dcp@mti.bme.hu. We will register and notify you.',
+    'login' => 'Lūdzu ielogojieties!',
+    'logout' => 'Izlogoties',
+    'self_registration' => 'Sign-up',
+];

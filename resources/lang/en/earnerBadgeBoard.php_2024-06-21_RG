@@ -1,0 +1,38 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Your badges',
+    'earner_badgeboard_num-o-badges' => 'Number of badges',
+    'earner_badgeboard_add-new-btn' => 'Add new badge',
+    'earner_badgeboard_add-new-byurl-btn' => 'Add new badge by URL',
+    'earner_badgeboard_search-btn' => 'Search',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Name',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Name',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Upload time',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Upload time',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Issued time',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Issued time',
+    'earner_badgeboard_sum_th_badge' => 'Badge',
+    'earner_badgeboard_sum_th_short-info' => 'Short description',
+    'earner_badgeboard_sum_th_functions' => 'Functions',
+    'earner_badgeboard_sum_si_uploadedat' => 'Uploaded at',
+    'earner_badgeboard_flag-revoked' => 'Revoked',
+    'earner_badgeboard_flag-expired' => 'Expired',
+    'earner_badgeboard_btn_delete' => 'Delete',
+    'earner_badgeboard_delete-tooltip' => 'The badge will be deleted from the list',
+    'earner_badgeboard_btn_edit' => 'Edit',
+    'earner_badgeboard_edit-tooltip' => 'Edit or add details to your badge and allow verification',
+    'earner_badgeboard_btn_info' => 'Info',
+    'earner_badgeboard_info-tooltip' => 'Give detailed information about the badge',
+    'earner_badgeboard_btn_print' => 'Print',
+    'earner_badgeboard_print-tooltip' => 'Save a printable version of the badge as a PDF file',
+    'earner_badgeboard_btn_send' => 'Share',
+    'earner_badgeboard_send-tooltip' => 'Share this badge by e-mail',
+    'earner_badgeboard_btn_check' => 'Check',
+    'earner_badgeboard_check-tooltip' => 'Check the integrity and validity of the badge',
+    'earner_badgeboard_btn_cert' => 'Cert.',
+    'earner_badgeboard_cert-tooltip' => 'Save a printable Certificate based on the badge as a PDF file',
+    'earner_badgeboard_backtohome' => 'Back to main page',
+
+];

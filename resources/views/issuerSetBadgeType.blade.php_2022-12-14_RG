@@ -1,0 +1,207 @@
+@extends('layouts.general')
+
+@section('title', __('hello.issuer_set_badge_type'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.issuer_set_badge_type') }} </strong></p>
+
+    <div class="row">
+        <div class="col-12 text-center">
+
+            <img src="data:image/png;base64,{{ base64_encode($badgeImage) }}" style="width: 150px;" alt="badge image">
+            <p><strong>{{ $thisIssuerBadge->name }}</strong><br />
+
+            </p>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+
+            @if (!is_null($badgeType))
+                You can set type for this badge!
+            @else
+                You can not set any types for this badge!
+            @endif
+        </div>
+    </div>
+
+    @if (!is_null($badgeType))
+
+        <form method="POST" action="./../../recordBadgeType" enctype="multipart/form-data">
+            @csrf
+
+
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success">
+                    <strong>{{ $message }}</strong>
+
+                </div>
+            @endif
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Select</th>
+                        <th scope="col">Type name</th>
+                        <th scope="col">Type description</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $badgeType = json_decode(json_encode($badgeType), true);
+                    ?>
+
+                    {{-- @foreach ($badgeType['form'] as $item)
+                        <tr>
+                            <td scope="col">{{ $loop->index + 1 }}</td>
+                            <td>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="badgetype[]"
+                                        id="{{ $item['id'] }}" value="{{ $item['id'] }}"
+                                        @if ($item['selected'] == 'true') checked @endif>
+                                </div>
+                            </td>
+                            <td>{{ $item['name'] }}</td>
+                            <td>{{ $item['description'] }}</td>
+                        </tr>
+                    @endforeach --}}
+
+
+                    @foreach ($badgeType['form'] as $item)
+                        <tr>
+                            <td scope="col">{{ $loop->index + 1 }}</td>
+                            <td>
+
+                                <div class="form-check">
+                                    @if ($item['name'] != 'General')
+                                        <input class="form-check-input" type="radio" name="badgetype[]"
+                                            id="{{ $item['id'] }}" value="{{ $item['id'] }}"
+                                            @if ($item['selected'] == 'true') checked @endif>
+                                    @else
+                                    @endif
+                                </div>
+
+                            </td>
+                            <td>{{ $item['name'] }}</td>
+                            <td>{{ $item['description'] }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <input type="button" class="resetbutton btn btn-primary" value="Reset" />
+                        </td>
+
+                        <td>Reset settings</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+            @foreach ($badgeType['form'] as $item)
+                @if ($item['name'] == 'General')
+                    <?php
+                    $item['selected'] = 'true';
+                    ?>
+                @endif
+
+                <div class="row typefields" id="{{ $item['id'] }}"
+                    @if ($item['selected'] == 'false') style="display:none" @endif>
+                    <h3>{{ $item['name'] }}</h3>
+                    <i>{{ $item['description'] }}</i>
+                    <ul>
+                        @foreach ($item['fields'] as $field)
+                            <li><strong>{{ $field['name'] }}</strong>
+                                (<i>{{ $field['type'] }}</i>)<br />{{ $field['description'] }}<br />
+                                <?php $tmp = substr($field['id'], 15, 2); ?>
+                                <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}"
+                                    rows="1" @if ($tmp == '00') disabled @endif>{{ $field['content'] }}</textarea>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+ 
+
+
+                <br />
+            @endforeach
+
+
+
+            <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+                crossorigin="anonymous"></script>
+
+            <script type="application/javascript">
+                $(function() {
+                    // alert("hello");
+                    $('.form-check-input').change(function() {
+
+                        //alert($(this).attr('id'));
+                        $('div.typefields').hide();
+                        $('div.typefields#' + $(this).attr('id')).show();
+                        $('div.typefields#bt_001').show();
+
+                    });
+
+                    $('.resetbutton').click(function() {
+                        
+                        $( document ).find('input.form-check-input').prop('checked',false);
+                        $('div.typefields').hide();
+                        $('div.typefields#bt_001').show();
+                        //alert('Reset');
+                    });
+
+                });
+            </script>
+
+            <div class="container">
+                <div class="alert alert-warning mt-5" role="alert">
+                    <p class="text-center"><b>{{ __('hello.set_new_type') }}</b></p>
+                    <p class="text-center ">
+                        <input type="submit" class="btn btn-success" value="{{ __('hello.set_new_type_button') }}" />
+                    </p>
+                </div>
+            </div>
+        </form>
+
+
+
+
+
+
+
+
+    @endif
+
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../../company/{{ session()->get('issuerID') }}"
+                    class="btn btn-action">Back</a></p>
+
+        </span></h2>
+
+
+
+@endsection

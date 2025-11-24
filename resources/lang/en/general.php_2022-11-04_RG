@@ -1,0 +1,20 @@
+<?php
+
+return [
+
+    'home' => 'Home',
+    'settings' => 'Settings',
+    'back-to-home' => 'Back to main page',
+    'back-to-earner' => 'Back to Earner Dashboard',
+    'back-to-searchresults' => 'Back to the search results',
+    'back' => 'Back',
+    'ok' => 'OK',
+    'error' => 'Error',
+    'about.title' => 'ABOUT THIS SITE',
+    'about.txt' => 'This site and the open badge displayer platform is created by the DISCO VET (Digitally Signed Credentials and Open Badges in VET and HE) project in 2022, to provide a free platform for issuing and collecting Open Badges and to provide access to learning materials on the subject.',
+    'about.ka2' => 'KA2 Strategic Partnerships<br />2020-1-HU01-KA202-078793',
+    'links.title' => 'LINKS',
+    'links.proj-web' => 'Project\'s website',
+    'links.proj-lms' => 'Project\'s LMS',
+
+];

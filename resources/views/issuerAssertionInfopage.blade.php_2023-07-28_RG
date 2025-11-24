@@ -1,0 +1,127 @@
+@extends('layouts.general')
+
+@section('title', __('issuerAssertionInfopage.aip_page-title'))
+
+
+@section('content')
+    <h2 class="section-title"><span>{{ __('issuerAssertionInfopage.aip_page-title') }}</span></h2>
+    <div class="row">
+        <div class="col-4">
+            <p>
+                <!--<strong>{{ __('issuerAssertionInfopage.aip_badge-image') }} </strong><br />-->
+                <img src="data:image/png;base64,{{ base64_encode($badgeImage) }}" style="width: 150px;" alt="badge image">
+            </p>
+
+            <p><a href=" {{ env('APP_URL') }}/assertions/{{ $assertionID }} " target="_blank"
+                    class="btn btn-action">{{ __('issuerAssertionInfopage.aip_badge_btn-assrtn') }}</a></p>
+            <p><a href=" {{ env('APP_URL') }}/badgeclasses/{{ $badgeclassID }} " target="_blank"
+                    class="btn btn-action">{{ __('issuerAssertionInfopage.aip_badge_btn-class') }}</a></p>
+            <p><a href=" {{ env('APP_URL') }}/criteria/{{ $badgeclassID }} " target="_blank"
+                    class="btn btn-action">{{ __('issuerAssertionInfopage.aip_badge_btn-criteria') }}</a></p>
+
+            @if ($thisAssertion->revoked == 'on')
+                <p>Revoked</p>
+                <p>Revoked at: {{$thisAssertion->revokedAt}}</p>
+                <p>Reason of revocation: {{$thisAssertion->revokedReason}}</p>
+            @else
+                <p>Not revoked</p>
+                <p><a href=" {{ env('APP_URL') }}/assertions/{{ $assertionID }}/revoke "
+                    class="btn btn-primary">{{ __('issuerAssertionInfopage.aip_badge_btn-revoke') }}</a></p>
+            @endif
+
+        </div>
+        <div class="col-8">
+
+            <h3>{{ __('issuerAssertionInfopage.aip_details') }}</h3>
+            <h4>{{ __('issuerAssertionInfopage.aip_badge-name') }}</h4>
+            <p>{{ $badgeName }}</p>
+            <h4>{{ __('issuerAssertionInfopage.aip_badge-descrpt') }}</h4>
+            <p>{{ $badgeDescription }}</p>
+            <h4>{{ __('issuerAssertionInfopage.aip_badge-crit') }}</h4>
+            <p>{{ $thisBadgeClass->criteria }}</p>
+            <hr />
+
+            <h3>{{ __('issuerAssertionInfopage.aip_rcpt') }}</h3>
+            <h4>{{ __('issuerAssertionInfopage.aip_rcpt-type') }}</h4>
+            <p>{{ $recipientType }} </p>
+            <h4>{{ __('issuerAssertionInfopage.aip_rcpt-id') }}</h4>
+            <p>{{ $awardedTo }}</p>
+            <h4>{{ __('issuerAssertionInfopage.aip_rcpt-date') }}</h4>
+            <p>{{ $issuedOn }}</p>
+
+            @if ($thisAssertion->neverexpires == 'off')
+                <h4>{{ __('issuerAssertionInfopage.aip_rcpt-expiresAt') }}</h4>
+
+                <?php
+                
+                $nowTime = time();
+                
+                $assertionExpiresTime = strtotime($thisAssertion->expiresAt);
+                
+                //ddd($assertionExpiresTime-$nowTime);
+                
+                ?>
+
+                <p @if ($assertionExpiresTime - $nowTime) style="color:red;font-weight:bold" @endif>
+                    {{ $thisAssertion->expiresAt }}</p>
+            @else
+                <h4>{{ __('issuerAssertionInfopage.aip_rcpt-expiresAt') }}</h4>
+                <p>Never expires</p>
+            @endif
+
+
+            <hr />
+
+            <h3>{{ __('issuerAssertionInfopage.aip_stack') }}</h3>
+            @if (count($inStack))
+                <p>{{ __('issuerAssertionInfopage.aip_stack-yes') }}:<br />
+                    {{ App\Models\Stackmember::where('stackmemberID', '=', $inStack[0]['stackmemberID'])->first()->name }}<br />
+                    <i>{{ App\Models\Stackmember::where('stackmemberID', '=', $inStack[0]['stackmemberID'])->first()->description }}</i>
+                @else
+                <p>{{ __('issuerAssertionInfopage.aip_stack-no') }}</p>
+            @endif
+
+            <hr />
+
+            <?php
+            $assertionType = json_decode($thisAssertion->assertiontype, true);
+            // ddd($assertionType);
+            ?>
+
+            @foreach ($assertionType['form'] as $item)
+                <div class="row typefields" id="{{ $item['id'] }}"
+                    @if ($item['selected'] == 'false') style="display:none" @endif>
+                    <h3>{{ __('issuerAssertionInfopage.aip_badge-type') }}</h3>
+                    <h4>{{ $item['name'] }}</h4>
+                    <p><i>{{ $item['description'] }}</i></p>
+                    <!--<ul>-->
+                    @foreach ($item['fields'] as $field)
+                        <!--<li>-->
+                        <p><strong>{{ $field['name'] }}</strong>
+                            (<i>{{ $field['type'] }}</i>)
+                            <br />{{ $field['description'] }}<br />
+                            <?php $tmp = substr($field['id'], 15, 2); ?>
+                            <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}"
+                                rows="1" disabled>{{ $field['content'] }}</textarea>
+                            <!--</li>-->
+                        </p>
+                    @endforeach
+                    <!--</ul>-->
+                </div>
+            @endforeach
+
+
+        </div>
+    </div>
+
+    <h2 class="section-title"><span>
+            {{-- <p class="text-center"><a href="./../../earnerMain" class="btn btn-action">Back to Earner main page</a></p> --}}
+
+
+            <p class="text-center"><a href=" {{ url()->previous() }}"
+                    class="btn btn-action">{{ __('issuerAssertionInfopage.aip_back') }}</a>
+
+
+
+        </span></h2>
+@endsection

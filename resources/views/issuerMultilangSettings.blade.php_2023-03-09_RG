@@ -1,0 +1,54 @@
+@extends('layouts.general')
+
+@section('title', __('hello.issuer_multilang_mainpage'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.issuer_multilang_mainpage') }} </strong></p>
+
+    <div class="row">
+        <div class="col-12 text-center">
+
+            <img src="data:image/png;base64,{{ base64_encode($badgeImage) }}" style="width: 150px;" alt="badge image">
+            <p><strong>{{ $thisBadgeClass->name }}</strong><br />
+
+            </p>
+        </div>
+    </div>
+
+   
+
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.issuer_multilang_settingChooser_description') }}</b></p>
+        </div>
+    </div>
+
+    <div class="bd-callout bd-callout-info">
+        <p>{{ __('hello.issuer_multilang_originalLangChooserButtonDescription') }}</p>
+    </div>
+    <div class="mb-3">
+        <a class="btn btn-primary" href="/issuerbadges/{{ $thisBadgeClass->badgeclassID }}/setoriginallang"
+            role="button">{{ __('issuerInst.inst_bc_btn-set_originallang') }}&nbsp;&nbsp;<i
+                class="bi-file-earmark-check-fill"></i></a>
+    </div>
+
+    @if (!is_null($thisBadgeClass->originalLang))
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('hello.issuer_multilang_originalLangContentFeederDescription') }}</p>
+        </div>
+        <div class="mb-3">
+            <a class="btn btn-primary" href="/issuerbadges/{{ $thisBadgeClass->badgeclassID }}/feedmultilangcontents"
+                role="button">{{ __('issuerInst.inst_bc_btn-feed_multillangcontents') }}&nbsp;&nbsp;<i
+                    class="bi-file-earmark-check-fill"></i></a>
+        </div>
+    @endif
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/backtocompany" class="btn btn-action">Back</a></p>
+
+        </span></h2>
+
+@endsection

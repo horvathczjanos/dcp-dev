@@ -1,0 +1,62 @@
+@extends('layouts.general')
+
+@section('title', __('addEarnerBadgePage.add_earnerbadge_title'))
+
+
+@section('content')
+
+    <h2 class="section-title"><span>{{ __('addEarnerBadgePage.add_earnerbadge_title') }}</span></h2>
+
+    <form method="POST" action="addEarnerBadge" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong><i class="bi bi-check-circle-fill"></i> {{ $message }}</strong>                
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <strong><i class="bi bi-x-circle-fill"></i> {{ $error }}</strong><br />
+                    @endforeach
+            </div>
+        @endif
+
+
+        <div class="bd-callout bd-callout-info">
+	    <p>{{ __('addEarnerBadgePage.add_earnerbadge_note') }}</p>
+	</div>
+
+        <div class="mb-3">
+            <label for="earnerbadge_description" class="form-label" required>{{ __('addEarnerBadgePage.add_earnerbadge_notelabel') }}</label>
+            <textarea name="earnerbadge_description" class="form-control" id="earnerbadge_description" rows="3"
+                required></textarea>
+        </div>
+
+	<div class="bd-callout bd-callout-info">
+                <p>{{ __('addEarnerBadgePage.set_earnerbadge_file') }}</p>
+	</div>
+        <div class="mb-3">
+            <input type="file" name="file" class="custom-file-input" id="chooseFile">
+            <label class="custom-file-label" for="chooseFile" required> {{ __('addEarnerBadgePage.do_badge_instruction') }} </label>
+        </div>
+
+	<div class="bd-callout bd-callout-info">
+            <p>{{ __('addEarnerBadgePage.add_earnerbadge_info') }}</p>
+	</div>
+            <p class="text-center">
+                <button type="submit" class="btn btn-primary" value="upload">
+		{{ __('addEarnerBadgePage.add_earnerbadge_button') }}&nbsp;&nbsp;<i class="bi-upload"></i>
+	    </button>
+            </p>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../earnerMain" class="btn btn-action">{{ __('general.back-to-earner')}}</a></p>
+        </span></h2>
+
+@endsection

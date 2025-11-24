@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>{{ $details['name'] }} sent you a badge via DCP!</title>
+
+</head>
+
+<body>
+
+    <h1>Hi, {{ $details['receiverEmail'] }}</h1>
+
+    <p><strong>{{ $details['name'] }}</strong> ( {{ $details['email'] }} ) sent you <a
+            href="{{ env('APP_URL') }}/earnerbadges/{{ $details['earnerbadgeID'] }}/info"><strong>{{ $details['badgeName'] }}</strong></a>
+        badge via <a href="{{ env('APP_URL') }}">DCP</a>!</p>
+
+    <p>Thank you! </p>
+    <p>Horváth Cz. János @ DCP, BME MTI
+    </p>
+
+</body>
+
+</html>

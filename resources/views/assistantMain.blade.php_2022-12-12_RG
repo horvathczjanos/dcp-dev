@@ -1,0 +1,42 @@
+@extends('layouts.general')
+
+@section('title', 'Assistant main page')
+
+
+@section('content')
+    <h1>Assistant main page</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                {{-- <th scope="col">Issuer ID</th> --}}
+                <th scope="col">Name</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Logo</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($companies as $company)
+                <tr>
+                    <td scope="row">{{ $loop->index + 1 }}</td>
+
+                    <td><a href="{{ $company->url }}" target="_blank">{{ $company->name }}</a></td>
+                    <td>{{ $company->email }}</td>
+                    <?php $imageData64 = base64_encode(Storage::get('public/images/' . $company->logofile));
+                    $ext = pathinfo(storage_path() . '/public/images/' . $company->logofile, PATHINFO_EXTENSION);
+                    
+                    ?>
+                    <td scope="col"><img src="data:image/{{ $ext }};base64,{{ $imageData64 }}"
+                            style="width: 50px;"></td>
+                    <td><a class="btn btn-primary" href="assistantcompany/{{ $company->issuerID }}" role="button">Manage</a></td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="abc" class="btn btn-action">Back to Service Page</a></p>
+        </span></h2>
+@endsection

@@ -1,0 +1,63 @@
+@extends('layouts.general')
+
+@section('title', __('adminSelfRegistrationUser.page_title'))
+
+
+@section('content')
+
+    <h2 class="section-title"><span>{{ __('adminSelfRegistrationUser.page_title') }}</span></h2>
+
+    <form method="POST" action="{{ env('APP_URL') }}/users/selfRegistration" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        <div class="container">
+            {{-- Name of User --}}
+            <div class="mb-3">
+                <label for="user_name_text"
+                    class="form-label">{{ __('adminSelfRegistrationUser.profile_name_label') }}</label>
+                <textarea style="resize: none;" name="user_name_text" class="form-control" id="user_name_text" rows="1" required></textarea>
+            </div>
+
+            {{-- email of User --}}
+            <div class="mb-3">
+                <label for="user_email_text"
+                    class="form-label">{{ __('adminSelfRegistrationUser.profile_email_label') }}</label>
+                <textarea style="resize: none;" name="user_email_text" class="form-control" id="user_email_text" rows="1"
+                    required></textarea>
+            </div>
+
+            {{-- Update button --}}
+            <div class="bd-callout bd-callout-info">
+                <p>{{ __('adminSelfRegistrationUser.profile_registration_information') }}</p>
+            </div>
+            <p class="text-center">
+                <button type="submit" class="btn btn-primary" value="update">
+                    {{ __('adminSelfRegistrationUser.profile_registration_action_btn') }} &nbsp;&nbsp;<i class="bi-save"></i>
+                </button>
+            </p>
+        </div>
+    </form>
+
+    <h2 class="section-title"><span>
+            <a href="{{ env('APP_URL') }}/home" class="btn btn-action">{{ __('general.back') }}</a>
+        </span></h2>
+
+@endsection

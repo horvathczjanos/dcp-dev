@@ -1,0 +1,27 @@
+<?php
+
+return [
+
+    'abc_title' => 'Role Selector Page',
+    'roles' => 'Choose your role',
+    'earner_name' => 'Earner',
+    'earner-tooltip' => 'As an Earner, You can collect, manage and share your own badges',
+    'issuer_name' => 'Issuer',
+    'issuer-tooltip' => 'As an Issuer, You can issue badges to your colleagues and learners',
+    'verifier_name' => 'Verifier',
+    'verifier-tooltip' => '',
+    'admin_name' => 'Admin',
+    'admin-tooltip' => '',
+    'assistant_name' => 'Assistant',
+    'assistant-tooltip' => '',
+    'enter' => 'Enter',
+    'issuer_short_description' => 'You can issue badges to people here.',
+    'earner_short_description' => 'You can collect your own badges here.',
+    'verifier_short_description' => 'You can verifiy a badge.',
+    'admin_short_description' => 'Only for the Admin!',
+    'assistant_short_description' => 'Prepare assertions for the Issuer!',
+    'greetings' => 'Welcome to the DIScoPLAYER site, where you can collect your digital badges as Earner, register your company or your organisation to issue badges (as Issuer) or to verify badges to see if they are valid (as Verifier).',
+    'login' => 'Please, login!',
+    'logout' => 'Logout',
+
+];

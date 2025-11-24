@@ -1,0 +1,65 @@
+@extends('layouts.general')
+
+@section('title', __('hello.show_all_assertions_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.show_all_assertions_title') }} </strong></p>
+
+    <p>Company [ <small><small><small><small>{{ $issuer->issuerID }}</small></small></small></small> ]</br />
+        {{ $issuer->name }}<br />
+        <a href="{{ $issuer->url }}" target="_blank">{{ $issuer->url }}</a> {{ $issuer->email }}
+    </p>
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.all_assertions_information') }}</b> {{ $numberofassertions }}</p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('hello.assertion_issuing_date') }}</th>
+                <th scope="col">{{ __('hello.assertion_original_identity') }}</th>
+                <th scope="col">{{ __('hello.assertion_badgeimage') }}</th>
+                <th scope="col">...</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($assertionlist as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+                    <td scope="col">{{ $item['issuedOn'] }}</td>
+                    <td scope="col">
+                        @if ($item['originalIdentity'])
+                            {{ $item['originalIdentity'] }}
+                        @else
+                            NA
+                        @endif
+                    </td>
+                    <?php
+                    $thisAssertion = App\Models\Assertion::where('assertionID', '=', $item['assertionID'])->first();
+                    ?>
+                    <td scope="col">{{ $thisAssertion->badge_name }}<br />
+                        <a href="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge" target="_blank"
+                            rel="noopener noreferrer"><img
+                                src="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge"
+                                width="75px" alt="digital badge"></a>
+                    </td>
+
+                    <td><a class="btn btn-primary" href="/assertions/{{ $item['assertionID'] }}/info"
+                            role="button">Info</a></td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/manageIssuers" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+@endsection

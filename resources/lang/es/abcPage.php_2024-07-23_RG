@@ -1,0 +1,29 @@
+<?php
+
+return [
+
+    'abc_title' => 'Página de selección de funciones',
+    'roles' => 'Elige tu rol',
+    'earner_name' => 'Receptor',
+    'earner-tooltip' => 'Como receptor, puede recopilar, administrar y compartir sus propias insignias',
+    'issuer_name' => 'Emisor',
+    'issuer-tooltip' => 'Como Emisor Puede otorgar insignias a sus colegas y alumnos',
+    'verifier_name' => 'Verificador',
+    'verifier-tooltip' => '',
+    'admin_name' => 'Administrador',
+    'admin-tooltip' => '',
+    'assistant_name' => 'Asistente',
+    'assistant-tooltip' => '',
+    'enter' => 'Entrar',
+    'issuer_short_description' => 'Puede emitir insignias aquí.',
+    'earner_short_description' => 'Puedes recoger tus propias insignias aquí.',
+    'verifier_short_description' => 'Puedes verificar una insignia.',
+    'admin_short_description' => '¡Solo para el administrador!',
+    'assistant_short_description' => '¡Prepara aserciones para el Emisor!',
+    'greetings1' => 'Bienvenido al sitio DIScoPLAYER,',
+    'greetings2' => 'sitio donde puedes recoger tus credenciales digitales como receptor, registrar tu empresa o tu organización para emitir credenciales (como emisor) o para verificar las credenciales para ver si son válidas (como verificador).',
+    'contact' => 'Actualmente puedes registrarte como Receptor enviando un correo electrónico a dcp@mti.bme.hu. Tomamos nota y te avisaremos.',
+    'login' => '¡Por favor, Inicia sesión!',
+    'logout' => 'Cerrar session',
+    'self_registration' => 'Registrarse',
+];

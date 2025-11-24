@@ -1,0 +1,111 @@
+@extends('layouts.general')
+
+@section('title', 'Company')
+
+
+@section('content')
+    <h1>Company [ <small><small><small><small>{{ $company->issuerID }}</small></small></small></small> ]</h1>
+    <hr />
+    <h2>{{ $company->name }}</h2>
+    <h4><a href="{{ $company->url }}" target="_blank">{{ $company->url }}</a> {{ $company->email }}</h4>
+    <hr />
+    @if ($customFields && $customFields['header']['name'] == 'issuerCustomFileds')
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.issuer_custom_fields') }}</b> </p>
+            </div>
+        </div>
+
+        @foreach ($customFields['form'] as $field)
+            @if ($field['type'] == 'text')
+                <div class="mb-3">
+                    <label for="{{ $field['id'] }}" class="form-label">{{ $field['name'] }}</label>
+                    <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}" rows="1"
+                        required disabled>{{ $field['content'] }}</textarea>
+                </div>
+            @else
+            @endif
+        @endforeach
+
+
+    @endif
+
+    <hr />
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+
+            <div style="display: flex;">
+
+                <div style="display: flex; margin-right: 5px;">
+                    <a class="btn btn-primary" href="./../assistantCreatePreAssertion" role="button">Create pre-assertion</a>
+                </div>
+                <div style="display: flex; margin-right: 5px;">
+                    <a class="btn btn-primary" href="./../assistantShowPreAssertions" role="button">Show all pre-assertions</a>
+                </div>
+                <div style="display: flex; margin-right: 5px;">
+                    <a class="btn btn-primary" href="./../assistantShowAssertions" role="button">Show all assertions</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <h1>Badge Classes</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                {{-- <th scope="col">Badge Class ID</th> --}}
+                <th scope="col">Name</th>
+
+                <th scope="col">Created at</th>
+                <th scope="col">...</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($badgeclasses as $badgeclass)
+                <tr>
+                    <th scope="row">{{ $loop->index + 1 }}</th>
+                    {{-- <td>{{ $badgeclass->badgeclassID }}</td> --}}
+                    <td style="width:200px">
+                        <strong>{{ $badgeclass->name }}</strong><br />{{ $badgeclass->description }}
+                    </td>
+
+                    <td>{{ $badgeclass->created_at }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/info"
+                            role="button">Show</a>
+                       
+
+                        <?php
+                        
+                        $tmpAssertion = App\Models\Assertion::where('badgeclassID', '=', $badgeclass->badgeclassID)->count();
+                        $tmpPreAssertion = App\Models\Preassertion::where('badgeclassID', '=', $badgeclass->badgeclassID)->count();
+                        
+                            //ddd($tmpPreAssertion);
+
+                        ?>
+
+                        @if (!($tmpAssertion || $tmpPreAssertion))
+                            <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/settype"
+                                role="button">Set Type</a>
+                        @endif
+
+
+
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/assistantMain" class="btn btn-action">Back to Assistant main page</a></p>
+        </span></h2>
+
+@endsection

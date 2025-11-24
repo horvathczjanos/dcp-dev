@@ -1,0 +1,35 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Jūsų ženkliukai',
+    'earner_badgeboard_num-o-badges' => 'Ženkliukų kiekis',
+    'earner_badgeboard_add-new-btn' => 'Pridėti naują ženkliuką',
+    'earner_badgeboard_search-btn' => 'Paieška',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Pavadinimas',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Pavadinimas',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Įkėlimo laikas',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Įkėlimo laikas',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Išdavimo laikas',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Išdavimo laikas',
+    'earner_badgeboard_sum_th_badge' => 'Ženklelis',
+    'earner_badgeboard_sum_th_short-info' => 'Trumpas aprašas',
+    'earner_badgeboard_sum_th_functions' => 'Funkcijos',
+    'earner_badgeboard_sum_si_uploadedat' => 'Įkelta',
+    'earner_badgeboard_btn_delete' => 'Ištrinti',
+    'earner_badgeboard_delete-tooltip' => 'Ženklelis bus ištrintas iš sąrašo',
+    'earner_badgeboard_btn_edit' => 'Redaguoti',
+    'earner_badgeboard_edit-tooltip' => 'Redaguokite arba pridėkite išsamią informaciją apie savo ženklelį ir leiskite jį patikrinti',
+    'earner_badgeboard_btn_info' => 'Informacija',
+    'earner_badgeboard_info-tooltip' => 'Pateikite išsamią informaciją apie ženklelį',
+    'earner_badgeboard_btn_print' => 'Spausdinti',
+    'earner_badgeboard_print-tooltip' => 'Išsaugoti ženkelio spausdintą informaciją PDF formatu',
+    'earner_badgeboard_btn_send' => 'Dalintis ženkleliu el. paštu',
+    'earner_badgeboard_send-tooltip' => 'Dalintis ženkleliu el. paštu',
+    'earner_badgeboard_btn_check' => 'Patikrinti',
+    'earner_badgeboard_check-tooltip' => 'Patikrinkite ženklelio patikimumą ir galiojimą',
+    'earner_badgeboard_btn_cert' => 'Pažymėjimas',
+    'earner_badgeboard_cert-tooltip' => 'Išsaugokite ženklelio pažymėjimą PDF formatu',
+    'earner_badgeboard_backtohome' => 'Grįžti į pagrindinį puslapį',
+
+];

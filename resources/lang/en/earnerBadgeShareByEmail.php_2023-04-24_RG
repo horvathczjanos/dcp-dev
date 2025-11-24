@@ -1,0 +1,11 @@
+<?php
+
+
+return [
+
+    'page_title' => 'Share your badge by e-mail',
+    'receiver_email_label' => 'Add ONLY ONE e-mail address!',
+    'share_information' => 'DCP will send your badge to receiver you add above by e-mail.',
+    'share_action_btn' => 'Share by E-mail',
+
+];

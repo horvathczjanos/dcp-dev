@@ -1,0 +1,61 @@
+@extends('layouts.general')
+
+<?php
+session()->put('loginPage', true);
+?>
+
+@section('title', 'General Login Page')
+
+
+@section('content')
+
+    <div class="container">
+    <form method="POST" action="login" enctype="multipart/form-data">
+        @csrf
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+            <h2 class="section-title"><span>{{ __('login.login-title') }}</span></h2>
+
+
+            <!-- <p> <img class="rounded mx-auto d-block" src="ud_01.jpg" width="372" height="204" /></p>
+            <h4>{{ __('login.underdev') }}</h4>
+            <hr /> -->
+
+            <div class="col-sm-6 col-md-3 mx-auto">
+                <!--<h3 class="text-center">Login Page</h3>-->
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">{{ __('login.label-username') }}</label>
+                    <input type="text" name="username" class="form-control" id="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">{{ __('login.label-password') }}</label>
+                    <input type="password" name="password" class="form-control" id="password" required>
+                </div>
+
+                <p class="text-center ">
+                    <button type="submit" class="btn btn-success" value="{{ __('login.btn-login') }}">
+			<span style="color:white">{{ __('login.btn-login') }}&nbsp;&nbsp;<i class="bi-door-open"></i></span>
+		    </button>
+                </p>
+
+            </div>
+
+
+    </form>
+    </div>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="home" class="btn btn-action">{{ __('login.btn-back') }}</a></p>
+        </span></h2>
+@endsection

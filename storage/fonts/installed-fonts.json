@@ -1,0 +1,33 @@
+{
+    "rubik regular": {
+        "normal": "rubik_regular_normal_1745d64ba9eb0d7867c4f89b05844df8"
+    },
+    "rubik italic": {
+        "italic": "rubik_italic_italic_165d3c35454e7da334499f66afa3433c"
+    },
+    "rubik bold": {
+        "bold": "rubik_bold_bold_eaad3f1787496eb35416a8a8c741150e"
+    },
+    "rubik bold italic": {
+        "bold_italic": "rubik_bold_italic_bold_italic_6684ed860fe0ec49337db03450038262"
+    },
+    "crimson text regular": {
+        "normal": "crimson_text_regular_normal_8e4cd440448b7e89914a0c74638b0cf1"
+    },
+    "crimson text italic": {
+        "italic": "CrimsonText-Italic"
+    },
+    "crimson text bold": {
+        "bold": "CrimsonText-Bold"
+    },
+    "crimson text bold italic": {
+        "bold_italic": "CrimsonText-BoldItalic"
+    },
+    "ubuntu regular": {
+        "normal": "Ubuntu-Regular"
+    },
+    "forum": {
+        "normal": "\/var\/www\/html\/dcp\/storage\/fonts\/forum_normal_fdf05357c98cf4c15c6cbeae512206f4",
+        "600": "forum_600_98f6c296a09a48fda704e00b0a9bedfc"
+    }
+}

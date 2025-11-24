@@ -1,0 +1,21 @@
+<?php
+
+return [
+
+    'home' => 'Inicio',
+    'settings' => 'Ajustes',
+    'back-to-home' => 'Volver a la página principal',
+    'back-to-earner' => 'Volver al panel de ingresos',
+    'back-to-searchresults' => 'Volver a los resultados de búsqueda',
+    'back-to-statistics' => 'Volver a las estadísticas',
+    'back' => 'Atrás',
+    'ok' => 'OK',
+    'error' => 'Error',
+    'about.title' => 'SOBRE ESTE SITIO',
+    'about.txt' => 'Este sitio y la plataforma abierta de visualización de distintivos han sido creados por el proyecto DISCO VET (Credenciales firmadas digitalmente e isignias abiertas en FP y Educación Superior) en 2022, para proporcionar una plataforma gratuita para emitir y recopilar distintivos abiertos y para proporcionar acceso a materiales de aprendizaje.',
+    'about.ka2' => 'Asociaciones estratégicas de KA2<br />2020-1-HU01-KA202-078793',
+    'links.title' => 'ENLACES',
+    'links.proj-web' => 'Sitio web del proyecto',
+    'links.proj-lms' => 'LMS del proyecto',
+
+];

@@ -1,0 +1,133 @@
+@extends('layouts.general')
+
+@section('title', __('hello.new_badgeclass_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.new_badgeclass_title') }} </strong></p>
+
+    <form method="POST" action="createBadgeclass" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+                <br />
+                ID: {{ Session::get('id') }}
+                <br />
+                Badge info: {{ Session::get('badge') }}
+                <br />
+                Issued on: {{ Session::get('issuedOn') }}
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.badgeclass_name') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_name" class="form-label" required>Title</label>
+            <input type="text" name="badgeclass_name" class="form-control" id="badgeclass_name" required>
+        </div>
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.badgeclass_description') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_description" class="form-label" required>Description</label>
+            <textarea name="badgeclass_description" class="form-control" id="badgeclass_description" rows="3" required></textarea>
+        </div>
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.badgeclass_criteria') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_criteria" class="form-label" required>Criteria</label>
+            <textarea name="badgeclass_criteria" class="form-control" id="badgeclass_criteria" rows="3" required></textarea>
+        </div>
+
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.badgeclass_tags') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_tags" class="form-label" required>tags - use semicolons (;) to separate tags</label>
+            <input type="text" name="badgeclass_tags" class="form-control" id="badgeclass_tags" required>
+        </div>
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.set_badge_image') }}</b> </p>
+            </div>
+        </div>
+        <div class="custom-file text-center">
+            <input type="file" name="file" class="custom-file-input" id="chooseFile">
+            <label class="custom-file-label" for="chooseFile" required> {{ __('hello.do_badge_instruction') }} </label>
+        </div>
+
+        {{-- Image author's name --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_name" class="form-label">Image author's name</label>
+            <input type="text" name="badgeclass_image_author_name" class="form-control" id="badgeclass_image_author_name"
+                >
+        </div>
+
+        {{-- Image author's e-mail --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_email" class="form-label" >Image author's e-mail</label>
+            <input type="text" name="badgeclass_image_author_email" class="form-control"
+                id="badgeclass_image_author_email" >
+        </div>
+
+        {{-- Image author's url --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_url" class="form-label">Image author's URL</label>
+            <input type="text" name="badgeclass_image_author_url" class="form-control" id="badgeclass_image_author_url"
+                >
+        </div>
+
+        {{-- Image caption --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_caption" class="form-label">Image caption</label>
+            <input type="text" name="badgeclass_image_caption" class="form-control" id="badgeclass_image_caption"
+                >
+        </div>
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.create_new_assertion_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-success"
+                        value="{{ __('hello.create_new_badgeclass_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../backtocompany" class="btn btn-action">Back to Company page</a></p>
+        </span></h2>
+
+@endsection

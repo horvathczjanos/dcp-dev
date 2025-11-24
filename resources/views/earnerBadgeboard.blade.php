@@ -1,0 +1,229 @@
+@extends('layouts.general')
+
+@section('title', __('earnerBadgeBoard.earner_badgeboard_title'))
+
+
+@section('content')
+    <h2 class="section-title"><span>{{ __('earnerBadgeBoard.earner_badgeboard_title') }}</span></h2>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('earnerBadgeBoard.earner_badgeboard_num-o-badges') }}:</b>
+                {{ $numberofearnerbadges }}
+            </p>
+
+            <p><a class="btn btn-primary" href="{{ env('APP_URL') }}/addEarnerBadge"
+                    role="button">{{ __('earnerBadgeBoard.earner_badgeboard_add-new-btn') }}&nbsp;&nbsp;<i
+                        class="bi-shield-plus"></i></a>
+                <a class="btn btn-primary" href="{{ env('APP_URL') }}/addEarnerBadgeByURL"
+                    role="button">{{ __('earnerBadgeBoard.earner_badgeboard_add-new-byurl-btn') }}&nbsp;&nbsp;<i
+                        class="bi-shield-plus"></i></a>
+            <form method="POST" action="earnerSearch" enctype="multipart/form-data">
+                @csrf
+                <div style="display: flex;"><input style="width: 400px;" type="text" name="search" class="form-control"
+                        id="search">
+                    <button type="submit" class="btn btn-success" value="Search">
+                        <span style="color:white;">{{ __('earnerBadgeBoard.earner_badgeboard_search-btn') }}&nbsp;&nbsp;<i
+                                class="bi-search"></i></span>
+                    </button>
+                </div>
+            </form>
+            </p>
+            <p>
+            <div class="d-flex flex-wrap">
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex; margin-right: 5px;">
+                        <button id="name, asc" name="orderbutton" type="submit" class="btn btn-primary" value="Name ASC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-name-asc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-alpha-down"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <button id="name, desc" name="orderbutton" type="submit" class="btn btn-primary" value="Name DESC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-name-desc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-alpha-up"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <button id="issued, asc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Issued ASC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-issuedtime-asc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-numeric-up"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <button id="issued, desc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Issued DESC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-issuedtime-desc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-numeric-down"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <button id="uploading, asc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Uploading ASC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-upldtime-asc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-numeric-up"></i>
+                        </button>
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <button id="uploading, desc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Uploading DESC">
+                            {{ __('earnerBadgeBoard.earner_badgeboard_order-by-upldtime-desc-btn') }}&nbsp;&nbsp;<i
+                                class="bi-sort-numeric-down"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            </p>
+        </div>
+
+
+    </div>
+
+    <!--- display cards in loop --->
+
+    <?php
+    //Columns must be a factor of 12 (1,2,3,4,6,12)
+    $numOfCols = 4;
+    $rowCount = 0;
+    $bootstrapColWidth = 12 / $numOfCols;
+    ?>
+    <div class="row row_cards">
+        @foreach ($earnerbadges as $item)
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card"  @if ($item->is_dcp_metabadge)
+                style="border: solid 3px #c40909;"
+                @endif>
+                <div class="position-relative card_badge_image_div">
+                    <a href="{{ env('APP_URL') }}/earnerbadges/{{ $item['earnerbadgeID'] }}/info">
+                        <img src="{{ env('APP_URL') }}/earnerbadges/{{ $item['earnerbadgeID'] }}/badge" height="100px"
+                            alt="badge image">
+                    </a>
+                    <?php
+
+    $thisEarnerBadge = App\Models\EarnerBadge::where('earnerbadgeID', '=', $item['earnerbadgeID'])->first();
+
+    if ($thisEarnerBadge->is_dcp_badge && $thisEarnerBadge->is_dcp_badge_revoked) {
+        echo '<div class="position-absolute badge_revoked_label"><p class="fs-6 px-2 py-1 fw-semibold text-light bg-danger bg-opacity-80 border-start border-2 border-danger">' . __('earnerBadgeBoard.earner_badgeboard_flag-revoked') . '</p></div>';
+    }
+    if (!empty($thisEarnerBadge->badge_expires_at)) {
+        $nowTime = time();
+        $earnerbadgeExpiresTime = strtotime($thisEarnerBadge->badge_expires_at);
+        if (($earnerbadgeExpiresTime - $nowTime) < 0) {
+            echo '<div class="position-absolute badge_expired_label"><p class="fs-6 px-2 py-1 fw-semibold text-dark bg-warning bg-opacity-80 border-start border-2 border-warning">' . __('earnerBadgeBoard.earner_badgeboard_flag-expired') . '</p></div>';
+        }
+    }
+                            ?>
+                </div>
+                <div class="card-body postition-static">
+                    <h6 class="card-title"><strong>
+                            <?php
+    $max_word = 5;
+    $phrase_array = explode(' ', $item->badge_name);
+    if (count($phrase_array) > $max_word) {
+        $b_title = implode(' ', array_slice($phrase_array, 0, $max_word)) . ' ...';
+    } else {
+        $b_title = $item->badge_name;
+    }
+    //echo '<a href="earnerbadges/'. $item['earnerbadgeID'].'/info">'.$b_title.'</a>';
+    echo $b_title;
+        ?>
+                        </strong></h6>
+                    <p class="card-text">{{ $thisEarnerBadge->badge_issuer_name }}<br />
+                        {{ date("Y.m.d", strtotime($thisEarnerBadge->badge_issued_on)) }}<br />
+
+                        @php
+                        $tags = json_decode($item['earnerBadgeTags']);
+                        $OBtags = [];
+                        $backData = unserialize($item->cachedBadgeReport);
+                        try {
+                        //print_r($backData['checkOB']['badgeClass']['tags']);
+                        $OBtags = $backData['checkOB']['badgeClass']['tags'];
+                        } catch (\Throwable $th) {
+                        //print_r($OBtags);
+                        }
+
+                        @endphp
+                        @foreach ($tags as $tag)
+                        <span class="badge rounded-pill bg-primary">{{ $tag }}</span>
+                        @endforeach
+
+                        @if ($tags)
+                        <br />
+                        @endif
+
+                        @foreach ($OBtags as $OBtag)
+                        <span class="badge rounded-pill bg-warning">{{ $OBtag }}</span>
+                        @endforeach
+                    </p>
+
+
+                    <div class="text-center">
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/info" role="button" data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_info-tooltip') }}"><i
+                                class="bi-info-circle" style="font-size: 1.2rem;"></i></a>
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/check" role="button" data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_check-tooltip') }}"><i
+                                class="bi-check-circle" style="font-size: 1.2rem;"></i></a>
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/sharebyemail" role="button" target="_blank"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_send-tooltip') }}"><i
+                                class="bi-share-fill" style="font-size: 1.2rem;"></i></a>
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/cert" role="button" target="_blank"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_cert-tooltip') }}"><i
+                                class="bi-file-richtext" style="font-size: 1.2rem;"></i></a>
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/edit" role="button" data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_edit-tooltip') }}"><i class="bi-pencil"
+                                style="font-size: 1.2rem;"></i></a>
+                        <a class="btn btn-light"
+                            style="border-radius: 24px !important; padding: 10px !important; padding-left: 15px !important; padding-right: 15px !important; margin: 4px;"
+                            href="earnerbadges/{{ $item['earnerbadgeID'] }}/delete" role="button" data-bs-toggle="tooltip"
+                            data-bs-title="{{ __('earnerBadgeBoard.earner_badgeboard_delete-tooltip') }}"><i
+                                class="bi-trash" style="font-size: 1.2rem;"></i></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <?php
+    $rowCount++;
+    if ($rowCount % $numOfCols == 0)
+        echo '</div><div class="row row_cards">';
+    ?>
+        @endforeach
+    </div>
+
+    <!-- end of cards loop -->
+
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="home" class="btn btn-action">{{ __('general.back-to-home') }}</a></p>
+        </span></h2>
+@endsection

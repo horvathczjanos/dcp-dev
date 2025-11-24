@@ -1,0 +1,192 @@
+@extends('layouts.general')
+
+@section('title', __('hello.edit_issuer_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.edit_issuer_title') }} </strong></p>
+
+    <form method="POST" action="./../../updateIssuer" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        {{-- Name of Issuer --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.issuer_name') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="issuer_name_text" class="form-label">issuer name</label>
+            <textarea style="resize: none;" name="issuer_name_text" class="form-control" id="issuer_name_text" rows="1"
+                required>{{ $issuer->name }}</textarea>
+        </div>
+
+        {{-- URL of Issuer --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.issuer_url') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="issuer_url_text" class="form-label">issuer URL</label>
+            <textarea style="resize: none;" name="issuer_url_text" class="form-control" id="issuer_url_text" rows="1"
+                required>{{ $issuer->url }}</textarea>
+        </div>
+
+        {{-- email of Issuer --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.issuer_email') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="issuer_email_text" class="form-label">issuer e-mail</label>
+            <textarea style="resize: none;" name="issuer_email_text" class="form-control" id="issuer_email_text" rows="1"
+                required>{{ $issuer->email }}</textarea>
+        </div>
+
+        {{-- logo of Issuer --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.set_issuer_logo_file') }}</b> </p>
+            </div>
+        </div>
+        <div class="custom-file text-center">
+            <?php $imageData64 = base64_encode(Storage::get('public/images/' . $issuer->logofile));
+            $ext = pathinfo(storage_path() . '/public/images/' . $issuer->logofile, PATHINFO_EXTENSION);
+            
+            ?>
+            <td scope="col"><img src="data:image/{{ $ext }};base64,{{ $imageData64 }}" style="width: 50px;">
+            </td><br />
+            <label class="form-label">Current logo</label><br />
+            <input type="file" name="file" class="custom-file-input" id="chooseFile">
+            <label class="custom-file-label" for="chooseFile"> {{ __('hello.do_issuer_logo_instruction') }} </label>
+        </div>
+
+
+
+
+        {{-- admin person of Issuer --}}
+
+
+        <?php
+        $filerForIssuers = App\Models\User::get()->filter(function ($value, $key) {
+            if (in_array('issuer', $value['roles'])) {
+                return true;
+            }
+        });
+        
+        ?>
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.select_issuer_admin') }}</b> </p>
+            </div>
+        </div>
+        <div class="custom-file text-center">
+            <label class="custom-file-label" for="selectAdminIssuer"> {{ __('hello.select_admin_issuer') }}
+            </label>
+            <select class="form-select" size="5" name="issuer_option" required>
+                @foreach ($filerForIssuers as $aissuer)
+                    <option value="{{ $aissuer->id }}" @if ($aissuer->id == $issuer->adminID) selected @endif>
+                        {{ $aissuer->name }} [ {{ $aissuer->email }} ]
+                    </option>
+                @endforeach
+            </select>
+
+        </div>
+
+
+
+        {{-- assistant person of Issuer --}}
+
+
+        <?php
+        $filerForIssuers = App\Models\User::get()->filter(function ($value, $key) {
+            if (in_array('assistant', $value['roles'])) {
+                return true;
+            }
+        });
+        
+        ?>
+
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.select_issuer_assistant') }}</b> </p>
+            </div>
+        </div>
+        <div class="custom-file text-center">
+            <label class="custom-file-label" for="selectAssistantIssuer"> {{ __('hello.select_assistant_issuer') }}
+            </label>
+            <select class="form-select" size="5" name="assistant_option[]" multiple="multiple" >
+                @foreach ($filerForIssuers as $aissuer)
+                    <option value="{{ $aissuer->id }}" @if (in_array($aissuer->id, json_decode($issuer->assistantID))) selected @endif>
+                        {{ $aissuer->name }} [ {{ $aissuer->email }} ]
+                    </option>
+                @endforeach
+            </select>
+
+        </div>
+
+
+        {{-- custom fields --}}
+
+        @if ($customFields && $customFields['header']['name'] == 'issuerCustomFileds')
+            <div class="container">
+                <div class="alert alert-warning mt-5" role="alert">
+                    <p class="text-center"><b>{{ __('hello.issuer_custom_fields') }}</b> </p>
+                </div>
+            </div>
+
+            @foreach ($customFields['form'] as $field)
+                @if ($field['type'] == 'text')
+                    <div class="mb-3">
+                        <label for="{{ $field['id'] }}" class="form-label">{{ $field['name'] }}</label>
+                        <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}"
+                            rows="1" required>{{ $field['content'] }}</textarea>
+                    </div>
+                @else
+                @endif
+            @endforeach
+
+
+        @endif
+
+        {{-- Update button --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.update_issuer_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-primary" value="{{ __('hello.update_issuer_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../../manageIssuers" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+
+@endsection

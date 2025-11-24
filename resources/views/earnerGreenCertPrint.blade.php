@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Green Certificate print</title>
+<style>
+@font-face {
+    font-family: 'Forum';
+	src: url( {{storage_path('fonts/Forum-Regular.ttf')}}) format('truetype');
+	font-weight: 400;
+	font-style: normal;
+	font-variant: normal;
+}
+@font-face {
+    font-family: 'Forum';
+	src: url( {{storage_path('fonts/Forum-Bold.ttf')}}) format('truetype');
+	font-weight: 600;
+	font-style: normal;
+	font-variant: normal;
+}
+@page {
+    margin: 0;
+}
+body {
+    font-family: 'Forum';
+    margin: 0;
+    padding: 0;
+/*    font-synthesis-weight: auto;*/
+}
+#page1, #page2 {
+    padding: 20mm;
+    padding-top: 15mm;
+    padding-bottom: 12mm;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+/*    border: solid 2px;*/
+    width: 256mm;
+    height: 181mm;
+}
+#page1 {
+	background-image: url(data:image/jpeg;base64,{{base64_encode($greenCertBgImageA)}});
+}
+#page2 {
+	background-image: url(data:image/jpeg;base64,{{base64_encode($greenCertBgImageB)}});
+}
+.page-break {
+    page-break-after: always;
+}
+table.green {
+    width: 100%;
+    }
+.green tr td {
+	margin: 0;
+	padding: 0;
+}
+.placeholder1 {
+	height: 78mm;
+}
+.placeholder2 {
+	height: 22mm;
+}
+.placeholder3 {
+	height: 26mm;
+}
+p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.p1_text {
+    font-size: 14pt;
+    line-height: 14pt;
+}
+.p1_name {
+    font-size: 24pt;
+    text-transform: uppercase;
+}
+.p1_descr, .p1_date {
+    font-size: 13pt;
+    line-height: 13pt;
+    padding-bottom: 13pt;
+}
+.p1_descr strong {
+    font-weight: 600;
+}
+.p2_text, .p2_text_sign {
+    font-size: 9pt;
+    line-height: 9pt;
+}
+.p2_text_sign {
+    padding-top: 5mm;
+}
+.p2_bme_1st, .p2_bme_rest {
+    padding-bottom: 3pt;
+    text-transform: uppercase;
+}
+.p2_bme_1st {
+    font-size: 12.5pt;
+}
+.p2_bme_rest {
+    font-size: 9pt;
+}
+.p2_name {
+    font-size: 17pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-top: 2mm;
+    padding-bottom: 0;
+}
+.p2_neptun {
+    font-size: 10pt;
+    padding-top: 0;
+    padding-bottom: 2mm;
+}
+table.p2_subject_tbl {
+    margin-top: 3mm;
+    width: 100%;
+    margin-bottom: 6mm;
+}
+.p2_subject_tbl thead tr td p, .p2_subject_tbl tbody tr td p {
+    text-align: left;
+	font-size: 9pt;
+    line-height: 9pt;
+}
+.p2_subject_tbl thead tr td p {
+	font-weight: 600;
+}
+.p2_subject_tbl thead tr td, p2_subject_tbl tbody tr td {
+    margin: 0;
+    padding: 0;
+}
+</style>
+</head>
+<body>
+<div id="page1">
+  <table class="green">
+    <tr>
+      <td><p class="p1_text">{{ $variableA['Sorszám'] }}</p></td>
+      <td><p class="p1_text">{{ $variableA['Sorszám'] }}</p></td>
+    </tr>
+    <tr>
+		<td><p class="placeholder1">&nbsp;</p></td>
+    </tr>
+    <tr>
+      <td><p class="p1_text">{{ __('earnerGreenCert.earner_greencert_p1-c1') }}</p></td>
+      <td><p class="p1_text">{{ __('earnerGreenCert.earner_greencert_p1-c2') }}</p></td>
+    </tr>
+    <tr>
+      <td colspan="2"><p class="p1_name">{{ $variableA['Név'] }}</p></td>
+    </tr>
+    <tr>
+    <?php
+	$bd = date_create_from_format("Y-m-d H:i:s",$variableA['Születési dátum']);
+	$hu_fmt = datefmt_create('hu_HU',IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Budapest', IntlDateFormatter::GREGORIAN, "Y. MMMM d"); //https://unicode-org.github.io/icu/userguide/format_parse/datetime/
+	$bd_hu = $hu_fmt -> format($bd);
+	$bd_hu_nap = $bd -> format("j");
+	if ($bd_hu_nap === "12") { $bds_hu = "-én";}
+	else {
+	    switch ($bd_hu_nap % 10){
+		case 1:
+		case 4:
+		case 5:
+		case 7:
+		case 9:
+		    $bds_hu = "-én";
+		    break;
+		case 2:
+		case 3:
+		case 6:
+		case 8:
+		    $bds_hu = "-án";
+		    break;
+		case 0:
+		    {
+			switch ($bd_hu_nap){
+			    case 10:
+				$bds_hu = "-én";
+				break;
+			    default:
+				$bds_hu = "-án";
+			}
+		    }
+	    }
+	}
+	$bd_en = $bd -> format("j F Y");
+    ?>
+      <td><p class="p1_descr">{!! __('earnerGreenCert.earner_greencert_p1-c3', ['bd-hu' => $bd_hu, 'bds-hu' => $bds_hu, 'bp-hu' => $variableA['Születési hely magyarul'], 'bpt-hu' => $variableA['Születési hely jellege magyarul, ragozva'], 'ba-hu' => $variableA['Születési térség magyarul'], 'bat-hu' => $variableA['Születési térség jellege magyarul, ragozva'], 'bc-hu' => $variableA['Születési ország magyarul, ragozva'] ]) !!}</p></td>
+      <td><p class="p1_descr">{!! __('earnerGreenCert.earner_greencert_p1-c4', ['bd-en' => $bd_en, 'bp-en' => $variableA['Születési hely angolul'], 'bpt-en' => $variableA['Születési hely jellege angolul'], 'ba-en' => $variableA['Születési térség angolul'], 'bat-en' => $variableA['Születési térség jellege angolul'], 'bc-en' => $variableA['Születési ország angolul'] ]) !!}</p></td>
+    </tr>
+    <tr>
+      <td><p class="p1_text">{{ __('earnerGreenCert.earner_greencert_p1-c5', ['doi-hu' => $variableA['_date_issued_hu'] ]) }}</p></td>
+      <td><p class="p1_text">{{ __('earnerGreenCert.earner_greencert_p1-c6', ['doi-en' => $variableA['_date_issued_en'] ]) }}</p></td>
+    </tr>
+  </table>
+</div>
+<div class="page-break"></div>
+<div id="page2">
+  <table class="green">
+	  <tr>
+	  <td colspan="2"><p class="placeholder2">&nbsp;</p></td></tr>
+    <tr>
+      <td><p class="p2_text">{{ $variableA['Sorszám'] }}</p></td>
+      <td><p class="p2_text">{{ $variableA['Sorszám'] }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="p2_bme_1st">{{  __('earnerGreenCert.earner_greencert_p2-c1-1') }}</p>
+		<p class="p2_bme_rest">{!! __('earnerGreenCert.earner_greencert_p2-c1-2') !!}</p></td>
+      <td><p class="p2_bme_1st">{{ __('earnerGreenCert.earner_greencert_p2-c2-1') }}</p>
+		<p class="p2_bme_rest">{!! __('earnerGreenCert.earner_greencert_p2-c2-2') !!}</p></td>
+    </tr>
+	  <tr>
+	  <td colspan="2"><p class="placeholder3">&nbsp;</p></td></tr>
+    <tr>
+    <tr>
+      <td><p class="p2_text">{{ __('earnerGreenCert.earner_greencert_p2-c3') }}</p></td>
+      <td><p class="p2_text">{{ __('earnerGreenCert.earner_greencert_p2-c4') }}</p></td>
+    </tr>
+    <tr>
+      <td colspan="2"><p class="p2_name">{{ $variableA['Név'] }}</p>
+        <p class="p2_neptun">{{ $variableB['Neptun kód'] }}</p></td>
+    </tr>
+    <tr>
+      <td><p class="p2_text">{!! __('earnerGreenCert.earner_greencert_p2-c5') !!}</p></td>
+      <td><p class="p2_text">{!! __('earnerGreenCert.earner_greencert_p2-c6') !!}</p></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+		  <table  class="p2_subject_tbl">
+          <thead>
+            <tr>
+              <td><p>{!! __('earnerGreenCert.earner_greencert_p2-stbl-head-cuc') !!}</p></td>
+              <td><p>{!! __('earnerGreenCert.earner_greencert_p2-stbl-head-cun') !!}</p></td>
+              <td><p>{!! __('earnerGreenCert.earner_greencert_p2-stbl-head-c') !!}</p></td>
+              <td><p>{!! __('earnerGreenCert.earner_greencert_p2-stbl-head-fg') !!}</p></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><p><a href="{{ $variableB['_c1sublink'] }}">{{ $variableB['01course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['01course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['01course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['01course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c2sublink'] }}">{{ $variableB['02course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['02course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['02course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['02course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c3sublink'] }}">{{ $variableB['03course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['03course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['03course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['03course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c4sublink'] }}">{{ $variableB['04course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['04course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['04course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['04course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c5sublink'] }}">{{ $variableB['05course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['05course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['05course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['05course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c6sublink'] }}">{{ $variableB['06course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['06course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['06course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['06course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c7sublink'] }}">{{ $variableB['07course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['07course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['07course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['07course'][1][3] }}</p></td>
+            </tr>
+            <tr>
+              <td><p><a href="{{ $variableB['_c8sublink'] }}">{{ $variableB['08course'][1][0] }}</a></p></td>
+              <td><p>{{ $variableB['08course'][1][1] }}</p></td>
+              <td><p>{{ $variableB['08course'][1][2] }}</p></td>
+              <td><p>{{ $variableB['08course'][1][3] }}</p></td>
+            </tr>
+          </tbody>
+        </table></td>
+    </tr>
+    <tr>
+      <td><p class="p2_text">{{ __('earnerGreenCert.earner_greencert_p2-c7', ['doi-hu' => $variableA['_date_issued_hu'] ]) }}</p></td>
+      <td><p class="p2_text">{{ __('earnerGreenCert.earner_greencert_p2-c8', ['doi-en' => $variableA['_date_issued_en'] ]) }}</p></td>
+    </tr>
+	  <tr><td colspan="2"><p class="p2_text_sign">{!! __('earnerGreenCert.earner_greencert_p2-c9') !!}</p></td></tr>
+  </table>
+</div>
+</body>
+</html>

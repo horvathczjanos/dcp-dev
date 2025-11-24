@@ -1,0 +1,89 @@
+@extends('layouts.general')
+
+@section('title', __('hello.edit_user_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.edit_user_title') }} </strong></p>
+
+    <form method="POST" action="{{ env('APP_URL') }}/users/editProfile" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        {{-- Name of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_name') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_name_text" class="form-label">user name</label>
+            <textarea style="resize: none;" name="user_name_text" class="form-control" id="user_name_text" rows="1" required>{{ $user->name }}</textarea>
+        </div>
+
+
+
+        {{-- email of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_email') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">user e-mail</label>
+            <textarea style="resize: none;" name="user_email_text" class="form-control" id="user_email_text" rows="1"
+                required>{{ $user->email }}</textarea>
+        </div>
+
+        {{-- login data of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_logindata') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">username</label>
+            <textarea style="resize: none;" name="user_email_text" class="form-control" id="user_email_text" rows="1"
+                required disabled>{{ $user->username }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">password</label>
+            <p><a href="{{ env('APP_URL') }}/users/changePassword" class="btn btn-primary">Change password</a></p>
+        </div>
+
+        {{-- Update button --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.update_userprofile_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-primary" value="{{ __('hello.update_userprofile_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/abc" class="btn btn-action">Main Page</a></p>
+        </span></h2>
+
+
+@endsection

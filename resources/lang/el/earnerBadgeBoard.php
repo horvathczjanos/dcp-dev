@@ -1,0 +1,35 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Τα διακριτικά σας',
+    'earner_badgeboard_num-o-badges' => 'Αριθμός διακριτικών',
+    'earner_badgeboard_add-new-btn' => 'Προσθέστε νέο διακριτικό',
+    'earner_badgeboard_search-btn' => 'Αναζήτηση',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Όνομα',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Όνομα',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Χρόνος μεταφόρτωσης',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Χρόνος μεταφόρτωσης',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Χρόνος έκδοσης',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Χρόνος έκδοσης',
+    'earner_badgeboard_sum_th_badge' => 'Ψηφιακό διακριτικό',
+    'earner_badgeboard_sum_th_short-info' => 'Σύντομη περιγραφή',
+    'earner_badgeboard_sum_th_functions' => 'Λειτουργίες',
+    'earner_badgeboard_sum_si_uploadedat' => 'Μεταφορτώθηκε στις',
+    'earner_badgeboard_btn_delete' => 'Διαγραφή',
+    'earner_badgeboard_delete-tooltip' => 'Το διακριτικό θα διγραφεί από τη λίστα',
+    'earner_badgeboard_btn_edit' => 'Επεξεργασία',
+    'earner_badgeboard_edit-tooltip' => 'Επεξεργαστείτε ή προσθέστε στοιχεία στο διακριτικό σας κι επιτρέψτε την πιστοποίηση',
+    'earner_badgeboard_btn_info' => 'Πληροφορίες',
+    'earner_badgeboard_info-tooltip' => 'Δώστε λεπτομερείς πληροφορίες για το διακριτικό',
+    'earner_badgeboard_btn_print' => 'Εκτύπωση',
+    'earner_badgeboard_print-tooltip' => 'Αποθηκεύστε το διακριτικό σε εκτυπώσιμη μορφή pdf',
+    'earner_badgeboard_btn_send' => 'Κοινοποίηση',
+    'earner_badgeboard_send-tooltip' => 'Κοινοποιήστε αυτό το διακριτικό με email',
+    'earner_badgeboard_btn_check' => 'Έλεγχος',
+    'earner_badgeboard_check-tooltip' => 'Ελέγξτε την πληρότητα και γνησιότητα του διακριτικού',
+    'earner_badgeboard_btn_cert' => 'Πιστοποιητικό',
+    'earner_badgeboard_cert-tooltip' => 'Αποθηκεύστε ένα εκτυπώσιμο πιστοποιητικό του διακριτικού σε μορφή pdf',
+    'earner_badgeboard_backtohome' => 'Πίσω στην κεντρική σελίδα',
+
+];

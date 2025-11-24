@@ -1,0 +1,36 @@
+<?php
+
+return [
+
+    'inst_title' => 'Organization',
+    'inst_issuer-name' => '',
+    'inst_issuer-url' => 'URL',
+    'inst_issuer-email' => 'E-mail',
+    'inst_issuer-id' => 'Issuer ID',
+    'inst_issuer-custom-fields' => 'Custom fields',
+    'inst_new-class-btn' => 'New badge class',
+    'inst_bulk-upload-btn' => 'Pre-assertion bulk upload',
+    'inst_greencert-upload-btn' => 'Pre-assertion bulk upload for Green Certification',
+    'inst_create-pre-assrt-btn' => 'Create pre-assertion',
+    'inst_show-pre-assrt-btn' => 'Show all pre-assertions',
+    'inst_show-assrt-btn' => 'Show all assertion',
+    'inst_badge-classes-title' => 'Badge classes (latest)',
+    'inst_bc-sum-th-name' => 'Name',
+    'inst_bc-sum-th-date' => 'Created at',
+    'inst_bc-sum-th-func' => 'Functions',
+    'inst_bc_btn-info' => 'Info',
+    'inst_bc_btn-stack' => 'Stack',
+    'inst_bc_btn-set-type' => 'Set type',
+    'inst_bc_btn-delete' => 'Delete',
+    'inst_bc_btn-edit' => 'Edit',
+    'inst_bc_btn-multilangsettings' => 'Multilanguage settings',
+    'inst_assrt-title' => 'Assertions (last 10)',
+    'inst_assrt-sum-th-name' => 'Name of Badge class',
+    'inst_assrt-sum-th-rcp' => 'Recipient',
+    'inst_assrt-sum-th-date' => 'Issued on',
+    'inst_assrt_sum-th-ids' => 'IDs',
+    'inst_assrt_bc-id-lbl' => 'Badge class ID',
+    'inst_assrt_assrt-id-lbl' => 'Assertion ID',
+    'inst_back' => 'Back to Issuer Dashboard',
+
+];

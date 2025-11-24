@@ -1,0 +1,21 @@
+<?php
+
+return [
+
+    'abc_title' => 'Role Selector Page',
+    'roles' => 'Choose your roles',
+    'issuer_name' => 'Issuer',
+    'earner_name' => 'Earner',
+    'verifier_name' => 'Verifier',
+    'admin_name' => 'Admin',
+    'assistant_name' => 'Assistant',
+    'enter' => 'Enter',
+    'issuer_short_description' => 'You can issue badges to people here.',
+    'earner_short_description' => 'You can collect your own badges here.',
+    'verifier_short_description' => 'You can verifiy a badge.',
+    'admin_short_description' => 'Only for the Admin!',
+    'assistant_short_description' => 'Prepare assertions for the Issuer!',
+    'login' => 'Login',
+    'logout' => 'Logout',
+
+];

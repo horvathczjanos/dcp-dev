@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>DCP login data</title>
+
+</head>
+
+<body>
+
+    <h1>Dear {{ $details['name'] }},</h1>
+
+    <p>Your login data in DCP [ <a href="http://dcp.discovet.eu:3000/login">http://dcp.discovet.eu:3000/login</a> ]
+        (username,
+        password): </p>
+    <p> <strong>{{ $details['username'] }}</strong></p>
+    <p> <strong>{{ $details['password'] }}</strong></p>
+
+    <p>Thank you! </p>
+    <p>Horváth Cz. János @ DCP, BME MTI
+    </p>
+
+</body>
+
+</html>

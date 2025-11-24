@@ -1,0 +1,38 @@
+<?php
+
+return [
+
+    'info_earnerbadge_title' => 'Detailed badge information',
+    'info_earnerbadge_image' => 'Badge image',
+    'info_earnerbadge_flag-revoked' => 'Revoked',
+    'info_earnerbadge_flag-expired' => 'Expired',
+    'info_earnerbadge_btn_dwnload' => 'Dowmnload',
+    'info_earnerbadge_btn_copyurl' => 'Copy URL',
+    'info_earnerbadge_btn_embed' => 'Embed',
+    'info_earnerbadge_btn_assrtn' => 'Assertion (JSON)',
+    'info_earnerbadge_btn_evidence' => 'Evidence',
+    'info_earnerbadge_btn_class' => 'Badge class (JSON)',
+    'info_earnerbadge_btn_criteria' => 'Criteria (JSON)',
+    'info_earnerbadge_last_chktime' => 'Last checked at:',
+    'info_earnerbadge_rcpt' => 'Recipient details',
+    'info_earnerbadge_rcpt_username' => 'Name',
+    'info_earnerbadge_rcpt_email' => 'E-mail',
+    'info_earnerbadge_rcpt_type' => 'Recipient type:',
+    'info_earnerbadge_rcpt_id' => 'Recipient identity:',
+    'info_earnerbadge_rcpt_valid' => '',
+    'info_earnerbadge_rcpt_invalid' => 'This badge does not appear to have been awarded to the email address above',
+    'info_earnerbadge_details' => 'Badge details',
+    'info_earnerbadge_note' => 'Note',
+    'info_earnerbadge_tags' => 'Tags',
+    'info_earnerbadge_name' => 'Name',
+    'info_earnerbadge_descrpt' => 'Description',
+    'info_earnerbadge_criteria' => 'Criteria',
+    'info_earnerbadge_date_issue' => 'Date of issue',
+    'info_earnerbadge_date_expire' => 'Date of expiration',
+    'info_earnerbadge_h-revoked' => 'Revoked',
+    'info_earnerbadge_revoked-at' => 'Revoked at: ',
+    'info_earnerbadge_revoked-reason' => 'Reason of revosation: ',
+    'info_earnerbadge_issuer_name' => 'Issuer name (and e-mail)',
+    'info_earnerbadge_issuer_url' => 'Issuer URL',
+
+];

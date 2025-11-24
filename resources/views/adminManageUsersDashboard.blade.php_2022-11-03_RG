@@ -1,0 +1,55 @@
+@extends('layouts.general')
+
+@section('title', 'Manage Users')
+
+
+@section('content')
+    <h1>Manage Users</h1>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p><strong>In DCP you have</strong> {{ App\Models\User::count() }} <strong>Users</strong>.</p>
+            <p><a href="./../addNewUser"><button type="button" class="btn btn-primary">Add new User</button></a></p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">User profile</th>
+                <th scope="col">Roles</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (App\Models\User::get() as $user)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+                    <td scope="col">{{ $user->name }}<br />{{ $user->email }}</td>
+                    <td>
+                        <ul>
+                            @if (count($user->roles))
+                                @foreach ($user->roles as $role)
+                                    <li>{{ $role }}</li>
+                                @endforeach
+                            @else
+                                -
+                            @endif
+                        </ul>
+                    </td>
+                    <td scope="col">
+                        <a class="btn btn-primary" href="users/{{ $user['id'] }}/editbyadmin" role="button">Edit</a>
+                        <a class="btn btn-primary" href="users/{{ $user['id'] }}/senddatabyadmin" role="button">Send login data</a>
+                    </td>
+                </tr>
+            @endforeach
+
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="adminMain" class="btn btn-action">Back to Admin Page</a></p>
+        </span></h2>
+@endsection

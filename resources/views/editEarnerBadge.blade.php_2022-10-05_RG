@@ -1,0 +1,116 @@
+@extends('layouts.general')
+
+@section('title', __('hello.edit_earnerbadge_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.edit_earnerbadge_title') }} </strong></p>
+
+    <form method="POST" action="./../../updateEarnerBadge" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Memo --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.earnerbadge_description') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="earnerbadge_description" class="form-label" required>user memo</label>
+            <textarea name="earnerbadge_description" class="form-control" id="earnerbadge_description" rows="3"
+                required>{{ $earnerbadge[0]['description'] }}</textarea>
+        </div>
+
+
+        {{-- Set  the recipient --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.set_recipient') }}</b> </p>
+            </div>
+        </div>
+        <select class="form-select" aria-label="Recipient type" name="recipient_type" disabled>
+            <option value="email" @if ($earnerbadge[0]['recipientType'] == 'email') {{ 'selected' }} @endif>E-mail</option>
+            <option value="phone" @if ($earnerbadge[0]['recipientType'] == 'phone') {{ 'selected' }} @endif>Phone number</option>
+            <option value="url" @if ($earnerbadge[0]['recipientType'] == 'url') {{ 'selected' }} @endif>URL</option>
+        </select>
+        <br />
+        <div class="mb-3">
+            <label for="earnerbadge_description" class="form-label" required>Identity</label>
+            <textarea style="resize: none;" name="recipient_identity" class="form-control" id="recipient_identity" rows="1"
+                required>{{ $earnerbadge[0]['recipientIdentity'] }}</textarea>
+        </div>
+
+
+
+        {{-- Enable search --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.isSearchable_earnerbadge_file') }}</b> </p>
+            </div>
+        </div>
+        <div class="custom-file text-center">
+            <input type="checkbox" name="isSearchable" @if ($earnerbadge[0]['issearchable'] == '1') checked @endif>
+            <label>{{ __('hello.isSearchable_earnerbadge_question') }}</label><br /><br />
+        </div>
+
+
+        @php
+            
+            $tagtext = '';
+            $tags = json_decode($earnerbadge[0]['earnerBadgeTags']);
+            foreach ($tags as $tag) {
+                $tagtext .= $tag . '; ';
+            }
+            $tagtext = rtrim($tagtext, '; ');
+        @endphp
+
+        {{-- Editor field of tags --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.edit_tags_field_earnerbadge') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="earner_badge_tags" class="form-label">Tags, separeted by ";" (semicolon)</label>
+            <textarea style="resize: none;" name="earner_badge_tags" class="form-control" id="earner_badge_tags"
+                rows="1">{{ $tagtext }}</textarea>
+        </div>
+
+
+
+        {{-- Update button --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.update_earnerbadge_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-primary" value="{{ __('hello.update_earnerbadge_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../../earnerMain" class="btn btn-action">Back to Earner main page</a></p>
+        </span></h2>
+
+
+@endsection

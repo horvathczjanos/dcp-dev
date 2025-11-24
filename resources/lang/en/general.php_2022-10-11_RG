@@ -1,0 +1,13 @@
+<?php
+
+return [
+
+    'settings' => 'Settings',
+    'back-to-home' => 'Back to main page',
+    'back-to-earner' => 'Back to Earner Dashboard',
+    'back-to-searchresults' => 'Back to the search results',
+    'back' => 'Back',
+    'ok' => 'OK',
+    'error' => 'Error',
+
+];

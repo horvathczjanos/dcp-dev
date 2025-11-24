@@ -1,0 +1,17 @@
+id;name_hu;name_en;desc_hu;desc_en;type;content
+Badgecustom_01_0001;Teljes név;Full name;A teljes név, személyazonosító igazolvány szerint.;Full name as ID card contains it.;text;
+Badgecustom_01_0002;NEPTUN azonosító;Neptun code;NEPTUN azonosító;Neptun code;text;*
+Badgecustom_01_0003;Bizonyítvány sorszáma;Serial number of certification;Bizonyítvány sorszáma;Serial number of certification;text;*
+Badgecustom_01_0004;Születési dátum;Earner date of birth;Születési dátum;Earner date of birth;text;*
+Badgecustom_01_0005;Születési hely;Earner place of birth;Település neve;City name;text;
+Badgecustom_01_0006;Születési hely jellege, ragozva;Type of place of birth;Születési hely jellege;Type of place of birth;text;
+Badgecustom_01_0007;Születési térség;Earner state of birth;vérmegye, térség, tartomány;Earner state of birth;text;
+Badgecustom_01_0008;Születési térség jellege, ragozva;Type of state of birth;Születési térség jellege, ragozva;Type of state of birth;text;
+Badgecustom_01_0009;Születési ország;Earner country of birth;Születési ország;Earner country of birth;text;
+Badgecustom_01_0010;01 tantárgy és adatai;Course 01 and data;01 tantárgy és adatai;Course 01 and data;table;*
+Badgecustom_01_0011;02 tantárgy és adatai;Course 02 and data;02 tantárgy és adatai;Course 02 and data;table;*
+Badgecustom_01_0012;03 tantárgy és adatai;Course 03 and data;03 tantárgy és adatai;Course 03 and data;table;*
+Badgecustom_01_0013;04 tantárgy és adatai;Course 04 and data;04 tantárgy és adatai;Course 04 and data;table;*
+Badgecustom_01_0014;05tantárgy és adatai;Course 05 and data;05tantárgy és adatai;Course 05 and data;table;*
+Badgecustom_01_0015;06 tantárgy és adatai;Course 06 and data;06 tantárgy és adatai;Course 06 and data;table;*
+Badgecustom_01_0016;Keltezés;Date of issue;Keltezés;Date of issue;text;

@@ -1,0 +1,62 @@
+@extends('layouts.general')
+
+@section('title', __('hello.show_all_preassertions_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.show_all_preassertions_title') }} </strong></p>
+
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.all_preassertions_information') }}</b> {{ $numberofpreassertions }}</p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('hello.preassertion_summary_info') }}</th>
+
+                <th scope="col">...</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($preassertionlist as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+
+                    <td scope="col">
+                        <a href="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}" target="_blank"
+                            rel="noopener noreferrer"><img
+                                src="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}/image" width="75px"
+                                alt="digital badge"></a><br />
+                        @if ($item['originalIdentity'])
+                            {{ $item['originalIdentity'] }}
+                        @else
+                            NA
+                        @endif <br />
+                        {{ $item['issuedOn'] }}<br />
+
+                    </td>
+
+
+                    <td><a class="btn btn-primary" href="{{ env('APP_URL') }}/assistantPreAssertions/{{ $item['id'] }}/edit" role="button">Edit</a>
+                       {{-- <a class="btn btn-primary" href="{{ env('APP_URL') }}/preAssertions/{{ $item['id'] }}/delete"
+                            role="button">Delete</a> --}}
+                        
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+        <p class="text-center"><a href="{{ env('APP_URL') }}/backtoassistantcompany" class="btn btn-action">Back to Assistant Company page</a></p>
+        </span></h2>
+
+@endsection

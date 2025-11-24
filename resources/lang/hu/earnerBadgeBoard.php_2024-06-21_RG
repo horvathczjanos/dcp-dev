@@ -1,0 +1,35 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Az Ön kitűzői',
+    'earner_badgeboard_num-o-badges' => 'Kitűzők száma',
+    'earner_badgeboard_add-new-btn' => 'Új kitűző hozzáadása',
+    'earner_badgeboard_search-btn' => 'Keresés',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Név',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Név',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Feltöltés ideje',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Feltöltés ideje',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Kiállítás ideje',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Kiállítás ideje',
+    'earner_badgeboard_sum_th_badge' => 'Kitűző',
+    'earner_badgeboard_sum_th_short-info' => 'Rövid leírás',
+    'earner_badgeboard_sum_th_functions' => 'Funkciók',
+    'earner_badgeboard_sum_si_uploadedat' => 'Feltöltve',
+    'earner_badgeboard_btn_delete' => 'Törlés',
+    'earner_badgeboard_delete-tooltip' => 'A kitűző törlésre kerül a listából',
+    'earner_badgeboard_btn_edit' => 'Szerkesztés',
+    'earner_badgeboard_edit-tooltip' => 'Szerkesztheti és kiegészítheti a kitűző részleteit, valamint nyilvánossá teheti a kitűzőt, ezáltal alkalmassá megtekintésre és érvényesítésre',
+    'earner_badgeboard_btn_info' => 'Info',
+    'earner_badgeboard_info-tooltip' => 'Adjon részletes információt a kitűzőről',
+    'earner_badgeboard_btn_print' => 'Nyomtatás',
+    'earner_badgeboard_print-tooltip' => 'Nyomtatható, lementhető pdf fájl készítése a kitűzőről',
+    'earner_badgeboard_btn_send' => 'Megosztás',
+    'earner_badgeboard_send-tooltip' => 'Megosztás e-mailben',
+    'earner_badgeboard_btn_check' => 'Ellenőrzés',
+    'earner_badgeboard_check-tooltip' => 'Ellenőrizze le a kitűző érvényességét',
+    'earner_badgeboard_btn_cert' => 'Tanúsítvány',
+    'earner_badgeboard_cert-tooltip' => 'Nyomtatható pdf készítése a kitűzőről, tanúsítvány formátumban',
+    'earner_badgeboard_backtohome' => 'Vissza a főoldalra',
+
+];

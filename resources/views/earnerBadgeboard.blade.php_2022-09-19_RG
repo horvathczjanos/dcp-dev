@@ -1,0 +1,142 @@
+@extends('layouts.general')
+
+@section('title', 'Earner badge page')
+
+
+@section('content')
+    <h1>Earner badge page</h1>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.all_earnerbadges_information') }}</b> {{ $numberofearnerbadges }}
+            </p>
+
+            <p><a class="btn btn-primary" href="./../addEarnerBadge" role="button">Add new badge to list</a>
+            <form method="POST" action="earnerSearch" enctype="multipart/form-data">
+                @csrf
+                <div style="display: flex;"><input style="width: 400px;" type="text" name="search" class="form-control"
+                        id="search">
+                    <input type="submit" class="btn btn-success" value="Search.." />
+                </div>
+            </form>
+            </p>
+            <p>
+            <div style="display: flex;">
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex; margin-right: 5px;">
+                        <input id="name, asc" name="orderbutton" type="submit" class="btn btn-primary" value="Name ASC" />
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <input id="name, desc" name="orderbutton" type="submit" class="btn btn-primary" value="Name DESC" />
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <input id="uploading, asc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Uploading ASC" />
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <input id="uploading, desc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Uploading DESC" />
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <input id="issued, asc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Issued ASC" />
+                    </div>
+                </form>
+                <form method="POST" action="earnerMain" enctype="multipart/form-data">
+                    @csrf
+                    <div style="display: flex;  margin-right: 5px;">
+                        <input id="issued, desc" name="orderbutton" type="submit" class="btn btn-primary"
+                            value="Issued DESC" />
+                    </div>
+                </form>
+            </div>
+            </p>
+        </div>
+
+
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Badge</th>
+                <th scope="col">Short Info</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($earnerbadges as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+
+                    <td scope="col"><a href="http://badgr2.mti.bme.hu:3000/earnerbadges/{{ $item['earnerbadgeID'] }}/info"
+                            target="_blank" rel="noopener noreferrer"><img
+                                src="http://badgr2.mti.bme.hu:3000/earnerbadges/{{ $item['earnerbadgeID'] }}/badge"
+                                width="100px" alt="badge image"></a></td>
+                    <td>
+                        <p>{{ $item->badge_name }}</p>
+                        <p>Uploaded at: {{ $item['created_at'] }}</p>
+                        <p>
+                            @php
+                                $tags = json_decode($item['earnerBadgeTags']);
+                                $OBtags = [];
+                                $backData = unserialize($item->cachedBadgeReport);
+                                try {
+                                    //print_r($backData['checkOB']['badgeClass']['tags']);
+                                    $OBtags = $backData['checkOB']['badgeClass']['tags'];
+                                } catch (\Throwable $th) {
+                                    //print_r($OBtags);
+                                }
+                                
+                            @endphp
+                            @foreach ($tags as $tag)
+                                <span class="badge rounded-pill bg-primary">{{ $tag }}</span>
+                            @endforeach
+
+                            <br />
+
+                            @foreach ($OBtags as $OBtag)
+                                <span class="badge rounded-pill bg-warning">{{ $OBtag }}</span>
+                            @endforeach
+                        </p>
+                    </td>
+
+                    <td><a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/delete"
+                            role="button">Delete</a>
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/edit"
+                            role="button">Edit</a>
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/info"
+                            role="button">Info</a>
+                        <br /><br />
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/print" role="button"
+                            target="_blank">Print</a>
+
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/check"
+                            role="button">Check</a>
+                        <a class="btn btn-primary" href="earnerbadges/{{ $item['earnerbadgeID'] }}/cert" role="button"
+                            target="_blank">Cert</a>
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="abc" class="btn btn-action">Back to Service Page</a></p>
+        </span></h2>
+@endsection

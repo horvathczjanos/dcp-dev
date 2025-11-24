@@ -1,0 +1,11 @@
+a {
+    color: #bd1550;
+}
+
+a:hover {
+    color: #e93675;
+}
+
+body {
+    font-family: DejaVu Sans, sans-serif;
+}

@@ -1,0 +1,76 @@
+@extends('layouts.general')
+
+@if (auth()->check())
+    <?php session()->put('loginPage', false); ?>
+@endif
+
+
+@section('title', __('abcPage.abc_title'))
+
+@section('content')
+
+    {{-- <p> <img class="rounded mx-auto d-block" src="discovet_long_header.png" width="" height="" /></p> 
+    <h1>Service selector</h1> --}}
+
+
+    @if (auth()->check())
+        {{-- <p>Hello: {{ Auth::user()->name }} </p>
+        <ul>
+            @if (count(Auth::user()->roles))
+
+                @foreach (Auth::user()->roles as $role)
+                    <li>{{ $role }}</li>
+                @endforeach
+            @endif
+        </ul> --}}
+        <div class="row section featured topspace" style="clear: right;">
+            <h2 class="section-title"><span>{{ __('abcPage.roles') }}</span></h2>
+            <div class="row d-flex justify-content-center">
+                <div class="col-sm-6 col-md-2">
+                    <h3 class="text-center">{{ __('abcPage.issuer_name') }}</h3>
+                    <p class="text-center short-description">{{ __('abcPage.issuer_short_description') }}
+                    </p>
+                    <p class="text-center"><a href="issuerMain" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="{{ __('abcPage.issuer-tooltip') }}"><i class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <h3 class="text-center">{{ __('abcPage.earner_name') }}</h3>
+                    <p class="text-center short-description">{{ __('abcPage.earner_short_description') }}
+                    </p>
+                    <p class="text-center"><a href="earnerMain" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="{{ __('abcPage.earner-tooltip') }}"><i class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <h3 class="text-center">{{ __('abcPage.verifier_name') }}</h3>
+                    <p class="text-center short-description">{{ __('abcPage.verifier_short_description') }}
+                    </p>
+                    <p class="text-center"><a href="verifierMain" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="{{ __('abcPage.verifier-tooltip') }}"><i class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <h3 class="text-center">{{ __('abcPage.admin_name') }}</h3>
+                    <p class="text-center short-description">{{ __('abcPage.admin_short_description') }}
+                    </p>
+                    <p class="text-center"><a href="adminMain" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="{{ __('abcPage.admin-tooltip') }}"><i class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <h3 class="text-center">{{ __('abcPage.assistant_name') }}</h3>
+                    <p class="text-center short-description">{{ __('abcPage.assistant_short_description') }}
+                    </p>
+                    <p class="text-center"><a href="assistantMain" class="btn btn-action" data-bs-toggle="tooltip" data-bs-title="{{ __('abcPage.assistant-tooltip') }}"><i class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                </div>
+            </div>
+        </div> <!-- / section -->
+        <h2 class="section-title"><span>
+                <p class="text-center"><a href="logout" class="btn btn-action">{{ __('abcPage.logout') }}</a></p>
+            </span></h2>
+    @else
+        <!-- <p> <img class="rounded mx-auto d-block" src="discovet_long_header.png" width="" height="" /></p> -->
+        <h1 style="padding-top: 1em;">{{ __('abcPage.greetings1') }}</h1>
+        <p>{{ __('abcPage.greetings2') }}</p>
+        <p class="alert text-center alert-success"><strong>{{ __('abcPage.contact') }}</strong></p>
+        <h2 class="section-title"><span>
+                <p class="text-center"><a href="login" class="btn btn-action">{{ __('abcPage.login') }}</a></p>
+            </span></h2>
+    @endif
+
+
+
+@endsection

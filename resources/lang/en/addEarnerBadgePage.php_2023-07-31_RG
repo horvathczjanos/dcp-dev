@@ -1,0 +1,15 @@
+<?php
+
+return [
+
+    'add_earnerbadge_title' => 'Add a new badge you earned',
+    'add_earnerbadge_note' => 'Add a note to the badge',
+    'add_earnerbadge_notelabel' => 'Add your own note to this badge (this will appear in the badge description when viewed)',
+    'set_earnerbadge_file' => 'Select a badge file!',
+    'do_badge_instruction' => 'Select a badge file!',
+    'add_earnerbadge_info' => 'Upload the badge to your badge list',
+    'add_earnerbadge_button' => 'Upload',
+    'add_earnerbadge_success' => 'You have succesfully uploaded your Badge',
+    'add_earnerbadge_error-not-ob' => 'This is not a valid open badge!',
+
+];

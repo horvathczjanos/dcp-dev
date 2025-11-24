@@ -1,0 +1,64 @@
+@extends('layouts.general')
+
+@section('title', __('verifierDashboard.verifier_dashboard_title'))
+
+
+@section('content')
+    <h2 class="section-title"><span>{{ __('verifierDashboard.verifier_dashboard_title') }}</span></h2>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><strong>{{ __('verifierDashboard.verifier_dashboard_all-vbadges') }}</strong>{{ $numberofverifierbadges }}
+            </p>
+	    <div class="row d-flex justify-content-center">
+                <div class="col-md-3 col-sm-3 col-xs-6">
+	            <p class="text-center"><a class="btn btn-primary" href="{{ env('APP_URL') }}/addVerifierBadge" role="button">{{ __('verifierDashboard.verifier_dashboard_add-new-vbadge') }}</a></p>
+	        </div>
+		<div class="col-md-3 col-sm-3 col-xs-6">
+            	    <p class="text-center"><a class="btn btn-primary" href="{{ env('APP_URL') }}/lookupEarnerBadges" role="button">{{ __('verifierDashboard.verifier_dashboard_lookup-vbadge') }}</a></p>
+		</div>
+		<div class="col-md-3 col-sm-3 col-xs-6">
+                    <p class="text-center"><a class="btn btn-primary" href="{{ env('APP_URL') }}/searchForVET" role="button">{{ __('verifierDashboard.verifier_dashboard_search-vet') }}</a></p>
+		</div>
+		<div class="col-md-3 col-sm-3 col-xs-6">
+                    <p class="text-center"><a class="btn btn-primary" href="{{ env('APP_URL') }}/lookupIssuers" role="button">{{ __('verifierDashboard.verifier_dashboard_lookup-issuers') }}</a></p>
+		</div>
+	    </div>
+        </div>
+    </div>
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+		<th scope="col">{{ __('verifierDashboard.verifier_dashboard_sum_th_badge') }}</th>
+                <th scope="col">{{ __('verifierDashboard.verifier_dashboard_sum_th_short-info') }}</th>
+                <th scope="col">{{ __('verifierDashboard.verifier_dashboard_sum_th_functions') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($verifierbadges as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+
+                    <td scope="col"><a href="{{ env('APP_URL') }}/verifierbadges/{{ $item['verifierbadgeID'] }}/badge" target="_blank" rel="noopener noreferrer"><img src="{{ env('APP_URL') }}/verifierbadges/{{ $item['verifierbadgeID'] }}/badge" width="100px" alt="badge image"></a></td>
+                    <td>
+			<p>{{ $item->description }}
+			<!--<br />{{ $item['badge_name'] }}--><br />
+                	{{ __('verifierDashboard.verifier_dashboard_sum_si_uploadedat') }}: {{ $item['created_at'] }}</p>
+		    </td>
+                    <td><a class="btn btn-primary" href="verifierbadges/{{ $item['verifierbadgeID'] }}/delete" role="button">{{ __('verifierDashboard.verifier_dashboard_btn_delete') }}&nbsp;&nbsp;<i class="bi-trash"></i></a>
+                    {{-- <a class="btn btn-primary" href="verifierbadges/{{ $item['verifierbadgeID'] }}/info" role="button">{{  __('verifierDashboard.verifier_dashboard_btn_info') }}&nbsp;&nbsp;<i class="bi-info-circle"></i></a> --}}
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/home" class="btn btn-action">{{ __('general.back-to-home') }}</a></p>
+        </span></h2>
+@endsection

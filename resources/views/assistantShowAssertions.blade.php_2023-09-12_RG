@@ -1,0 +1,163 @@
+@extends('layouts.general')
+
+@section('title', __('assistantShowAssertions.aa_page-title'))
+
+
+@section('content')
+
+    <h2 class="section-title"><span>{{ __('assistantShowAssertions.aa_page-title') }}</span></h2>
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('assistantShowAssertions.aa_num-o-a') }}:</b> {{ $numberofassertions }}</p>
+            <div style="display: flex; margin-right: 5px;" class="checkboxBar" hidden>
+                <button style=" margin-right: 5px;" class="btn btn-primary resetChecking" type="button"
+                    id="resetCheckingButton">{{ __('assistantShowAssertions.aa_btn-clear-sel') }}</button>
+                <button style=" margin-right: 5px;" class="btn btn-primary multipleSendByEmail" type="button"
+                    id="multipleSendByEmailButton">{{ __('assistantShowAssertions.aa_btn-send-multi-notif') }}</button>
+            </div>
+        </div>
+
+    </div>
+
+    <?php
+    $advancedIssuers = json_decode(env('ADVANCED_ISSUERS'), true)['advaced_issuers'];
+    ?>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('assistantShowAssertions.aa_th-date') }}</th>
+                <th scope="col">{{ __('assistantShowAssertions.aa_th-awardee-id') }}</th>
+                <th scope="col">{{ __('assistantShowAssertions.aa_th-image') }}</th>
+                <th scope="col">{{ __('assistantShowAssertions.aa_th-func') }}</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($assertionlist as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}
+
+                        @if (in_array($issuerID, $advancedIssuers))
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="{{ $item['assertionID'] }}"
+                                    id="flexCheckDefault" disabled>
+                            </div>
+                        @endif
+
+                    </td>
+                    <td scope="col">{{ $item['issuedOn'] }}</td>
+                    <td scope="col">
+                        @if ($item['originalIdentity'])
+                            {{ $item['originalIdentity'] }}
+                        @else
+                            NA
+                        @endif
+                    </td>
+                    <td scope="col"><a href="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge"
+                            target="_blank" rel="noopener noreferrer"><img
+                                src="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge" width="75px"
+                                alt="digital badge"></a></td>
+
+                    <td> <a class="btn btn-primary" href="/assertions/{{ $item['assertionID'] }}/info"
+                            role="button">{{ __('assistantShowAssertions.aa_btn-info') }}&nbsp;&nbsp;<i class='bi-info-circle'></i></a>
+
+                        {{-- @if ($issuerID == 'f4c649072ff246a448513c1df6c530e75ae763fc69341d3ec57b7502de6ed794') --}}
+                        @if (in_array($issuerID, $advancedIssuers))
+                            <a class="btn btn-primary" href="/assertions/{{ $item['assertionID'] }}/assistantSend2"
+                                role="button">{{ __('assistantShowAssertions.aa_btn-sendby-plus') }}</a>
+                        @else
+                            <a class="btn btn-primary"href="/assertions/{{ $item['assertionID'] }}/assistantSend"
+                                role="button">{{ __('assistantShowAssertions.aa_btn-sendby') }}</a>
+                        @endif
+
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    <form class="otherForm" method="POST" hidden>
+        @csrf
+    </form>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+    $( document ).ready(function() {
+    
+        
+        function areThereCheckedBoxes(){
+            var retData = false;
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                retData = true;
+                return false;
+            });
+            return retData;
+        }
+
+
+        
+        $('.form-check-input').change(function() {
+
+            if(areThereCheckedBoxes()){
+                $( document ).find('div.checkboxBar').prop('hidden',false);
+            }else{
+                $( document ).find('div.checkboxBar').prop('hidden',true);
+            }
+
+            var selectedBoxes = [];
+
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                selectedBoxes.push(this.value);
+            });
+  
+            //alert(areThereCheckedBoxes());
+
+        });
+
+        $('button.resetChecking').click(function() {
+            $( document ).find('input.form-check-input[type=checkbox]').prop('checked',false);
+            $( document ).find('div.checkboxBar').prop('hidden',true);
+            
+        });
+
+        $('button.multipleSendByEmail').click(function() {
+           //alert('Multiple notification sending');
+
+           var selectedBoxes = [];
+
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                selectedBoxes.push(this.value);
+            });
+
+            var thisForm = $( document ).find('form.otherForm');
+            thisForm.prop('action', 'http://dcp.discovet.eu:3000/assistantAssertionsMultipleNotification' );
+
+            var tmpInput = $('<textarea />');
+            tmpInput.prop('id', 'tmpinput');
+            tmpInput.prop('name', 'tmpinput');
+            tmpInput.val(selectedBoxes);          
+            thisForm.append(tmpInput);
+
+            thisForm.submit();
+
+            //alert(tmpInput.val());
+            
+        });
+
+
+        $( document ).find('input.form-check-input[type=checkbox]').prop('disabled',false);
+
+
+    });
+</script>
+
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/backtoassistantcompany" class="btn btn-action">{{ __('assistantShowAssertions.aa_back-2-inst') }}</a></p>
+        </span></h2>
+
+@endsection

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+
+
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <style>
+        body {
+
+            font-family: DejaVu Sans, sans-serif;
+
+        }
+
+        .background {
+            position: absolute;
+            height: 185mm;
+            width: 275mm;
+        }
+
+        .innerDiv {
+            position: relative;
+            left: -50%;
+        }
+
+        .username {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 20mm;
+
+        }
+
+        .badgename {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 30mm;
+
+        }
+
+        .badgeimage {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 50mm;
+
+        }
+
+        .discovetimage {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 170mm;
+
+        }
+
+        .qrcode {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 100mm;
+
+        }
+
+        .issuername {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 130mm;
+
+        }
+
+        .issuedon {
+            position: absolute;
+            margin-left: 50%;
+            margin-top: 140mm;
+
+        }
+    </style>
+</head>
+
+
+<body>
+    <div>
+        <div>
+            <img class="background" src="certificate_template_v2.jpg"
+            alt="certification image">
+        </div>
+        
+    </div>
+    <div class="username">
+        <div class="innerDiv" style="border-bottom: solid balck 1px;"><span>{{ $user['name'] }}</span>
+        </div>
+    </div>
+
+    <div class="badgename">
+        <div class="innerDiv" style="border-bottom: solid balck 1px;">
+            <span>{{ $thisBadge->first()->badge_name }}</span>
+        </div>
+    </div>
+
+    <div class="badgeimage">
+        <div class="innerDiv">
+            <img src="data:image/png;base64,{{ base64_encode($badgeImage) }}" style="width: 150px;" alt="badge image">
+        </div>
+    </div>
+
+    <div class="qrcode">
+        <div class="innerDiv">
+            <img src="data:image/png;base64,{{ base64_encode($qrCode) }}" style="width: 100px;" alt="qr code image">
+        </div>
+    </div>
+
+    <div class="discovetimage">
+        <div class="innerDiv">
+            <img src="data:image/png;base64,{{ base64_encode($discovetImage) }}" style="width: 250px;"
+                alt="discovet image">
+        </div>
+    </div>
+
+    <div class="issuername">
+        <div class="innerDiv" style="border-bottom: solid balck 1px;">
+            <span>{{ $thisBadge->first()->badge_issuer_name }}</span>
+        </div>
+    </div>
+
+    <div class="issuedon">
+        <div class="innerDiv" style="border-bottom: solid balck 1px;">
+            <span>{{ $thisBadge->first()->badge_issuedon }}</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

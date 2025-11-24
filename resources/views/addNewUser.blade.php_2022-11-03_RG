@@ -1,0 +1,96 @@
+@extends('layouts.general')
+
+@section('title', __('hello.add_newuser_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.add_newuser_title') }} </strong></p>
+
+    <form method="POST" action="addNewUser" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>                
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        {{-- Name of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_name') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_name_text" class="form-label">real name of user</label>
+            <textarea style="resize: none;" name="user_name_text" class="form-control" id="user_name_text" rows="1" required></textarea>
+        </div>
+
+
+
+        {{-- email of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_email') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">user e-mail</label>
+            <textarea style="resize: none;" name="user_email_text" class="form-control" id="user_email_text" rows="1"
+                required></textarea>
+        </div>
+
+        {{-- username of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_username') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">username</label>
+            <textarea style="resize: none;" name="user_username_text" class="form-control" id="user_username_text" rows="1"
+                required></textarea>
+        </div>
+
+        {{-- password of User --}}
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.user_password') }}</b> </p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="user_email_text" class="form-label">password</label>
+            <textarea style="resize: none;" name="user_password_text" class="form-control" id="user_password_text" rows="1"
+                required></textarea>
+        </div>
+
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.add_newuser_info') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-primary" value="{{ __('hello.add_newuser_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../manageUsers" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+@endsection

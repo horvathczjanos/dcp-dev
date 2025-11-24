@@ -1,0 +1,133 @@
+@extends('layouts.general')
+
+@section('title', __('hello.issuer_stack_mainpage'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.issuer_stack_mainpage') }} </strong></p>
+
+    <div class="row">
+        <div class="col-12 text-center">
+
+            <img src="data:image/png;base64,{{ base64_encode($badgeImage) }}" style="width: 150px;" alt="badge image">
+            <p><strong>{{ $badgeName }}</strong><br />
+
+            </p>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            @if (count($inStack))
+                <strong>This badgeclass belongs to stack member:</strong><br />
+                {{ App\Models\Stackmember::where('stackmemberID', '=', $inStack[0]['stackmemberID'])->first()->name }}<br />
+                <i>{{ App\Models\Stackmember::where('stackmemberID', '=', $inStack[0]['stackmemberID'])->first()->description }}</i>
+            @else
+                <p><strong>This badgeclass is not ordered to a stack member!</strong></p>
+            @endif
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="alert alert-warning mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.select_stack_member') }}</b></p>
+        </div>
+    </div>
+
+    <form method="POST" action="doStack" enctype="multipart/form-data">
+        @csrf
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Select</th>
+                    <th scope="col">Stack member name</th>
+                    <th scope="col">Stack member description</th>
+                    <th scope="col">Role(s) for this stack member</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td scope="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="stackmember" id="0" value="0"
+                            @if (!count($inStack)) checked @endif>
+                        </div>
+                    </td>
+                    <td><strong>- - - </strong></td>
+                    <td>Select this to remove stack membering</td>
+                    <td scope="col">
+                        *
+                    </td>
+                </tr>
+                @foreach ($stackMembers as $item)
+                    <tr>
+                        <td scope="col">{{ $loop->index + 1 }}</td>
+                        <td scope="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="stackmember"
+                                    id="{{ $item->stackmemberID }}" value="{{ $item->stackmemberID }}"
+                                    @if (count($inStack) && $item->stackmemberID == $inStack[0]['stackmemberID']) checked @endif>
+                            </div>
+                        </td>
+                        <td scope="col">{{ $item->name }}</td>
+                        <td scope="col">{{ $item->description }}</td>
+                        <td scope="col">
+                            <?php
+                            $rolesToThisStackMembers = App\Models\Stackrole::where('part1', '=', $item->stackmemberID)->get();
+                            
+                            ?>
+                            @foreach ($rolesToThisStackMembers as $role)
+                                {{ $role->name }} <br />
+                            @endforeach
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+
+
+        <div class="container">
+            <div class="alert alert-warning mt-5" role="alert">
+                <p class="text-center"><b>{{ __('hello.set_new_stack_role') }}</b></p>
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-success" value="{{ __('hello.set_new_stack_role_button') }}" />
+                </p>
+            </div>
+        </div>
+
+    </form>
+
+
+
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../../company/{{ session()->get('issuerID') }}" class="btn btn-action">Back</a></p> 
+
+        </span></h2>
+
+@endsection

@@ -1,0 +1,157 @@
+@extends('layouts.general')
+
+@section('title', __('issuerInst.inst_title'))
+
+
+@section('content')
+    <h2 class="section-title"><span>{{ __('issuerInst.inst_title') }}</span></h2>
+
+    <h3>{{ __('issuerInst.inst_issuer-name') }}{{ $company->name }}</h3>
+        <p>{{ __('issuerInst.inst_issuer-url') }}: <a href="{{ $company->url }}" target="_blank">{{ $company->url }}</a><br />
+	    {{ __('issuerInst.inst_issuer-email') }}: {{ $company->email }}<br />
+	    {{ __('issuerInst.inst_issuer-id') }}: <span style="font-size: 0.75em;">[{{ $company->issuerID }}]</span>
+        </p>
+
+    {{-- custom fields --}}
+
+    @if ($customFields && $customFields['header']['name'] == 'issuerCustomFileds')
+    <div class="bd-callout bd-callout-info">
+        <p>{{ __('issuerInst.inst_issuer-custom-fields') }}</p>
+    </div>
+
+        @foreach ($customFields['form'] as $field)
+            @if ($field['type'] == 'text')
+                <div class="mb-3">
+                    <label for="{{ $field['id'] }}" class="form-label">{{ $field['name'] }}</label>
+                    <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}" rows="1"
+                        required disabled>{{ $field['content'] }}</textarea>
+                </div>
+            @else
+            @endif
+        @endforeach
+
+    @endif
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/createBadgeclass" role="button">{{ __('issuerInst.inst_new-class-btn') }}</a>
+                </div>
+                {{-- <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="./../createAssertion" role="button">{{ __('issuerInst.inst_new-assrt-btn') }}</a>
+                </div> --}}
+                <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/bulkPreAssertionUpload" role="button">{{ __('issuerInst.inst_bulk-upload-btn') }}</a>
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/createPreAssertion" role="button">{{ __('issuerInst.inst_create-pre-assrt-btn') }}</a>
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/showPreAssertions" role="button">{{ __('issuerInst.inst_show-pre-assrt-btn') }}</a>
+                </div>
+                <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/showAssertions" role="button">{{ __('issuerInst.inst_show-assrt-btn') }}</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+        <h3>{{ __('issuerInst.inst_badge-classes-title') }}</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    {{-- <th scope="col">Badge Class ID</th> --}}
+                    <th scope="col">{{ __('issuerInst.inst_bc-sum-th-name') }}</th>
+                    <th scope="col">{{ __('issuerInst.inst_bc-sum-th-date') }}</th>
+                    <th scope="col">{{ __('issuerInst.inst_bc-sum-th-func') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($badgeclasses as $badgeclass)
+                <tr>
+                    <th scope="row">{{ $loop->index + 1 }}</th>
+                    {{-- <td>{{ $badgeclass->badgeclassID }}</td> --}}
+                    <td style="width:200px">
+                        <strong>{{ $badgeclass->name }}</strong><br />{{ $badgeclass->description }}
+                    </td>
+
+                    <td>{{ $badgeclass->created_at }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/info"
+                            role="button">Show</a>
+                        <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/stack"
+                            role="button">Stack</a>
+
+                        <?php
+                        
+                        $tmpAssertion = App\Models\Assertion::where('badgeclassID', '=', $badgeclass->badgeclassID)->count();
+                        $tmpPreAssertion = App\Models\Preassertion::where('badgeclassID', '=', $badgeclass->badgeclassID)->count();
+                        
+                            //ddd($tmpPreAssertion);
+
+                        ?>
+
+                        @if (!($tmpAssertion || $tmpPreAssertion))
+                            <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/settype"
+                                role="button">Set Type</a>
+                        @endif
+
+
+
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+    {{-- <p><a class="btn btn-primary" href="./../createBadgeclass" role="button">Create new badge class</a></p> --}}
+
+    <h3>{{ __('issuerInst.inst_assrt-title') }}</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Short Info</th>
+                <th scope="col">Badgeclass name</th>
+                <th scope="col">recipient</th>
+                <th scope="col">Issued on</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($assertions as $assertion)
+                <tr>
+                    <th scope="row">{{ $loop->index + 1 }}</th>
+                    <td><small><small>badgeclass ID: {{ $assertion->badgeclassID }}<br />
+                                assertion ID: {{ $assertion->assertionID }}<br />
+                            </small></small>
+                    </td>
+                    <td>{{ App\Models\Badgeclass::where('badgeclassID', '=', $assertion->badgeclassID)->first()->name }}
+                    </td>
+                    <td>
+                        @if (!$assertion->originalIdentity)
+                            NA
+                        @else
+                            {{ $assertion->originalIdentity }}
+                        @endif
+                    </td>
+                    <td>{{ $assertion->issuedOn }}</td>
+
+
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+
+    {{-- <p><a class="btn btn-primary" href="./../createAssertion" role="button">Create new assertion</a><span> </span></span><a
+            class="btn btn-primary" href="./../showAssertions" role="button">Show all assertions</a></p> --}}
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ env('APP_URL') }}/issuerMain" class="btn btn-action">Back to Issuer main page</a></p>
+        </span></h2>
+
+@endsection

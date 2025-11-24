@@ -1,0 +1,65 @@
+@extends('layouts.general')
+
+<?php
+session()->put('loginPage', true);
+?>
+
+@section('title', 'General Login Page')
+
+
+@section('content')
+
+    <form method="POST" action="login" enctype="multipart/form-data">
+        @csrf
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="row section featured topspace">
+            <h2 class="section-title"><span>General Login Page</span></h2>
+
+
+            <p> <img class="rounded mx-auto d-block" src="ud_01.jpg" width="" height="" /></p>
+            <h4>DisCoPlayer is under development. Data loss and/or function changes may occur. Pay attention to saving your
+                data frequently!
+                During development phase use DCP at your own risk!</h4>
+            <hr />
+
+            <div class="col-sm-6 col-md-3 mx-auto">
+                <h3 class="text-center">Login Page</h3>
+
+
+
+                <div class="mb-3">
+                    <label for="badgeclass_name" class="form-label">username</label>
+                    <input type="text" name="username" class="form-control" id="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="badgeclass_name" class="form-label">password</label>
+                    <input type="password" name="password" class="form-control" id="password" required>
+                </div>
+
+                <p class="text-center ">
+                    <input type="submit" class="btn btn-success" value="{{ __('hello.login_button') }}" />
+                </p>
+
+            </div>
+
+
+        </div> <!-- / section -->
+    </form>
+
+    <p> <img class="rounded mx-auto d-block" src="discovet_logo.png" width="50" height="50" /></p>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="abc" class="btn btn-action">Back to Service Page</a></p>
+        </span></h2>
+@endsection

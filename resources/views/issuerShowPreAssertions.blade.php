@@ -1,0 +1,220 @@
+@extends('layouts.general')
+
+@section('title', __('issuerShowPreAssertions.spa_page-title'))
+
+
+@section('content')
+
+    <h2 class="section-title"><span>{{ __('issuerShowPreAssertions.spa_page-title') }}</span></h2>
+
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('issuerShowPreAssertions.spa_num-o-pa') }}:</b> {{ $numberofpreassertions }}</p>
+            <div style="display: flex; margin-right: 5px;" class="checkboxBar" hidden>
+                <button style=" margin-right: 5px;" class="btn btn-primary resetChecking" type="button"
+                    id="resetCheckingButton">{{ __('issuerShowPreAssertions.spa_btn-clear-sel') }}</button>
+                <button style=" margin-right: 5px;" class="btn btn-primary setAllChecking" type="button"
+                    id="setAllCheckingButton">{{ __('issuerShowPreAssertions.spa_btn-set-all') }}</button>
+                <button style=" margin-right: 5px;" class="btn btn-primary multipleAwarding" type="button"
+                    id="multipleAwardingButton">{{ __('issuerShowPreAssertions.spa_btn-multi-award') }}</button>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ __('issuerShowPreAssertions.spa_th-brief') }}</th>
+                <th scope="col">{{ __('issuerShowPreAssertions.spa_th-func') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($preassertionlist as $item)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{ $item['id'] }}"
+                                id="flexCheckDefault" disabled>
+                        </div>
+                    </td>
+
+
+                    @if (env('GREENCERT_ID') == $item['badgeclassID'])
+                        <td scope="col">
+                            <a href="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}" target="_blank"
+                                rel="noopener noreferrer"><img
+                                    src="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}/image"
+                                    width="75px" alt="digital badge"></a><br />
+
+                            <span>{{ $item->badge_name }}</span><br />
+
+                            <?php
+                            $assertionType = json_decode($item['assertiontype'], true);
+                            //ddd($assertionType);
+                            $fullname = $assertionType['form'][0]['fields'][0]['load'][1]['content'];
+                            ?>
+
+
+                            <strong>{{ $fullname }}</strong>
+
+
+
+                            <br />
+
+                            @if ($item['originalIdentity'])
+                                {{ $item['originalIdentity'] }}
+                            @else
+                                <i>NA</i>
+                            @endif <br />
+                            {{ $item['issuedOn'] }}<br />
+
+                        </td>
+                    @else
+                        <td scope="col">
+                            <a href="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}" target="_blank"
+                                rel="noopener noreferrer"><img
+                                    src="{{ env('APP_URL') }}/badgeclasses/{{ $item['badgeclassID'] }}/image"
+                                    width="75px" alt="digital badge"></a><br />
+
+                            <span>{{ $item->badge_name }}</span><br />
+
+                            <?php
+                            $assertionType = json_decode($item['assertiontype'], true);
+                            
+                            $firstname = $assertionType['form'][0]['fields'][0]['content'];
+                            $lastname = $assertionType['form'][0]['fields'][1]['content'];
+                            ?>
+
+                            @if (session('locale') !== 'hu')
+                                <strong>{{ $firstname . ' ' . $lastname }}</strong>
+                            @else
+                                <strong>{{ $lastname . ' ' . $firstname }}</strong>
+                            @endif
+
+                            <br />
+
+                            @if ($item['originalIdentity'])
+                                {{ $item['originalIdentity'] }}
+                            @else
+                                <i>NA</i>
+                            @endif <br />
+                            {{ $item['issuedOn'] }}<br />
+
+                        </td>
+                    @endif
+
+
+                    <td>
+
+                        @if (env('GREENCERT_ID') !== $item['badgeclassID'])
+                            <a class="btn btn-primary" href="{{ env('APP_URL') }}/preAssertions/{{ $item['id'] }}/edit"
+                                role="button">{{ __('issuerShowPreAssertions.spa_btn-edit') }}&nbsp;&nbsp;<i
+                                    class="bi-pencil"></i></a>
+                        @endif
+                        <a class="btn btn-primary" href="{{ env('APP_URL') }}/preAssertions/{{ $item['id'] }}/delete"
+                            role="button">{{ __('issuerShowPreAssertions.spa_btn-del') }}&nbsp;&nbsp;<i
+                                class="bi-trash"></i></a>
+                        <a class="btn btn-primary" href="{{ env('APP_URL') }}/preAssertions/{{ $item['id'] }}/award"
+                            role="button">{{ __('issuerShowPreAssertions.spa_btn-award') }}&nbsp;&nbsp;<i
+                                class="bi-shield-plus"></i></a>
+                    </td>
+                </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+    <form class="otherForm" method="POST" hidden>
+        @csrf
+    </form>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+    $( document ).ready(function() {
+    
+        
+        function areThereCheckedBoxes(){
+            var retData = false;
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                retData = true;
+                return false;
+            });
+            return retData;
+        }
+
+
+        
+        $('.form-check-input').change(function() {
+
+            if(areThereCheckedBoxes()){
+                $( document ).find('div.checkboxBar').prop('hidden',false);
+            }else{
+                $( document ).find('div.checkboxBar').prop('hidden',true);
+            }
+
+            var selectedBoxes = [];
+
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                selectedBoxes.push(this.value);
+            });
+  
+            //alert(areThereCheckedBoxes());
+
+        });
+
+        $('button.resetChecking').click(function() {
+            $( document ).find('input.form-check-input[type=checkbox]').prop('checked',false);
+            $( document ).find('div.checkboxBar').prop('hidden',true);
+            
+        });
+
+        $('button.setAllChecking').click(function() {
+            $( document ).find('input.form-check-input[type=checkbox]').prop('checked',true);
+
+            
+        });
+
+        $('button.multipleAwarding').click(function() {
+           //alert('Multiple notification sending');
+
+           var selectedBoxes = [];
+
+            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
+                selectedBoxes.push(this.value);
+            });
+
+            var thisForm = $( document ).find('form.otherForm');
+
+            // Ez itt egy durva bedrótozott hivatkozás! :-) env('APP_URL')
+            //thisForm.prop('action', 'https://dcp.discovet.eu/preAssertionsMultipleAward' );
+
+
+            var envURL = "{{env('APP_URL')}}";
+            thisForm.prop('action', envURL+'/preAssertionsMultipleAward' );
+
+            var tmpInput = $('<textarea />');
+            tmpInput.prop('id', 'tmpinput');
+            tmpInput.prop('name', 'tmpinput');
+            tmpInput.val(selectedBoxes);          
+            thisForm.append(tmpInput);
+
+            thisForm.submit();
+
+            //alert(tmpInput.val());
+            
+        });
+
+
+        $( document ).find('input.form-check-input[type=checkbox]').prop('disabled',false);
+
+
+    });
+</script>
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../backtocompany"
+                    class="btn btn-action">{{ __('issuerShowPreAssertions.spa_back-2-inst') }}</a></p>
+        </span></h2>
+
+@endsection

@@ -1,0 +1,35 @@
+<?php
+
+return [
+
+    'earner_badgeboard_title' => 'Tavas nozīmītes',
+    'earner_badgeboard_num-o-badges' => 'Nozīmīšu skaits',
+    'earner_badgeboard_add-new-btn' => 'Pievienot jaunu nozīmīti',
+    'earner_badgeboard_search-btn' => 'Meklēt',
+    'earner_badgeboard_order-by-name-asc-btn' => 'Vārds',
+    'earner_badgeboard_order-by-name-desc-btn' => 'Vārds',
+    'earner_badgeboard_order-by-upldtime-asc-btn' => 'Augšuplādēšanas laiks',
+    'earner_badgeboard_order-by-upldtime-desc-btn' => 'Augšuplādēšanas laiks',
+    'earner_badgeboard_order-by-issuedtime-asc-btn' => 'Izdošanas laiks',
+    'earner_badgeboard_order-by-issuedtime-desc-btn' => 'Izdošanas laiks',
+    'earner_badgeboard_sum_th_badge' => 'Nozīmīte',
+    'earner_badgeboard_sum_th_short-info' => 'Īss apraksts',
+    'earner_badgeboard_sum_th_functions' => 'Funkcijas',
+    'earner_badgeboard_sum_si_uploadedat' => 'Augšupielādēts',
+    'earner_badgeboard_btn_delete' => 'Izdzēst',
+    'earner_badgeboard_delete-tooltip' => 'Nozīmīte tiks izdzēsta no saraksta',
+    'earner_badgeboard_btn_edit' => 'Rediģēt',
+    'earner_badgeboard_edit-tooltip' => 'Rediģēt un pievienot detaļas nozīmītei un atļaut pārbaudi',
+    'earner_badgeboard_btn_info' => 'Informācija',
+    'earner_badgeboard_info-tooltip' => 'Sniedziet detalizētu informāciju par nozīmīti',
+    'earner_badgeboard_btn_print' => 'Izdrukāt',
+    'earner_badgeboard_print-tooltip' => 'Saglabāt nozīmītes drukas versiju PFD datnē',
+    'earner_badgeboard_btn_send' => 'Share',
+    'earner_badgeboard_send-tooltip' => 'Share this badge by e-mail',
+    'earner_badgeboard_btn_check' => 'Pārbaudīt',
+    'earner_badgeboard_check-tooltip' => 'Pārbaudīt nozīmītes integritāti un derīgumu',
+    'earner_badgeboard_btn_cert' => 'Sert.',
+    'earner_badgeboard_cert-tooltip' => 'Saglabāt nozīmītes sertifikāta drukas versiju PFD datnē',
+    'earner_badgeboard_backtohome' => 'Atpakaļ uz galveno lapu',
+
+];

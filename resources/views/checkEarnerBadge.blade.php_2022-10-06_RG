@@ -1,0 +1,35 @@
+@extends('layouts.general')
+
+@section('title', __('hello.check_earnerbadge_title'))
+
+
+@section('content')
+
+    <p class="text-center fs-1"> <strong>{{ __('hello.check_earnerbadge_title') }} </strong></p>
+
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p class="text-center"><b>{{ __('hello.check_badge_information') }}</b></p>
+        </div>
+    </div>
+
+
+
+    @if ($obReport['summary'])
+        <div class="alert alert-success">
+            <strong>OK</strong>
+
+        </div>
+    @else
+        <div class="alert alert-danger">
+            <strong>Error</strong>
+        </div>
+    @endif
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="{{ url()->previous() }}" class="btn btn-action">Back</a></p>
+        </span></h2>
+
+
+@endsection

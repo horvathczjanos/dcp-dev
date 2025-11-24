@@ -1,0 +1,54 @@
+@extends('layouts.general')
+
+@section('title', 'Manage Issuers')
+
+
+@section('content')
+    <h1>Manage Issuers</h1>
+
+    <div class="container">
+        <div class="alert alert-success mt-5" role="alert">
+            <p><strong>In DCP you have</strong> {{ App\Models\Issuer::count() }} <strong>Issuers</strong>.</p>
+            <p><a href="./../addNewIssuer"><button type="button" class="btn btn-primary">Add new Issuer</button></a></p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Logo</th>
+                <th scope="col">...</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (App\Models\Issuer::get() as $issuer)
+                <tr>
+                    <td scope="col">{{ $loop->index + 1 }}</td>
+                    <td scope="col"><a href="{{ $issuer->url }}" target="_blank">{{ $issuer->name }}</a></td>
+                    <td scope="col">{{ $issuer->email }}</td>
+                    <?php $imageData64 = base64_encode(Storage::get('public/images/' . $issuer->logofile));
+                    $ext = pathinfo(storage_path() . '/public/images/' . $issuer->logofile, PATHINFO_EXTENSION);
+                    
+                    ?>
+                    <td scope="col"><img src="data:image/{{ $ext }};base64,{{ $imageData64 }}"
+                            style="width: 50px;"></td>
+                    <td scope="col">
+                        <a class="btn btn-primary" href="issuers/{{ $issuer['issuerID'] }}/edit"
+                            role="button">Edit</a>
+                        <a class="btn btn-primary" href="issuers/{{ $issuer['issuerID'] }}/issuedbadges"
+                            role="button">Issued Badges</a>
+                    </td>
+                </tr>
+            @endforeach
+
+
+        </tbody>
+    </table>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="adminMain" class="btn btn-action">Back to Admin Page</a></p>
+        </span></h2>
+@endsection

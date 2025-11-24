@@ -1,0 +1,702 @@
+@extends('layouts.general')
+
+@section('title', __('infoEarnerBadgePage.info_earnerbadge_title'))
+
+
+@section('content')
+    <h2 class="section-title"><span>{{ __('infoEarnerBadgePage.info_earnerbadge_title') }}</span></h2>
+
+    <div class="row">
+        <div class="col-4">
+	    <div class="bg-image position-relative mb-3" style="width: 150px; min-height: 150px;">
+                <!--<strong>{{ __('infoEarnerBadgePage.info_earnerbadge_image') }}</strong><br />-->
+                    <a href="{{ $earnerBadgeURL }}"><img src="data:image/{{$filetypeOfBadge}};base64,{{ base64_encode($image) }}"
+                        style="width: 150px;" alt="badge image"></a>
+
+            @if ($thisBadge->is_dcp_badge_revoked)
+		<div class="position-absolute top-0 left-0"><p class="px-2 py-1 mb-0 fw-semibold text-dark bg-danger bg-opacity-50 border-start border-2 border-danger"> {{__('infoEarnerBadgePage.info_earnerbadge_flag-revoked')}}</p></div>
+            @endif
+
+            @if (!empty($thisBadge->badge_expires_at))
+
+                    <?php
+                    $nowTime = time();
+                    $earnerbadgeExpiresTime = strtotime($thisBadge->badge_expires_at);
+                    ?>
+                @if ($earnerbadgeExpiresTime-$nowTime) 
+		    <div class="position-absolute bottom-0 left-0"><p class="px-2 py-1 mb-0 fw-semibold text-dark bg-warning bg-opacity-50 border-start border-2 border-warning"> {{__('infoEarnerBadgePage.info_earnerbadge_flag-expired')}}</p></div>
+		@endif
+            @endif
+
+
+            </div>
+
+            @if (!session()->get('loginPage') && auth()->check())
+                <p><a href="{{ $earnerBadgeURL }}" download="MyBadge.png"
+                        class="btn btn-primary">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_dwnload') }}&nbsp;&nbsp;<i
+                            class="bi-download"></i></a></p>
+                <p>
+
+                    {{-- -- Copy URL of the badge itself -- --}}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-primary" type="button" id="copylinkButton"
+                            onclick="copyTxt('badge-url')">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_copyurl') }}&nbsp;&nbsp;<i
+                                class="bi-files"></i></button>
+                    </div>
+                    <input type="text" id="badge-url" class="form-control" placeholder="" aria-label=""
+                        aria-describedby="basic-addon1" value="{{ $earnerBadgeURL }}">
+                </div>
+
+                {{-- -- Copy Embed code -- --}}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-primary" type="button" id="embedButton"
+                            onclick="copyTxt('embed-code')">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_embed') }}&nbsp;&nbsp;<i
+                                class="bi-code-slash"></i></button>
+                    </div>
+                    <textarea style="resize: none;" id="embed-code" class="form-control" placeholder="" aria-label=""
+                        aria-describedby="basic-addon1" rows="1">&lt;a target=&quot;_blank&quot; href=&quot;{{ $earnerBadgeEmbed }}&quot;&gt;&lt;img src=&quot;{{ $earnerBadgeURL }}&quot; width=&quot;100&quot; /&gt;&lt;/a&gt;</textarea>
+                </div>
+
+                </p>
+            @endif
+
+         {{--   @if ($earnerBadgeEvidenceURL)
+                <p><a href=" {{ $earnerBadgeEvidenceURL }} " target="_blank"
+                        class="btn btn-primary">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_evidence') }}&nbsp;&nbsp;<i
+                            class="bi-box-arrow-up-right"></i></a></p>
+            @endif --}}
+
+            @if (!is_null($thisBadge->dcp_badge_evidence_url))
+                <p><a href=" {{ $thisBadge->dcp_badge_evidence_url }} " target="_blank"
+                    class="btn btn-primary">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_evidence') }}&nbsp;&nbsp;<i
+                    class="bi-box-arrow-up-right"></i></a></p>
+            @elseif ($earnerBadgeEvidenceURL)
+                <p><a href=" {{ $earnerBadgeEvidenceURL }} " target="_blank"
+                    class="btn btn-primary">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_evidence') }}&nbsp;&nbsp;<i
+                    class="bi-box-arrow-up-right"></i></a></p>
+            @endif
+
+
+            <p><a href=" {{ $assertionURL }} " target="_blank"
+                    class="btn btn-action">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_assrtn') }}</a></p>
+
+            @if (!session()->get('loginPage') && auth()->check())
+                <p><a href=" {{ $badgeclassURL }} " target="_blank"
+                        class="btn btn-action">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_class') }}</a></p>
+            @endif
+
+            @if ($earnerBadgeCriteriaURL)
+                <p><a href=" {{ $earnerBadgeCriteriaURL }} " target="_blank"
+                        class="btn btn-action">{{ __('infoEarnerBadgePage.info_earnerbadge_btn_criteria') }}</a></p>
+            @endif
+
+            <p>{{ __('infoEarnerBadgePage.info_earnerbadge_last_chktime') }}
+                @if ($checkedOB)
+                    <strong style="color:green;">
+                    @else
+                        <strong style="color:red;">
+                @endif
+                @if ($lastcheckingtime)
+                    {{ $lastcheckingtime }}
+                @else
+                    NONE
+                @endif
+                </strong>
+            </p>
+
+	    <!-- Itt volt a revoked -->
+
+
+            @if ($thisBadge->is_stackmember)
+                <hr />
+
+                {{-- ddd($thisBadge->get_dcp_badge_stackreport) --}}
+
+                <strong>Reporting stacking info</strong><br />
+                <strong>{{ $thisBadge->get_dcp_badge_stackreport['name'] }}</strong>
+                (<i>{{ $thisBadge->badge_name }}</i>),
+                <i>{{ $thisBadge->get_dcp_badge_stackreport['description'] }}</i>. <br /><br />
+
+                @foreach ($thisBadge->get_dcp_badge_stackreport['stackroles'] as $stackrole)
+                    @if ($stackrole[0]['relationship'] == 'partOf')
+                        This badge is part of <strong>{{ $stackrole[0]['includePartName'] }}</strong>.<br /><br />
+                        All parts of <strong>{{ $stackrole[0]['includePartName'] }}</strong> are:<br />
+                        <ul>
+                            @foreach ($stackrole[0]['parts'] as $part)
+                                <br />
+                                <li>
+                                    <strong>{{ $part[1] }}</strong> (<i>{{ $part[4] }}</i>),
+                                    @if ($part[2])
+                                        <br />
+                                        <img src="{{ $part[5] }}" style="width: 50px;"><br />
+
+                                        <strong>You got it</strong>,
+                                        @if ($part[3])
+                                            recipient is <strong>VALID</strong>
+                                        @else
+                                            recipient is <strong>NOT VALID</strong>
+                                        @endif
+                                    @else
+                                        <br />
+                                        <img src="{{ $part[5] }}" style="width: 50px;"><br />
+
+                                        <i>You have not got it</i>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                        @if ($stackrole[0]['metaBadge'][0])
+                            @if ($stackrole[0]['metaBadge'][1])
+                                You got metabadge
+                                <strong>{{ $stackrole[0]['includePartName'] }}</strong>
+                                (<i>{{ $stackrole[0]['metaBadge'][3] }}</i>),
+                                <br />
+                                <img src="{{ $stackrole[0]['metaBadge'][4] }}" style="width: 50px;"><br />
+                                @if ($stackrole[0]['metaBadge'][2])
+                                    recipient is <strong>VALID</strong>
+                                @else
+                                    recipient is <strong>NOT VALID</strong>
+                                @endif
+                            @else
+                                You have got all part badges for metabadge
+                                <strong>{{ $stackrole[0]['includePartName'] }}</strong>
+                                (<i>{{ $stackrole[0]['metaBadge'][3] }}</i>),
+                                <br />
+                                <img src="{{ $stackrole[0]['metaBadge'][4] }}" style="width: 50px;"><br />, claim it from
+                                your ISSUER!
+                            @endif
+                        @else
+                            You have not got all part badges for metabadge
+                            <strong>{{ $stackrole[0]['includePartName'] }}</strong>
+                            (<i>{{ $stackrole[0]['metaBadge'][3] }}</i>),
+                            <br />
+                            <img src="{{ $stackrole[0]['metaBadge'][4] }}" style="width: 50px;"><br />,
+                            collect them!
+                        @endif
+                    @endif
+                    @if ($stackrole[0]['relationship'] == 'includes')
+                        This metabadge <strong>{{ $thisBadge->get_dcp_badge_stackreport['name'] }}</strong> contains this
+                        badge:<br />
+                        <img src="{{ $stackrole[4] }}" style="width: 50px;"><br />
+                        <p><strong>{{ $stackrole[0]['includedPartName'] }}</strong> (<i>{{ $stackrole[3] }}</i>),
+                            @if ($stackrole[1])
+                                badge is <strong>PRESENT</strong> and
+                                @if ($stackrole[2])
+                                    recipient is <strong>VALID</strong>.
+                                @else
+                                    recipient is <strong>NOT VALID</strong>.
+                                @endif
+                            @else
+                                badge is <strong>NOT PRESENT</strong>.
+                            @endif
+                        </p>
+                    @endif
+                @endforeach
+                {{-- $thisBadge->get_dcp_badge_stackreport['stackmessage'] --}}
+                {{-- ddd($thisBadge->get_dcp_badge_stackreport) --}}
+
+                <hr />
+            @endif
+
+            {{-- @if ($thisBadge->is_dcp_badge)
+                <hr />
+            @endif --}}
+
+            @if (str_contains(url()->previous(), 'earnerMain'))
+                @php
+                    
+                    $earnerbadgeID = $thisBadge->earnerbadgeID;
+                    
+                    $isEndorsementFromVerifier = (bool) ($numberOfEndorsements = App\Models\VerifierEndorsement::where('status', '=', '1')
+                        ->where('earnerbadgeID', '=', $earnerbadgeID)
+                        ->count());
+                    
+                    if ($isEndorsementFromVerifier) {
+                        $thisEndorsements = App\Models\VerifierEndorsement::where('status', '=', '1')
+                            ->where('earnerbadgeID', '=', $earnerbadgeID)
+                            ->orderBy('created_at')
+                            ->get();
+                    }
+                    
+                    //ddd($isEndorsementFromVerifier);
+                    
+                @endphp
+
+                @if ($isEndorsementFromVerifier)
+                    <p>Number of your endorsemenets: {{ $numberOfEndorsements }}</p>
+                    @foreach ($thisEndorsements as $item)
+                        <strong>{{ App\Models\User::where('id', '=', $item->verifierID)->first()->name }}</strong>
+                        <p>Rating: {{ $item->rating }}</p>
+                        <div class="mb-3">
+                            <label for="verifier_endorsement_message" class="form-label">Text of endorsement</label>
+                            <textarea name="verifier_endorsement_message" class="form-control" id="verifier_endorsement" rows="3" disabled>{{ $item->verifierMessage }}</textarea>
+                        </div>
+                        <hr />
+                    @endforeach
+                @endif
+
+            @endif
+
+            @if (str_contains(url()->previous(), 'lookupEarnerBadges'))
+                @php
+                    
+                    $verifierID = session()->get('userID');
+                    $earnerbadgeID = $thisBadge->earnerbadgeID;
+                    
+                    $isEndorsementFromVerifier = (bool) App\Models\VerifierEndorsement::where('status', '=', '1')
+                        ->where('verifierID', '=', $verifierID)
+                        ->where('earnerbadgeID', '=', $earnerbadgeID)
+                        ->count();
+                    
+                    if ($isEndorsementFromVerifier) {
+                        $thisEndorsement = App\Models\VerifierEndorsement::where('status', '=', '1')
+                            ->where('verifierID', '=', $verifierID)
+                            ->where('earnerbadgeID', '=', $earnerbadgeID)
+                            ->first();
+                    }
+                    
+                    $numberOfEndorsements = App\Models\VerifierEndorsement::where('status', '=', '1')
+                        ->where('earnerbadgeID', '=', $earnerbadgeID)
+                        ->count();
+                    
+                    if ((bool) $numberOfEndorsements) {
+                        $allEndorsements = App\Models\VerifierEndorsement::where('status', '=', '1')
+                    
+                            ->where('earnerbadgeID', '=', $earnerbadgeID)
+                            ->orderBy('created_at')
+                            ->get();
+                    
+                        $summOfRatings = 0;
+                        foreach ($allEndorsements as $key => $endorsement) {
+                            $summOfRatings += $endorsement->rating;
+                        }
+                    
+                        $averageOfRatings = round($summOfRatings / $numberOfEndorsements, 2);
+                    }
+                    
+                @endphp
+
+                <hr />
+                <h3>Verifier endorsement</h3>
+
+                @if ((bool) $numberOfEndorsements)
+                    <p>Number of endorsements: {{ $numberOfEndorsements }}</p>
+                    <p>Average of ratings: {{ $averageOfRatings }}</p>
+                    <hr />
+
+
+                    @foreach ($allEndorsements as $endorsement)
+                        @if ($endorsement->verifierID != $verifierID)
+                            <div class="input-group mb-3">
+                                <p>The rating is: {{ $endorsement->rating }} </p>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="verifier_endorsement_message" class="form-control" id="verifier_endorsement" rows="3" disabled>{{ $endorsement->verifierMessage }}</textarea>
+                            </div>
+                        @endif
+                    @endforeach
+
+                    <hr />
+                @endif
+
+
+                @if ($isEndorsementFromVerifier)
+                    <form method="POST" action="{{ env('APP_URL') }}/deleteVerifierEndorsement">
+                        @csrf
+
+
+                        <div class="input-group mb-3">
+                            <p>Your rating is: {{ $thisEndorsement->rating }} </p>
+                            <p><i>(0 = no rating, 1 = worst ... 5 = best)</i></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="verifier_endorsement_message" class="form-label">Text of endorsement</label>
+                            <textarea name="verifier_endorsement_message" class="form-control" id="verifier_endorsement" rows="3" disabled>{{ $thisEndorsement->verifierMessage }}</textarea>
+                        </div>
+
+                        @php
+                            session()->put('actEarnerbadgeID', $thisBadge->earnerbadgeID);
+                        @endphp
+
+                        <p class="text-center">
+                            <button type="submit" class="btn btn-primary" value="Delete"> Delete </button>
+                        </p>
+                    </form>
+                @else
+                    <form method="POST" action="{{ env('APP_URL') }}/recordVerifierEndorsement">
+                        @csrf
+                        <hr />
+                        <h3>Verifier endorsement</h3>
+                        <div class="input-group mb-3">
+                            <label for="verifierRating" class="form-label" id="verifierRatingLabel">Rating is not set:
+                                0</label>
+                            <input type="range" class="form-range" min="0" max="5" val="0"
+                                id="verifierRating" name="verifierRating" list="values">
+                            <p><i>(0 = no rating, 1 = worst ... 5 = best)</i></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="verifier_endorsement_message" class="form-label">Text of endorsement</label>
+                            <textarea name="verifier_endorsement_message" class="form-control" id="verifier_endorsement" rows="3"></textarea>
+                        </div>
+
+                        @php
+                            session()->put('actEarnerbadgeID', $thisBadge->earnerbadgeID);
+                        @endphp
+
+                        <p class="text-center">
+                            <button type="submit" class="btn btn-primary" value="Send"> Send </button>
+                        </p>
+                    </form>
+                @endif
+            @endif
+
+
+        </div>
+
+        <div class="col-8">
+
+
+            <h3>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt') }}</h3>
+
+            {{-- --    <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_username') }}</h4>
+            <p>{{ $printEarnerBadge['user']['name'] }}</p>
+            <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_email') }}</h4>
+                <p><i>{{ $printEarnerBadge['user']['email'] }}</i></p>
+            <hr /> -- --}}
+
+            <p><strong>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_type') }}</strong> {{ $recipientType }}<br />
+                <strong>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_id') }}</strong> {{ $recipientIdentity }}<br />
+
+                @if ($recipientValid)
+                    <span
+                        style="color:green"><strong>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_valid') }}</strong></span>
+                @else
+                    <span
+                        style="color:red"><strong>{{ __('infoEarnerBadgePage.info_earnerbadge_rcpt_invalid') }}</strong></span>
+                @endif
+            </p>
+
+            <hr />
+
+            <h3>{{ __('infoEarnerBadgePage.info_earnerbadge_details') }}</h3>
+
+            @php // Is there any OB Tags?
+            if (array_key_exists('tags', $printEarnerBadge['badgeClass'])) {
+                $badgeclasstags = $printEarnerBadge['badgeClass']['tags'];
+            } else {
+                $badgeclasstags = false;
+            }
+            @endphp
+
+                {{-- ******************************************************
+                    Bootstrap TAB for multilanguage capable badge 
+                *******************************************************--}}
+
+            @if ($thisBadge->is_dcp_badge) {{-- the badge is issued by DCP ? begin --}}
+                @php
+                    
+                    $guiLang = session()->get('locale');
+                    
+                    $languages = json_decode(env('LANGUAGES'), true);
+
+	            // Is there multilanguage ? begin
+                    
+                    if (!is_null($multilangPack = json_decode($thisBadge->get_multilangpack, true))) {
+                        $originalLang = $thisBadge->get_originallang;
+                        $multiLangTXT = '';
+                        $multiLangTAB = '';
+                        $thisbadgeclassID = $thisBadge->get_dcp_badgeclass_id;
+
+                        //ddd($multilangPack);
+                    
+                        $multiHeader = [];
+                    
+                        $additionalLang = '';
+                    
+                        foreach ($multilangPack['form'] as $key => $item) {
+                            if ($item['selected'] == 'true' && $item['available'] == 'true') {
+                                $multiHeader[] = $item;
+                                $additionalLang .= $item['name'];
+                            }
+                        }
+
+                        $multiLangTAB = '<ul class="nav nav-tabs" id="MLTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="'.$originalLang.'-tab" data-bs-toggle="tab" data-bs-target="#'.$originalLang.'-tab-pane" type="button" role="tab" aria-controls="'.$originalLang.'-tab-pane" aria-selected="true">Original language: ' . $languages[$originalLang].'</button>
+                            </li>
+                                ';
+                        //$multiLangTAB .= '<p>' . 'Original language: ' . $languages[$originalLang] . '</p>';
+
+                        //ddd($multiHeader);
+
+			            $multiLangTXT .= '<div class="tab-content" id="myTabContent">
+					    <div class="tab-pane fade show active" id="'.$originalLang.'-tab-pane" role="tabpanel" aria-labelledby="'.$originalLang.'-tab" tabindex="0">';
+                        if ($guiLang != $originalLang) { // If the locale not the original language of the badge, we write the lables in original language too in square brackets
+			                $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_name') . ' [' . __('infoEarnerBadgePage.info_earnerbadge_name', [], $originalLang) . ']</h4>
+                        			<p>' . $printEarnerBadge['badgeClass']['name'] . '</p>
+                        		     <h4>' . __('infoEarnerBadgePage.info_earnerbadge_descrpt') . ' [' . __('infoEarnerBadgePage.info_earnerbadge_descrpt', [], $originalLang) . ']</h4>
+                        			<p>' . $printEarnerBadge['badgeClass']['description'] . '</p>
+                        		     <h4>' . __('infoEarnerBadgePage.info_earnerbadge_criteria') . ' [' . __('infoEarnerBadgePage.info_earnerbadge_criteria', [], $originalLang) . ']</h4>
+						<p>' . App\Models\Badgeclass::where('badgeclassID', '=', $thisbadgeclassID)->value('criteria') . '</p>';
+		                    if ($badgeclasstags) {
+		                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_tags') . ' [' . __('infoEarnerBadgePage.info_earnerbadge_tags', [], $originalLang) . ']</h4>';
+			                 }
+                        } else {
+                            $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_name') . '</h4>
+                        			<p>' . $printEarnerBadge['badgeClass']['name'] . '</p>
+                        		      <h4>' . __('infoEarnerBadgePage.info_earnerbadge_descrpt') . '</h4>
+                        			<p>' . $printEarnerBadge['badgeClass']['description'] . '</p>
+                        		      <h4>' . __('infoEarnerBadgePage.info_earnerbadge_criteria') . '</h4>
+						            <p>' . App\Models\Badgeclass::where('badgeclassID', '=', $thisbadgeclassID)->value('criteria') . '</p>';
+                            if ($badgeclasstags) {
+                                $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_tags') . '</h4>';
+                                }
+			                }   
+                            foreach ($badgeclasstags as $tag) {
+                            $multiLangTXT .= '<p><span class="badge rounded-pill bg-warning">' . $tag .'</span>';
+                            }
+			            $multiLangTXT .= '</div>';
+                                               
+                        if (!empty($multiHeader)) {
+                            //ddd($multiHeader);
+                            foreach ($languages as $key => $lang) {
+				                $multiLangTXT .= '<div class="tab-pane fade" id="'.$lang.'-tab-pane" role="tabpanel" aria-labelledby="'.$lang.'-tab" tabindex="0">';
+                                foreach ($multiHeader as $pack) {
+                                    if ($pack['id'] == $key) {
+                                        $multiLangTAB .= '<li class="nav-item" role="presentation">  <button class="nav-link" id="'.$lang.'-tab" data-bs-toggle="tab" data-bs-target="#'.$lang.'-tab-pane" type="button" role="tab" aria-controls="'.$lang.'-tab-pane" aria-selected="false">Additional language: ' . $lang . '</button>  </li>';
+                                        foreach ($pack['fields'] as $field) {
+                                            if (strpos($field['id'], '_name') !== false) {
+                                                $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_name', [], $key) . '</h4>   <p>' . $field['content'] . '</p>';
+                                            } elseif (strpos($field['id'], '_description') !== false) {
+                                                $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_descrpt', [], $key) . '</h4>    <p>' . $field['content'] . '</p>';
+                                            } elseif (strpos($field['id'], '_criteria') !== false) {
+                                                $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_criteria', [], $key) . '</h4>    <p>' . $field['content'] . '</p>';
+                                            } elseif (strpos($field['id'], '_tags') !== false) {
+                                                $langTags = explode(';', $field['content']);
+                                                if (!empty($langTags)) {
+                                                    $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_tags', [], $key) . '</h4> <p>';
+                                                    foreach ($langTags as $key => $tag) {
+                                                        $multiLangTXT .= '<span class="badge rounded-pill bg-warning">' . $tag . '</span> ';
+                                                    }
+                                                    $multiLangTXT .= '</p>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+			                    $multiLangTXT .= "</div>\r\n";
+                            }
+                                $multiLangTAB .= "</ul>\r\n";
+                        }
+                            $multiLangTXT .= "</div>\r\n";
+                            echo $multiLangTAB;
+                            echo $multiLangTXT;
+		    } // Multilinguual DCP badge? end
+		    else {
+                        $multiLangTXT = '';
+                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_name') . '</h4>';
+                        $multiLangTXT .= '<p>' .  $printEarnerBadge['badgeClass']['name'] . '</p>';
+                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_descrpt') . '</h4>';
+                        $multiLangTXT .= '<p>' . $printEarnerBadge['badgeClass']['description'] . '</p>';
+                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_criteria') . '</h4>';
+			$multiLangTXT .= '<p>' . $thisBadge->get_badgeclass_criteria . '</p>';
+
+	                if ($badgeclasstags) {
+	                    $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_tags') . '</h4><p>';
+                        }
+	                foreach ($badgeclasstags as $tag) {
+	                    $multiLangTXT .= '<span class="badge rounded-pill bg-warning">' . $tag .'</span> ';
+	                }
+			$multiLangTXT .= '</p>';
+                        echo $multiLangTXT;
+		    }
+
+                @endphp
+
+	            {{-- End of multilanguage badge display --}}
+	
+            @else {{-- Badge from outside --}}
+                    @php
+                        $multiLangTXT = '';
+                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_name') . '</h4>';
+                        $multiLangTXT .= '<p>' .  $printEarnerBadge['badgeClass']['name'] . '</p>';
+                        $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_descrpt') . '</h4>';
+                        $multiLangTXT .= '<p>' . $printEarnerBadge['badgeClass']['description'] . '</p>';
+
+	                if ($badgeclasstags) {
+	                    $multiLangTXT .= '<h4>' . __('infoEarnerBadgePage.info_earnerbadge_tags') . '</h4><p>';
+                        }
+	                foreach ($badgeclasstags as $tag) {
+	                    $multiLangTXT .= '<span class="badge rounded-pill bg-warning">' . $tag .'</span> ';
+	                }
+			$multiLangTXT .= '</p>';
+                        echo $multiLangTXT;
+                    @endphp
+            @endif {{-- there is NO criteria field --}}
+
+            <hr />
+
+            <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_date_issue') }}</h4>
+            <p>{{ $issuedOn }}</p>
+
+            <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_date_expire') }}</h4>
+
+            @if (!empty($thisBadge->badge_expires_at))
+
+                <p @if ($earnerbadgeExpiresTime-$nowTime) class="text-warning fw-semibold" @endif>{{ $thisBadge->badge_expires_at }}</p>
+            @else
+                <p>Never expires</p> 
+            @endif
+
+	    @if ($thisBadge->is_dcp_badge_revoked)
+                <h4><i class="text-danger bi bi-exclamation-circle-fill"></i>&nbsp;{{ __('infoEarnerBadgePage.info_earnerbadge_h-revoked')}}</h4>
+                <p>{{ __('infoEarnerBadgePage.info_earnerbadge_revoked-at')}}<span class="text-danger fw-semibold">{{$thisBadge->dcp_badge_revokedat}}</span><br />
+                {{ __('infoEarnerBadgePage.info_earnerbadge_revoked-reason')}}{{$thisBadge->dcp_badge_revoked_reason}}</p>
+            @endif
+
+            <hr />
+            <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_issuer_name') }}</h4>
+            <p>{{ $printEarnerBadge['issuer']['name'] }} <br /> {{ $printEarnerBadge['issuer']['email'] }}</p>
+            <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_issuer_url') }}</h4>
+            <p><a href="{{ $printEarnerBadge['issuer']['url'] }}" target="_blank">
+                    @if ($printEarnerBadge['issuer']['image'])
+                        <img src="{{ $printEarnerBadge['issuer']['image'] }}" style="width: 150px;"
+                            alt="issuer's image">
+                    @else
+                        {{ $printEarnerBadge['issuer']['url'] }}
+                    @endif
+                </a>
+
+            </p>
+
+
+            @if ($thisBadge->is_dcp_badge)
+                <hr />
+                <div>
+                    <?php
+                    $assertionType = json_decode($thisBadge->get_assertion_type, true);
+                    
+                    ?>
+                    @if ($assertionType)
+                        @foreach ($assertionType['form'] as $item)
+                            <div class="row typefields" id="{{ $item['id'] }}"
+                                @if ($item['selected'] == 'false') style="display:none" @endif>
+                                <h3>{{ $item['name'] }}</h3>
+                                <i>{{ $item['description'] }}</i>
+                                <ul>
+                                    @foreach ($item['fields'] as $field)
+                                        <li @if (is_null($field['content']) || (strlen($field['content'])==0))
+                                                hidden
+                                            @endif
+                                        
+                                        ><strong>{{ $field['name'] }}</strong><br />{{ $field['description'] }}<br />
+                                            @if ($field['type'] == 'text')
+                                                <textarea style="resize: none;" name="{{ $field['id'] }}" class="form-control" id="{{ $field['id'] }}"
+                                                    rows="1" disabled>{{ $field['content'] }}</textarea>
+                                            @elseif($field['type'] == 'url')
+                                                <a href="{{ $field['content'] }}">{{ $field['content'] }}</a>
+                                            @elseif($field['type'] == 'email')
+                                                <a href="mailto:{{ $field['content'] }}">{{ $field['content'] }}</a>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                            </div>
+                            <br />
+                        @endforeach
+                    @endif
+                </div>
+            @endif
+
+            {{-- -- DCP specific data  -- --}}
+            @if (!session()->get('loginPage') && auth()->check())
+                <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_note') }}</h4>
+                <p> {{ $memo }}</p>
+
+                {{-- -- explode php function returns an array with one element of empty string if the explorable string is empty  -- --}}
+                {{-- @if ($earnerBadgeTags[0] != null) --}}
+
+                @if (!empty($earnerBadgeTags))
+                    <h4>{{ __('infoEarnerBadgePage.info_earnerbadge_tags') }}</h4>
+                    <p>
+                        @foreach ($earnerBadgeTags as $tag)
+                            <span class="badge rounded-pill bg-primary">{{ $tag }}</span>
+                        @endforeach
+                    </p>
+                @endif
+            @endif
+
+        </div>
+
+    </div>
+
+
+    {{-- <p>{{ url()->previous() }}</p> --}}
+
+
+    <h2 class="section-title"><span>
+            {{-- <p class="text-center"><a href="./../../earnerMain" class="btn btn-action">{{ __('general.back-to-earner')}}</a></p> --}}
+
+
+
+            @if (!session()->get('loginPage') && auth()->check())
+
+                @if (str_contains(url()->previous(), 'earnerbadges'))
+                    <p class="text-center"><a href=" {{ url()->previous() }}"
+                            class="btn btn-action">{{ __('general.back') }}</a>
+                @endif
+
+                @if (str_contains(url()->previous(), 'lookupEarnerBadges'))
+                    <p class="text-center"><a href="{{ env('APP_URL') }}/verifierMain"
+                            class="btn btn-action">{{ __('general.back') }}</a>
+                @endif
+
+                @if (url()->previous() === env('APP_URL'))
+                    *
+                @endif
+
+                @if (str_contains(url()->previous(), 'earnerMain'))
+                    <p class="text-center"><a href=" {{ url()->previous() }}"
+                            class="btn btn-action">{{ __('general.back-to-earner') }}</a>
+                    @elseif (str_contains(url()->previous(), 'earnerSearch'))
+                    <p class="text-center"><a href="javascript:history.back();"
+                            class="btn btn-action">{{ __('general.back-to-searchresults') }}</a>
+                    @elseif (str_contains(url()->previous(), 'earnerStatistics'))
+                    <p class="text-center"><a href="javascript:history.back();"
+                            class="btn btn-action">{{ __('general.back-to-statistics') }}</a>
+                @endif
+
+            @endif
+
+        </span></h2>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+        function copyTxt(param) {
+            var text = document.getElementById(param).select();
+            document.execCommand('copy');
+        }
+        $(function() {
+
+            $('.form-range#verifierRating').val(0);
+
+            $('.form-range#verifierRating').change(function() {
+            
+                $('label#verifierRatingLabel').html("Actual rating is: "+$(this).val());
+            
+        });
+
+        });
+        
+    </script>
+
+    <script></script>
+@endsection
