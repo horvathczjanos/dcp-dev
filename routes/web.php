@@ -57,6 +57,9 @@ Route::get('main', function () {
     return view('main');
 })->name('main');
 
+Route::get('badges', function(){
+return 'Hello from deep of DCP :-)';
+});
 
 Route::get('settings', [SettingsController::class, 'setLanguages']);
 Route::post('settings', [SettingsController::class, 'storeLanguages']);
@@ -133,7 +136,7 @@ Route::get('BMEMTI_logo.png', function () {
 Route::get('login', function (Request $request) {
 
     return view('login');
-})->middleware('guest');
+})->name('login')->middleware('guest');
 
 Route::post('login', [LoginController::class, 'doLogin'])->middleware('guest');
 

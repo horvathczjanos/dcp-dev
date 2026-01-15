@@ -25,7 +25,8 @@ class AuthServiceProvider extends ServiceProvider
 
 
         Passport::tokensCan([
-            'badges:read' => 'Open Badge olvasás',
+            'badges:read' => 'Open Badge-ek olvasása',
+            'profile:read' => 'Profil olvasása',
         ]);
     }
 }

@@ -71,4 +71,11 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\CheckAdmin::class,
         'assistant' => \App\Http\Middleware\CheckAssistant::class,
     ];
+
+    protected $routeMiddleware = [
+        // ...
+        'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scope'  => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+        'auth'   => \App\Http\Middleware\Authenticate::class,
+    ];
 }
