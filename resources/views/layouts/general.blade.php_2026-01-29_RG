@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <title>@yield('title')</title>
+
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="p-4">
+            <div class="logo">
+
+                @php
+
+                switch (env('APP_URL')) {
+                case 'http://dcp-dev.mti.bme.hu:8000':
+                $longHeaderImage = env('APP_URL') . '/discovet_long_header_dev.png';
+                break;
+                case 'https://dcp.discovet.eu':
+                $longHeaderImage = env('APP_URL') . '/dcp-host_long_header.png';
+                break;
+                case 'https://dcp-live-copy.mti.bme.hu':
+                $longHeaderImage = env('APP_URL') . '/discovet_long_header_dev.png';
+                break;
+                default:
+                break;
+                }
+
+
+                @endphp
+
+
+                <a href="{{ env('APP_URL') }}/"><img src="{{ $longHeaderImage }}"></a>
+            </div>
+        </div>
+
+        @if (!session()->get('loginPage') && auth()->check())
+        <nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background-color:#5a2158">
+            <div class="container">
+                <!--<a href="#" class="navbar-brand">DCP Host</a>
+                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>-->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a href="{{ env('APP_URL') }}/home" class="nav-item nav-link"><i
+                                class="bi-house"></i>&nbsp;{{ __('general.home') }}</a>
+                        <a href="{{ env('APP_URL') }}/settings" class="nav-item nav-link"><i
+                                class="bi-gear"></i>&nbsp;{{ __('general.settings') }}</a>
+                    </div>
+                    <div class="navbar-nav ms-auto">
+                        <a href="{{ env('APP_URL') }}/users/editProfile" class="nav-item nav-link"><i
+                                class="bi-person"></i>&nbsp;{{ Auth::user()->name }}</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        @endif
+
+        @yield('content')
+
+    </div>
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-light">
+        <div class="container py-4 py-md-5 px-4 px-md-3">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5>{{ __('general.about.title') }}</h5>
+                    <p>{{ __('general.about.txt') }}</p>
+                    <p>{!! __('general.about.ka2') !!}</p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>{{ __('general.1edtech.title') }}</h5>
+                    <p>{{ __('general.1edtech.regnum') }}: {{ __('general.1edtech.regnum.num') }}</p>
+                    <p><a href="https://site.imsglobal.org/certifications/budapest-university-of-technology-and-economics/disscoplayer"
+                            target="_blank">
+                            <img src="https://site.imsglobal.org/themes/custom/radix_sub/assets/images/1EdTech_Certified.svg"
+                                alt="1EdTech Certified" border="0" style="height:150px;" />
+                        </a></p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>{{ __('general.links.title') }}</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://www.discovet.eu/wp-content/uploads/2023/01/DCP_UserGuide_DV_v4.pdf"
+                                target="_blank">{{ __('general.links.user-guide') }}</a></li>
+                        <li><a href="https://www.discovet.eu" target="_blank">{{ __('general.links.proj-web') }}</a>
+                        </li>
+                        <li><a href="https://lms.discovet.eu" target="_blank">{{ __('general.links.proj-lms') }}</a>
+                        </li>
+                    </ul>
+                    <p>{{ __('general.erasmus') }}</p>
+                    <p><img
+                            src="https://www.discovet.eu/wp-content/uploads/2021/04/logosbeneficaireserasmusleft_en-300x64.png" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </footer>
+
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+
+</body>
+
+</html>

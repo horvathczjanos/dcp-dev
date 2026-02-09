@@ -62,3 +62,10 @@ Route::middleware(['auth:api', 'scope:badges:read'])->get('/badges', function (R
         'badges' => [],
     ]);
 });
+
+Route::middleware(['auth:api', 'scope:profile:read'])->get('/profile', function (Request $request) {
+    return response()->json([
+        'user_id' => $request->user()->id,
+        'message' => ['Hello from Profile Scope'],
+    ]);
+});

@@ -93,26 +93,28 @@
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>{{ __('general.1edtech.title') }}</h5>
-                    <p>{{ __('general.1edtech.regnum') }}: {{ __('general.1edtech.regnum.num') }}</p>
-                    <p><a href="https://site.imsglobal.org/certifications/budapest-university-of-technology-and-economics/disscoplayer"
+                    <p>{{ __('general.1edtech.regnum') }}: {{ env('1EDTECH_REGNUM') }}</p>
+                    <p><a href="{{ env('LINKS_1EDTECH_URL') }}"
                             target="_blank">
-                            <img src="https://site.imsglobal.org/themes/custom/radix_sub/assets/images/1EdTech_Certified.svg"
+                            <img src="{{ env('LINKS_1EDTECH_SVG_URL') }}"
                                 alt="1EdTech Certified" border="0" style="height:150px;" />
                         </a></p>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>{{ __('general.links.title') }}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="https://www.discovet.eu/wp-content/uploads/2023/01/DCP_UserGuide_DV_v4.pdf"
+                        <li><a href="{{ env('LINKS_VIDEO_USERGUIDE_URL') }}"
+                                target="_blank">{{ __('general.links.video.user-guide') }}</a></li>
+                        <li><a href="{{ env('LINKS_PROJECT_WEBSITE_URL') }}{{ env('LINKS_PDF_USERGUIDE_URL') }}"
                                 target="_blank">{{ __('general.links.user-guide') }}</a></li>
-                        <li><a href="https://www.discovet.eu" target="_blank">{{ __('general.links.proj-web') }}</a>
+                        <li><a href="{{ env('LINKS_PROJECT_WEBSITE_URL') }}" target="_blank">{{ __('general.links.proj-web') }}</a>
                         </li>
-                        <li><a href="https://lms.discovet.eu" target="_blank">{{ __('general.links.proj-lms') }}</a>
+                        <li><a href="{{ env('LINKS_PROJECT_LMS_URL') }}" target="_blank">{{ __('general.links.proj-lms') }}</a>
                         </li>
-                    </ul>
+                     </ul>
                     <p>{{ __('general.erasmus') }}</p>
                     <p><img
-                            src="https://www.discovet.eu/wp-content/uploads/2021/04/logosbeneficaireserasmusleft_en-300x64.png" />
+                            src="{{ env('LINKS_PROJECT_WEBSITE_URL') }}{{ env('LINKS_ERASMUS_PIC_URL') }}" />
                     </p>
                 </div>
             </div>
