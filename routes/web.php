@@ -1,7 +1,9 @@
 <?php
 
 use App\Events\TestSignal;
+use App\Http\Controllers\BadgeConnectManifestController;
 use App\Http\Controllers\CheckBadgeController;
+use App\Http\Controllers\DCRController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\MakeBadgeController;
@@ -40,9 +42,9 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    
+
     //return("HELLO :-)");
-    
+
     return view('abc');
 });
 
@@ -57,8 +59,8 @@ Route::get('main', function () {
     return view('main');
 })->name('main');
 
-Route::get('badges', function(){
-return 'Hello from deep of DCP :-)';
+Route::get('badges', function () {
+    return 'Hello from deep of DCP :-)';
 });
 
 Route::get('settings', [SettingsController::class, 'setLanguages']);
@@ -236,7 +238,7 @@ Route::get('test', function () {
     //ddd(Stackorder::where('id', 1)->first()->get_all_members_badgeclassid_from_stack);
 
 
-   // ddd($allRoles = Stackorder::where('id', 5)->first()->get_all_members_role_from_stack);
+    // ddd($allRoles = Stackorder::where('id', 5)->first()->get_all_members_role_from_stack);
     /*  $stackgroupID = Stackorder::where('id', 1)->first()->stackgroupID;
 
     $u = Stackrole::where('stackgroupID', '=', $stackgroupID)->get()->map(function ($item, $key) {
@@ -270,7 +272,7 @@ Route::get('test', function () {
 
     //ddd($x->get_meta_badgeclassid_if_stack);
 
-    
+
 
 
     //$contents = [];
@@ -284,10 +286,10 @@ Route::get('test', function () {
 
     //ddd($contents);
 
-   // $tmpPreAssertionID = (new ManageAssertionController)->enginePreAssertion($contents);
+    // $tmpPreAssertionID = (new ManageAssertionController)->enginePreAssertion($contents);
 
-   // $tmpAssertionID = (new ManageAssertionController)->awardPreAssertionEngine($tmpPreAssertionID);
-   // ddd($tmpAssertionID);
+    // $tmpAssertionID = (new ManageAssertionController)->awardPreAssertionEngine($tmpPreAssertionID);
+    // ddd($tmpAssertionID);
     //ddd($tmpPreAssertionID);
 });
 
@@ -432,3 +434,8 @@ Route::get('test', [RomanGaborController::class, 'test']);
 Route::get('readsvg', [RomanGaborController::class, 'readSVG']);
 Route::get('readurl', [RomanGaborController::class, 'assertionLink']);
 Route::get('converttojson', [RomanGaborController::class, 'convertTojson']);
+
+Route::get('/.well-known/badgeconnect.json', BadgeConnectManifestController::class)
+    ->name('badgeconnect.manifest');
+
+Route::middleware('api')->post('/o/register', DCRController::class)->name('badgeconnect.register');
