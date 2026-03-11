@@ -27,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensCan([
             'badges:read' => 'Open Badge-ek olvasása',
             'profile:read' => 'Profil olvasása',
+            'https://purl.imsglobal.org/spec/ob/v2p1/scope/profile.readonly' => 'Read profile',
+            'https://purl.imsglobal.org/spec/ob/v2p1/scope/profile.update' => 'Update profile',
+            'https://purl.imsglobal.org/spec/ob/v2p1/scope/assertion.readonly' => 'Read assertions',
+            'https://purl.imsglobal.org/spec/ob/v2p1/scope/assertion.create' => 'Create assertions',
+            'offline_access' => 'Refresh tokens',
         ]);
     }
 }

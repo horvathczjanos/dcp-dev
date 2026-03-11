@@ -46,15 +46,26 @@ Route::middleware('auth:api')->get('/debug-auth', function (Request $request) {
     ];
 });
 
-
-
 Route::middleware('auth:api')->get('/me', function (Request $request) {
+    return response()->json([
+        'id' => $request->user()->id,
+        'email' => $request->user()->email,
+    ]);
+});
+
+/*Route::middleware('auth:api')->get('/me', function (Request $request) {
     return [
         'id' => $request->user()->id,
         'email' => $request->user()->email,
     ];
-});
+}); */
 
+Route::get('/debug-auth', function () {
+    return response()->json([
+        'authorization_header' => request()->header('Authorization'),
+        'server_var' => $_SERVER['HTTP_AUTHORIZATION'] ?? null,
+    ]);
+});
 
 Route::middleware(['auth:api', 'scope:badges:read'])->get('/badges', function (Request $request) {
     return response()->json([
@@ -69,3 +80,24 @@ Route::middleware(['auth:api', 'scope:profile:read'])->get('/profile', function 
         'message' => ['Hello from Profile Scope'],
     ]);
 });
+
+Route::prefix('ims/ob/v2p1')
+    ->middleware('auth:api')
+    ->group(function () {
+        Route::get('/profile', function (Request $request) {
+            if (! $request->user()->tokenCan('https://purl.imsglobal.org/spec/ob/v2p1/scope/profile.readonly')) {
+                return response()->json([
+                    'error' => 'insufficient_scope',
+                    'message' => 'Missing required scope: profile.readonly',
+                ], 403);
+            }
+
+            return response()->json([
+                '@context' => 'https://purl.imsglobal.org/spec/ob/v2p1/ob_v2p1.jsonld',
+                'type' => 'Profile',
+                'id' => url('/api/ims/ob/v2p1/profile'),
+                'name' => $request->user()->name ?? $request->user()->email,
+                'email' => $request->user()->email,
+            ]);
+        });
+    });
