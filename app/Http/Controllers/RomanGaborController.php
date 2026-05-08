@@ -146,6 +146,17 @@ class RomanGaborController extends Controller
 
     //  } 
 
+
+    public function test2()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest', compact('host'));
+    }
+
+
+
     // HCzJ, 20230620
     public function readSVG()
     {
@@ -371,7 +382,7 @@ class RomanGaborController extends Controller
 
         $assertionList = $this->getAwardeesByIssuer($issuerID);
 
-        
+
         foreach ($assertionList as $key => $userProfile) {
 
             $originalIdentity = $userProfile[0]['originalIdentity'];
@@ -649,5 +660,4 @@ class RomanGaborController extends Controller
 
         return ($outputMessage);
     }
-
 }

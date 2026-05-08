@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\TestSignal;
+use App\Http\Controllers\BadgeConnectConsumerController;
 use App\Http\Controllers\BadgeConnectManifestController;
 use App\Http\Controllers\CheckBadgeController;
 use App\Http\Controllers\DCRController;
@@ -432,6 +433,10 @@ Route::get('d', function () {
 Route::get('rgabor/{id}', [RomanGaborController::class, 'rgabor']);
 Route::get('lc', [RomanGaborController::class, 'leetcode']);
 Route::get('test', [RomanGaborController::class, 'test']);
+Route::get('test2', [RomanGaborController::class, 'test2']);
+
+Route::post('/badge-connect/hosts/{host}/fetch-manifest', [BadgeConnectConsumerController::class, 'fetchManifest']);
+
 Route::get('readsvg', [RomanGaborController::class, 'readSVG']);
 Route::get('readurl', [RomanGaborController::class, 'assertionLink']);
 Route::get('converttojson', [RomanGaborController::class, 'convertTojson']);
