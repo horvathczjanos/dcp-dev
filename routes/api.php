@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Assertion_v21;
+use App\Http\Controllers\RevokeTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -100,4 +102,37 @@ Route::prefix('ims/ob/v2p1')
                 'email' => $request->user()->email,
             ]);
         });
+
+        Route::post('/profile', function (Request $request) {
+            if (! $request->user()->tokenCan('https://purl.imsglobal.org/spec/ob/v2p1/scope/profile.update')) {
+                return response()->json([
+                    'error' => 'insufficient_scope',
+                    'message' => 'Missing required scope: profile.update',
+                ], 403);
+            }
+
+            $data = $request->validate([
+                'name' => ['sometimes', 'string', 'max:255'],
+            ]);
+
+            $user = $request->user();
+
+            if (array_key_exists('name', $data)) {
+                $user->name = $data['name'];
+                $user->save();
+            }
+
+            return response()->json([
+                '@context' => 'https://purl.imsglobal.org/spec/ob/v2p1/ob_v2p1.jsonld',
+                'type' => 'Profile',
+                'id' => url('/api/ims/ob/v2p1/profile'),
+                'name' => $user->name ?? $user->email,
+                'email' => $user->email,
+            ]);
+        });
+
+
+        Route::get('/assertions', [Assertion_v21::class, 'index']);
+        Route::post('/assertions', [Assertion_v21::class, 'store']);
     });
+

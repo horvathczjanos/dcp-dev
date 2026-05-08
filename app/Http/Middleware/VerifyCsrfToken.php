@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/o/register',
+        '/o/revoke_token',
     ];
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\BadgeConnectManifestController;
 use App\Http\Controllers\CheckBadgeController;
 use App\Http\Controllers\DCRController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RevokeTokenController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\MakeBadgeController;
 use App\Http\Controllers\ManageAdminController;
@@ -439,3 +440,6 @@ Route::get('/.well-known/badgeconnect.json', BadgeConnectManifestController::cla
     ->name('badgeconnect.manifest');
 
 Route::middleware('api')->post('/o/register', DCRController::class)->name('badgeconnect.register');
+Route::middleware('api')
+    ->post('/o/revoke_token', RevokeTokenController::class)
+    ->name('badgeconnect.revoke');

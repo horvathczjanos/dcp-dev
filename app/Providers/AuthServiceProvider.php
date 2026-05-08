@@ -4,6 +4,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
@@ -33,5 +34,9 @@ class AuthServiceProvider extends ServiceProvider
             'https://purl.imsglobal.org/spec/ob/v2p1/scope/assertion.create' => 'Create assertions',
             'offline_access' => 'Refresh tokens',
         ]);
+
+        Passport::tokensExpireIn(Carbon::now()->addHour());
+        Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
+        Passport::personalAccessTokensExpireIn(Carbon::now()->addMonths(6));
     }
 }
