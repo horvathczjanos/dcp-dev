@@ -434,8 +434,19 @@ Route::get('rgabor/{id}', [RomanGaborController::class, 'rgabor']);
 Route::get('lc', [RomanGaborController::class, 'leetcode']);
 Route::get('test', [RomanGaborController::class, 'test']);
 Route::get('test2', [RomanGaborController::class, 'test2']);
+Route::get('test3', [RomanGaborController::class, 'test3']);
+Route::get('test4', [RomanGaborController::class, 'test4']);
+Route::get('test5', [RomanGaborController::class, 'test5']);
+Route::get('test6', [RomanGaborController::class, 'test6']);
 
 Route::post('/badge-connect/hosts/{host}/fetch-manifest', [BadgeConnectConsumerController::class, 'fetchManifest']);
+Route::post('/badge-connect/hosts/{host}/register-client', [BadgeConnectConsumerController::class, 'registerClient']);
+Route::get('/badge-connect/hosts/{host}/connect', [BadgeConnectConsumerController::class, 'connect']);
+Route::get('/badge-connect/consumer/callback', [BadgeConnectConsumerController::class, 'callback']);
+Route::get('/badge-connect/hosts', [BadgeConnectConsumerController::class, 'hosts']);
+Route::post('/badge-connect/hosts/{host}/import-assertions', [BadgeConnectConsumerController::class, 'importAssertions']);
+Route::post('/badge-connect/hosts/{host}/import-profile', [BadgeConnectConsumerController::class, 'importProfile']);
+
 
 Route::get('readsvg', [RomanGaborController::class, 'readSVG']);
 Route::get('readurl', [RomanGaborController::class, 'assertionLink']);
@@ -448,3 +459,5 @@ Route::middleware('api')->post('/o/register', DCRController::class)->name('badge
 Route::middleware('api')
     ->post('/o/revoke_token', RevokeTokenController::class)
     ->name('badgeconnect.revoke');
+
+

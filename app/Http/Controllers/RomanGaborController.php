@@ -155,6 +155,37 @@ class RomanGaborController extends Controller
         return view('consumerTest', compact('host'));
     }
 
+    public function test3()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest3', compact('host'));
+    }
+
+    public function test4()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest4', compact('host'));
+    }
+
+    public function test5()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest5', compact('host'));
+    }
+
+    public function test6()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest6', compact('host'));
+    }
 
 
     // HCzJ, 20230620

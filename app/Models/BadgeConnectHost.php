@@ -31,4 +31,18 @@ class BadgeConnectHost extends Model
         'is_active' => 'boolean',
         'manifest_fetched_at' => 'datetime',
     ];
+
+    public function remoteClient()
+    {
+        return $this->hasOne(BadgeConnectRemoteClient::class, 'host_id');
+    }
+    public function authorizationSessions()
+    {
+        return $this->hasMany(BadgeConnectAuthorizationSession::class, 'host_id');
+    }
+
+    public function remoteTokens()
+    {
+        return $this->hasMany(\App\Models\BadgeConnectRemoteToken::class, 'host_id');
+    }
 }
