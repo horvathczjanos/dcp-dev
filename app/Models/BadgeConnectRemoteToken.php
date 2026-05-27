@@ -11,6 +11,7 @@ class BadgeConnectRemoteToken extends Model
     protected $fillable = [
         'user_id',
         'host_id',
+        'mode',
         'access_token',
         'refresh_token',
         'token_type',

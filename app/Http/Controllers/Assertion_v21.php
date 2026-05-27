@@ -89,4 +89,33 @@ class Assertion_v21 extends Controller
 
         return response()->json($assertion->payload, 201);
     }
+
+    public function show(Request $request, string $id): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user || ! $user->tokenCan(self::SCOPE_READ)) {
+            return response()->json([
+                'error' => 'insufficient_scope',
+                'message' => 'Missing required scope: assertion.readonly',
+            ], 403);
+        }
+
+        $assertion = BadgeAssertionsV21::query()
+            ->where('user_id', $user->id)
+            ->where(function ($query) use ($id) {
+                $query->where('id', $id)
+                    ->orWhere('external_id', $id);
+            })
+            ->first();
+
+        if (! $assertion) {
+            return response()->json([
+                'error' => 'not_found',
+                'message' => 'Assertion not found.',
+            ], 404);
+        }
+
+        return response()->json($assertion->payload);
+    }
 }

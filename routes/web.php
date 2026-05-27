@@ -430,6 +430,8 @@ Route::get('d', function () {
     return ('D');
 })->middleware('admin');
 
+
+// Consumer - read
 Route::get('rgabor/{id}', [RomanGaborController::class, 'rgabor']);
 Route::get('lc', [RomanGaborController::class, 'leetcode']);
 Route::get('test', [RomanGaborController::class, 'test']);
@@ -439,6 +441,24 @@ Route::get('test4', [RomanGaborController::class, 'test4']);
 Route::get('test5', [RomanGaborController::class, 'test5']);
 Route::get('test6', [RomanGaborController::class, 'test6']);
 
+// Consumer - write
+Route::get('test7', [RomanGaborController::class, 'test7']);
+Route::post('/badge-connect/hosts/{host}/register-write-client', [BadgeConnectConsumerController::class, 'registerWriteClient']);
+
+Route::get('test8', [RomanGaborController::class, 'test8']);
+Route::get('/badge-connect/hosts/{host}/connect-write', [BadgeConnectConsumerController::class, 'connectWrite']);
+Route::get('/badge-connect/consumer/write/callback', [BadgeConnectConsumerController::class, 'callbackWrite']);
+
+
+Route::get('test9', [RomanGaborController::class, 'test9']);
+Route::post('/badge-connect/hosts/{host}/export-assertions/{assertion}', [BadgeConnectConsumerController::class, 'exportAssertion']);
+
+
+Route::get('test10', [RomanGaborController::class, 'test10']);
+Route::post('/badge-connect/hosts/{host}/export-profile', [BadgeConnectConsumerController::class, 'exportProfile']);
+
+
+// Provider - ?? Ezt majd tisztázni kell
 Route::post('/badge-connect/hosts/{host}/fetch-manifest', [BadgeConnectConsumerController::class, 'fetchManifest']);
 Route::post('/badge-connect/hosts/{host}/register-client', [BadgeConnectConsumerController::class, 'registerClient']);
 Route::get('/badge-connect/hosts/{host}/connect', [BadgeConnectConsumerController::class, 'connect']);
@@ -459,5 +479,3 @@ Route::middleware('api')->post('/o/register', DCRController::class)->name('badge
 Route::middleware('api')
     ->post('/o/revoke_token', RevokeTokenController::class)
     ->name('badgeconnect.revoke');
-
-

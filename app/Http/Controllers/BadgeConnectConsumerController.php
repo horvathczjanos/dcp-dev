@@ -3,7 +3,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BadgeAssertionsV21;
+use App\Models\BadgeConnectExportedAssertion;
+
 use App\Models\BadgeConnectAuthorizationSession;
+use App\Models\BadgeConnectExportedProfile;
 use App\Models\BadgeConnectImportedAssertion;
 use App\Models\BadgeConnectImportedProfile;
 use App\Models\BadgeConnectRemoteToken;
@@ -555,5 +559,399 @@ class BadgeConnectConsumerController extends Controller
         );
 
         return back()->with('success', 'Profile import sikeres.');
+    }
+
+    public function registerWriteClient(Request $request, BadgeConnectHost $host)
+    {
+        try {
+            if (empty($host->registration_url)) {
+                throw new RuntimeException('Hiányzik a registration_url. Előbb kérd le a manifestet.');
+            }
+
+            if (! Str::startsWith($host->registration_url, 'https://')) {
+                throw new RuntimeException('A registration_url csak HTTPS lehet.');
+            }
+
+            $requestedScopes = [
+                'https://purl.imsglobal.org/spec/ob/v2p1/scope/assertion.create',
+                'https://purl.imsglobal.org/spec/ob/v2p1/scope/profile.update',
+                'offline_access',
+            ];
+
+            $scopesOffered = $host->scopes_offered ?? [];
+
+            $missingScopes = collect($requestedScopes)
+                ->filter(fn($scope) => $scope !== 'offline_access')
+                ->diff($scopesOffered)
+                ->values();
+
+            if ($missingScopes->isNotEmpty()) {
+                throw new RuntimeException(
+                    'A Host nem kínálja a szükséges write scope-okat: ' . $missingScopes->implode(', ')
+                );
+            }
+
+            $scope = implode(' ', $requestedScopes);
+
+            $redirectUri = url('/badge-connect/consumer/write/callback');
+
+            $payload = [
+                'client_name' => 'DCP Consumer Write',
+                'client_uri' => config('app.url'),
+                'logo_uri' => config('app.url') . '/images/logo.png',
+                'tos_uri' => config('app.url') . '/terms',
+                'policy_uri' => config('app.url') . '/privacy',
+                'software_id' => 'dcp-openbadges-consumer-write',
+                'software_version' => '1.0.0',
+                'redirect_uris' => [
+                    $redirectUri,
+                ],
+                'token_endpoint_auth_method' => 'client_secret_basic',
+                'grant_types' => [
+                    'authorization_code',
+                    'refresh_token',
+                ],
+                'response_types' => [
+                    'code',
+                ],
+                'scope' => $scope,
+            ];
+
+            $response = Http::acceptJson()
+                ->asJson()
+                ->timeout(20)
+                ->post($host->registration_url, $payload);
+
+            if (! $response->successful()) {
+                throw new RuntimeException(
+                    'Consumer Write registration sikertelen. HTTP státusz: '
+                        . $response->status()
+                        . ' Válasz: '
+                        . $response->body()
+                );
+            }
+
+            $json = $response->json();
+
+            if (! is_array($json)) {
+                throw new RuntimeException('A registration response nem érvényes JSON.');
+            }
+
+            if (empty($json['client_id'])) {
+                throw new RuntimeException('Hiányzó registration response mező: client_id');
+            }
+
+            BadgeConnectRemoteClient::updateOrCreate(
+                [
+                    'host_id' => $host->id,
+                    'mode' => 'consumer_write',
+                ],
+                [
+                    'client_id' => $json['client_id'],
+                    'client_secret' => $json['client_secret'] ?? null,
+                    'client_id_issued_at' => $json['client_id_issued_at'] ?? null,
+                    'client_secret_expires_at' => $json['client_secret_expires_at'] ?? null,
+                    'redirect_uri' => $redirectUri,
+                    'scope' => $json['scope'] ?? $scope,
+                    'registration_request' => $payload,
+                    'registration_response' => $json,
+                    'registered_at' => now(),
+                    'last_error' => null,
+                ]
+            );
+
+            return back()->with('success', 'Consumer Write Dynamic Client Registration sikeresen lefutott.');
+        } catch (Throwable $e) {
+            return back()->withErrors([
+                'registration_write' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+    public function connectWrite(BadgeConnectHost $host)
+    {
+        if (empty($host->authorization_url)) {
+            return back()->withErrors([
+                'connect_write' => 'Hiányzik az authorization_url. Előbb kérd le a manifestet.',
+            ]);
+        }
+
+        $client = BadgeConnectRemoteClient::where('host_id', $host->id)
+            ->where('mode', 'consumer_write')
+            ->first();
+
+        if (! $client) {
+            return back()->withErrors([
+                'connect_write' => 'Nincs consumer_write remote client. Előbb futtasd a Write auto-registrationt.',
+            ]);
+        }
+
+        $codeVerifier = $this->makeCodeVerifier();
+        $codeChallenge = $this->makeCodeChallenge($codeVerifier);
+        $state = Str::random(64);
+
+        BadgeConnectAuthorizationSession::create([
+            'user_id' => Auth::id(),
+            'host_id' => $host->id,
+            'state' => $state,
+            'code_verifier' => $codeVerifier,
+            'code_challenge' => $codeChallenge,
+            'requested_scope' => $client->scope,
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        $query = http_build_query([
+            'response_type' => 'code',
+            'client_id' => $client->client_id,
+            'redirect_uri' => $client->redirect_uri,
+            'scope' => $client->scope,
+            'state' => $state,
+            'code_challenge' => $codeChallenge,
+            'code_challenge_method' => 'S256',
+        ], '', '&', PHP_QUERY_RFC3986);
+
+        return redirect()->away($host->authorization_url . '?' . $query);
+    }
+
+    public function callbackWrite(Request $request)
+    {
+        try {
+            if ($request->has('error')) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => $request->get('error') . ': ' . $request->get('error_description'),
+                ]);
+            }
+
+            if (! $request->filled('code') || ! $request->filled('state')) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'Hiányzik a code vagy state paraméter.',
+                ]);
+            }
+
+            $authSession = BadgeConnectAuthorizationSession::where('state', $request->get('state'))
+                ->where('expires_at', '>', now())
+                ->whereNull('used_at')
+                ->first();
+
+            if (! $authSession) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'Érvénytelen, lejárt vagy már felhasznált state.',
+                ]);
+            }
+
+            if ((int) $authSession->user_id !== (int) Auth::id()) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'A callback nem ehhez a bejelentkezett felhasználóhoz tartozik.',
+                ]);
+            }
+
+            $host = $authSession->host;
+
+            $client = BadgeConnectRemoteClient::where('host_id', $host->id)
+                ->where('mode', 'consumer_write')
+                ->first();
+
+            if (! $client) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'Nem található consumer_write remote client.',
+                ]);
+            }
+
+            $tokenResponse = Http::asForm()
+                ->acceptJson()
+                ->withBasicAuth($client->client_id, $client->client_secret)
+                ->timeout(20)
+                ->post($host->token_url, [
+                    'grant_type' => 'authorization_code',
+                    'code' => $request->get('code'),
+                    'redirect_uri' => $client->redirect_uri,
+                    'code_verifier' => $authSession->code_verifier,
+                ]);
+
+            if (! $tokenResponse->successful()) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'Write token lekérés sikertelen. HTTP státusz: '
+                        . $tokenResponse->status()
+                        . ' Válasz: '
+                        . $tokenResponse->body(),
+                ]);
+            }
+
+            $tokenJson = $tokenResponse->json();
+
+            if (empty($tokenJson['access_token'])) {
+                return redirect('/badge-connect/hosts')->withErrors([
+                    'oauth_write' => 'A write token válaszból hiányzik az access_token.',
+                ]);
+            }
+
+            BadgeConnectRemoteToken::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'host_id' => $host->id,
+                    'mode' => 'consumer_write',
+                ],
+                [
+                    'access_token' => $tokenJson['access_token'],
+                    'refresh_token' => $tokenJson['refresh_token'] ?? null,
+                    'token_type' => $tokenJson['token_type'] ?? null,
+                    'expires_in' => $tokenJson['expires_in'] ?? null,
+                    'expires_at' => ! empty($tokenJson['expires_in'])
+                        ? now()->addSeconds((int) $tokenJson['expires_in'])
+                        : null,
+                    'scope' => $tokenJson['scope'] ?? $client->scope,
+                    'token_response' => $tokenJson,
+                ]
+            );
+
+            $authSession->update([
+                'used_at' => now(),
+            ]);
+
+            return redirect('/badge-connect/hosts')->with(
+                'success',
+                'Consumer Write OAuth token sikeresen lekérve.'
+            );
+        } catch (Throwable $e) {
+            return redirect('/badge-connect/hosts')->withErrors([
+                'oauth_write' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function exportAssertion(BadgeConnectHost $host, BadgeAssertionsV21 $assertion)
+    {
+        if (empty($host->api_base)) {
+            return back()->withErrors([
+                'export' => 'Hiányzik az api_base. Előbb kérd le a manifestet.',
+            ]);
+        }
+
+        $token = BadgeConnectRemoteToken::where('user_id', Auth::id())
+            ->where('host_id', $host->id)
+            ->where('mode', 'consumer_write')
+            ->first();
+
+        if (! $token) {
+            return back()->withErrors([
+                'export' => 'Nincs consumer_write access token. Előbb futtasd a Consumer Write OAuth kapcsolódást.',
+            ]);
+        }
+
+        if ((int) $assertion->user_id !== (int) Auth::id()) {
+            return back()->withErrors([
+                'export' => 'Ez az assertion nem a bejelentkezett felhasználóhoz tartozik.',
+            ]);
+        }
+
+        $assertionPayload = $assertion->payload;
+
+        if (! is_array($assertionPayload)) {
+            return back()->withErrors([
+                'export' => 'Az assertion payload nem érvényes JSON objektum.',
+            ]);
+        }
+
+        $requestPayload = [
+            'assertion' => $assertionPayload,
+        ];
+
+        $response = Http::withToken($token->access_token)
+            ->acceptJson()
+            ->asJson()
+            ->timeout(20)
+            ->post(rtrim($host->api_base, '/') . '/assertions', $requestPayload);
+
+        $responseJson = $response->json();
+
+        BadgeConnectExportedAssertion::create([
+            'user_id' => Auth::id(),
+            'host_id' => $host->id,
+            'assertion_id' => $assertion->id,
+            'mode' => 'consumer_write',
+            'request_json' => $requestPayload,
+            'response_json' => is_array($responseJson) ? $responseJson : null,
+            'http_status' => $response->status(),
+            'success' => $response->successful(),
+            'last_error' => $response->successful() ? null : $response->body(),
+            'exported_at' => now(),
+        ]);
+
+        if (! $response->successful()) {
+            return back()->withErrors([
+                'export' => 'Assertion export sikertelen. HTTP státusz: '
+                    . $response->status()
+                    . ' Válasz: '
+                    . $response->body(),
+            ]);
+        }
+
+        return back()->with('success', 'Assertion sikeresen elküldve a külső Hostnak.');
+    }
+
+
+    public function exportProfile(BadgeConnectHost $host)
+    {
+        if (empty($host->api_base)) {
+            return back()->withErrors([
+                'profile_export' => 'Hiányzik az api_base. Előbb kérd le a manifestet.',
+            ]);
+        }
+
+        $token = BadgeConnectRemoteToken::where('user_id', Auth::id())
+            ->where('host_id', $host->id)
+            ->where('mode', 'consumer_write')
+            ->first();
+
+        if (! $token) {
+            return back()->withErrors([
+                'profile_export' => 'Nincs consumer_write access token.',
+            ]);
+        }
+
+        $user = Auth::user();
+
+        $profilePayload = [
+            '@context' => 'https://purl.imsglobal.org/spec/ob/v2p1/ob_v2p1.jsonld',
+            'type' => 'Profile',
+            'id' => url('/api/ims/ob/v2p1/profile/' . $user->id),
+            'name' => $user->name ?? 'DCP User',
+            'email' => $user->email,
+        ];
+
+        $requestPayload = [
+            'profile' => $profilePayload,
+        ];
+
+        $response = Http::withToken($token->access_token)
+            ->acceptJson()
+            ->asJson()
+            ->timeout(20)
+            ->post(rtrim($host->api_base, '/') . '/profile', $requestPayload);
+
+        $responseJson = $response->json();
+
+        BadgeConnectExportedProfile::create([
+            'user_id' => Auth::id(),
+            'host_id' => $host->id,
+            'request_json' => $requestPayload,
+            'response_json' => is_array($responseJson) ? $responseJson : null,
+            'http_status' => $response->status(),
+            'success' => $response->successful(),
+            'last_error' => $response->successful() ? null : $response->body(),
+            'exported_at' => now(),
+        ]);
+
+        if (! $response->successful()) {
+            return back()->withErrors([
+                'profile_export' => 'Profile export sikertelen. HTTP státusz: '
+                    . $response->status()
+                    . ' Válasz: '
+                    . $response->body(),
+            ]);
+        }
+
+        return back()->with('success', 'Profile sikeresen elküldve a külső Hostnak.');
     }
 }

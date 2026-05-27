@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class BadgeConnectRemoteClient extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'host_id',
+        'mode',
         'client_id',
         'client_secret',
         'client_id_issued_at',

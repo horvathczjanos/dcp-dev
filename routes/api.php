@@ -133,6 +133,7 @@ Route::prefix('ims/ob/v2p1')
 
 
         Route::get('/assertions', [Assertion_v21::class, 'index']);
+        Route::get('/assertions/{id}', [Assertion_v21::class, 'show']);
         Route::post('/assertions', [Assertion_v21::class, 'store']);
     });
 

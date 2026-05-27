@@ -146,6 +146,7 @@ class RomanGaborController extends Controller
 
     //  } 
 
+    // Consumer - read
 
     public function test2()
     {
@@ -187,6 +188,45 @@ class RomanGaborController extends Controller
         return view('consumerTest6', compact('host'));
     }
 
+    // Consumer - write
+
+
+    public function test7()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest7', compact('host'));
+    }
+
+    public function test8()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest8', compact('host'));
+    }
+
+    public function test9()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+        $assertion = \App\Models\BadgeAssertionsV21::findOrFail(1);
+
+
+
+
+        return view('consumerTest9', compact('host', 'assertion'));
+    }
+
+
+    public function test10()
+    {
+        $host = \App\Models\BadgeConnectHost::findOrFail(1);
+
+
+        return view('consumerTest10', compact('host'));
+    }
 
     // HCzJ, 20230620
     public function readSVG()
