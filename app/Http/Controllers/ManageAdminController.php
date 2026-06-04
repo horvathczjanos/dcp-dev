@@ -9,6 +9,7 @@ use App\Models\Badgeclass;
 use App\Models\Badgeimage;
 use App\Models\EarnerBadge;
 use App\Models\Issuer;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -1034,5 +1035,23 @@ class ManageAdminController extends Controller
             return view('adminFinalizeSelfRegistration')
                 ->with('newUserData', $newUserData);
         }
+    }
+
+    public function showSiteSettings()
+    {
+        return view('adminSiteSettings');
+    }
+
+    public function setSiteSettings(Request $request)
+    {
+        $servicemode = SiteSetting::where('key', 'servicemode')->first();
+        $servicemode->value = 'off';
+        if ($request->has('servicemode')) {
+
+            $servicemode->value = 'on';
+        }
+        $servicemode->save();
+
+        return redirect('adminMain');
     }
 }

@@ -411,6 +411,9 @@ Route::post('users/changePassword', [ManageAdminController::class, 'recordUserPa
 Route::get('users/selfRegistration', [ManageAdminController::class, 'selfRegistration']);
 Route::post('users/selfRegistration', [ManageAdminController::class, 'doSelfRegistration']);
 
+Route::get('changeSiteSettings', [ManageAdminController::class, 'showSiteSettings'])->middleware('admin');
+Route::post('admin/setSettings', [ManageAdminController::class, 'setSiteSettings'])->middleware('admin');
+
 Route::get('runIssuerMetabadgeRules', [ManageMetabadgeRuleController::class, 'runIssuerMetabadgeRules'])->middleware('issuer');
 Route::get('setIssuerMetabadgeRules', [ManageMetabadgeRuleController::class, 'setIssuerMetabadgeRules'])->middleware('issuer');
 Route::get('newIssuerMetabadgeRules', [ManageMetabadgeRuleController::class, 'newIssuerMetabadgeRules'])->middleware('issuer');

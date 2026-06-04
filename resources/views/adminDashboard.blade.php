@@ -18,6 +18,9 @@
 		<div class="col-md-4 col-sm-6">
 		    <p class="text-center"><a class="btn btn-primary" href="./../earnerStatistics" role="button">{{ __('adminDashboard.admin_dashboard_statistics') }}&nbsp;&nbsp;<i class="bi-bar-chart-line-fill"></i></a></p>
 		</div>
+		<div class="col-md-4 col-sm-6">
+		    <p class="text-center"><a class="btn btn-primary" href="./../changeSiteSettings" role="button">{{ __('adminDashboard.change_site_states') }}&nbsp;&nbsp;<i class="bi-bar-chart-line-fill"></i></a></p>
+		</div>
 	    </div>
         </div>
     </div>

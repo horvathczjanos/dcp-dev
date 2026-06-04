@@ -51,61 +51,68 @@
             <h2 class="section-title"><span>{{ __('abcPage.roles') }}</span></h2>
             <div class="row d-flex justify-content-center">
 
-                <!-- Earner -->
-                @if (in_array('earner', Auth::user()->roles))
-                    <div class="col-sm-6 {{ $col_md_x }}">
-                        <h3 class="text-center">
-                            {{ __('abcPage.earner_name') }}</h3>
-                        <p class="text-center short-description">
-                            {{ __('abcPage.earner_short_description') }}
-                        </p>
-                        <p class="text-center"><a href="earnerMain" class="btn btn-action" data-bs-toggle="tooltip"
-                                data-bs-title="{{ __('abcPage.earner-tooltip') }}"><i
-                                    class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
-                    </div>
+                @if (\App\Models\SiteSetting::where('key','servicemode')->first()->value == 'on')
+                SERVICE MODE is ON!
+                @else
+                            <!-- Earner -->
+                            @if (in_array('earner', Auth::user()->roles))
+                                <div class="col-sm-6 {{ $col_md_x }}">
+                                    <h3 class="text-center">
+                                        {{ __('abcPage.earner_name') }}</h3>
+                                    <p class="text-center short-description">
+                                        {{ __('abcPage.earner_short_description') }}
+                                    </p>
+                                    <p class="text-center"><a href="earnerMain" class="btn btn-action" data-bs-toggle="tooltip"
+                                            data-bs-title="{{ __('abcPage.earner-tooltip') }}"><i
+                                                class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                                </div>
+                            @endif
+
+                            <!-- Verifier -->
+                            @if (in_array('verifier', Auth::user()->roles))
+                                <div class="col-sm-6 {{ $col_md_x }}">
+                                    <h3 class="text-center">
+                                        {{ __('abcPage.verifier_name') }}</h3>
+                                    <p class="text-center short-description">
+                                        {{ __('abcPage.verifier_short_description') }}
+                                    </p>
+                                    <p class="text-center"><a href="verifierMain" class="btn btn-action" data-bs-toggle="tooltip"
+                                            data-bs-title="{{ __('abcPage.verifier-tooltip') }}"><i
+                                                class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                                </div>
+                            @endif
+
+                            <!-- Issuer -->
+                            @if (in_array('issuer', Auth::user()->roles))
+                                <div class="col-sm-6 {{ $col_md_x }}">
+                                    <h3 class="text-center">
+                                        {{ __('abcPage.issuer_name') }}</h3>
+                                    <p class="text-center short-description">
+                                        {{ __('abcPage.issuer_short_description') }}
+                                    </p>
+                                    <p class="text-center"><a href="issuerMain" class="btn btn-action" data-bs-toggle="tooltip"
+                                            data-bs-title="{{ __('abcPage.issuer-tooltip') }}"><i
+                                                class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                                </div>
+                            @endif
+
+                            <!-- Assistant -->
+                            @if (in_array('assistant', Auth::user()->roles))
+                                <div class="col-sm-6 {{ $col_md_x }}">
+                                    <h3 class="text-center">
+                                        {{ __('abcPage.assistant_name') }}</h3>
+                                    <p class="text-center short-description">
+                                        {{ __('abcPage.assistant_short_description') }}
+                                    </p>
+                                    <p class="text-center"><a href="assistantMain" class="btn btn-action" data-bs-toggle="tooltip"
+                                            data-bs-title="{{ __('abcPage.assistant-tooltip') }}"><i
+                                                class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
+                                </div>
+                            @endif
+
                 @endif
 
-                <!-- Verifier -->
-                @if (in_array('verifier', Auth::user()->roles))
-                    <div class="col-sm-6 {{ $col_md_x }}">
-                        <h3 class="text-center">
-                            {{ __('abcPage.verifier_name') }}</h3>
-                        <p class="text-center short-description">
-                            {{ __('abcPage.verifier_short_description') }}
-                        </p>
-                        <p class="text-center"><a href="verifierMain" class="btn btn-action" data-bs-toggle="tooltip"
-                                data-bs-title="{{ __('abcPage.verifier-tooltip') }}"><i
-                                    class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
-                    </div>
-                @endif
 
-                <!-- Issuer -->
-                @if (in_array('issuer', Auth::user()->roles))
-                    <div class="col-sm-6 {{ $col_md_x }}">
-                        <h3 class="text-center">
-                            {{ __('abcPage.issuer_name') }}</h3>
-                        <p class="text-center short-description">
-                            {{ __('abcPage.issuer_short_description') }}
-                        </p>
-                        <p class="text-center"><a href="issuerMain" class="btn btn-action" data-bs-toggle="tooltip"
-                                data-bs-title="{{ __('abcPage.issuer-tooltip') }}"><i
-                                    class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
-                    </div>
-                @endif
-
-                <!-- Assistant -->
-                @if (in_array('assistant', Auth::user()->roles))
-                    <div class="col-sm-6 {{ $col_md_x }}">
-                        <h3 class="text-center">
-                            {{ __('abcPage.assistant_name') }}</h3>
-                        <p class="text-center short-description">
-                            {{ __('abcPage.assistant_short_description') }}
-                        </p>
-                        <p class="text-center"><a href="assistantMain" class="btn btn-action" data-bs-toggle="tooltip"
-                                data-bs-title="{{ __('abcPage.assistant-tooltip') }}"><i
-                                    class="bi-door-open"></i>&nbsp;{{ __('abcPage.enter') }}</a></p>
-                    </div>
-                @endif
 
                 <!-- Admin -->
                 @if (in_array('admin', Auth::user()->roles))
