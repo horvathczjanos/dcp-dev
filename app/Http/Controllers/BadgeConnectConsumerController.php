@@ -44,6 +44,9 @@ class BadgeConnectConsumerController extends Controller
     public function fetchManifest(Request $request, BadgeConnectHost $host)
     {
         try {
+
+            \Log::info('**'.$host );
+
             $response = Http::acceptJson()
                 ->timeout(20)
                 ->get($host->manifest_url);
@@ -106,6 +109,8 @@ class BadgeConnectConsumerController extends Controller
                 'manifest_fetched_at' => now(),
                 'last_error' => null,
             ]);
+
+            \Log::info('---'.$host );
 
             return back()->with('success', 'Manifest sikeresen lekérve és eltárolva.');
         } catch (Throwable $e) {

@@ -77,6 +77,8 @@ Route::post('makeBadge', [MakeBadgeController::class, 'createBadge']);
 Route::get('organizations/{id}', [ShowDetailsController::class, 'showOrganization']);
 Route::get('organizations/{id}/image', [ShowDetailsController::class, 'showImage']);
 
+
+
 Route::get('assertions/{id}', [ShowDetailsController::class, 'showAssertion']);
 Route::get('assertions/{id}/badge', [ShowDetailsController::class, 'showAssertionBadge']);
 

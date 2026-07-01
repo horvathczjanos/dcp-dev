@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Log;
+
 class Assertion_v21 extends Controller
 {
     private const SCOPE_READ = 'https://purl.imsglobal.org/spec/ob/v2p1/scope/assertion.readonly';
@@ -45,7 +47,97 @@ class Assertion_v21 extends Controller
         ]);
     }
 
+
     public function store(Request $request): JsonResponse
+    {
+
+        \Log::info('Provider Write POST /assertions called', [
+            'user_id' => optional($request->user())->id,
+            'body' => $request->all(),
+        ]);
+
+        $user = $request->user();
+
+        if (! $user || ! $user->tokenCan(self::SCOPE_CREATE)) {
+            return response()->json([
+                'error' => 'insufficient_scope',
+                'message' => 'Missing required scope: assertion.create',
+            ], 403);
+        }
+
+        $input = $request->all();
+
+        // A Validator küldheti így:
+        // { "assertion": { ... } }
+        // vagy közvetlenül Assertion objektumként is.
+        $data = $input['assertion'] ?? $input;
+
+        if (! is_array($data)) {
+            return response()->json([
+                'status' => [
+                    'error' => 'invalid_request',
+                    'statusCode' => 400,
+                    'statusText' => 'Missing assertion object.',
+                ],
+            ], 400);
+        }
+
+        if (empty($data['recipient'])) {
+            return response()->json([
+                'status' => [
+                    'error' => 'invalid_request',
+                    'statusCode' => 400,
+                    'statusText' => 'Missing required field: recipient.',
+                ],
+            ], 400);
+        }
+
+        if (empty($data['badge'])) {
+            return response()->json([
+                'status' => [
+                    'error' => 'invalid_request',
+                    'statusCode' => 400,
+                    'statusText' => 'Missing required field: badge.',
+                ],
+            ], 400);
+        }
+
+        $externalId = $data['id'] ?? 'urn:uuid:' . (string) Str::uuid();
+
+        $payload = array_merge([
+            '@context' => 'https://purl.imsglobal.org/spec/ob/v2p1/ob_v2p1.jsonld',
+            'type' => 'Assertion',
+            'id' => $externalId,
+        ], $data);
+
+        $assertion = BadgeAssertionsV21::updateOrCreate(
+            [
+                'external_id' => $externalId,
+            ],
+            [
+                'user_id' => $user->id,
+                'recipient' => $data['recipient'],
+                'issued_on' => $data['issuedOn'] ?? now(),
+                'expires_at' => $data['expires'] ?? null,
+                'revoked' => false,
+                'image' => $data['image'] ?? null,
+                'evidence' => $data['evidence'] ?? null,
+                'payload' => $payload,
+            ]
+        );
+
+        return response()->json([
+            'status' => [
+                'error' => null,
+                'statusCode' => 200,
+                'statusText' => 'OK',
+            ],
+            'assertion' => $assertion->payload,
+        ], 200);
+    }
+
+
+    public function store2(Request $request): JsonResponse
     {
         $user = $request->user();
 

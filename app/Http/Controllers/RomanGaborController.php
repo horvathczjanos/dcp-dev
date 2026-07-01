@@ -152,6 +152,7 @@ class RomanGaborController extends Controller
     {
         $host = \App\Models\BadgeConnectHost::findOrFail(1);
 
+        \Log::info($host );
 
         return view('consumerTest', compact('host'));
     }
