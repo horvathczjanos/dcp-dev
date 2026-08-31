@@ -402,6 +402,11 @@ Route::get('manageUsers', [ManageAdminController::class, 'manageUsers'])->middle
 Route::get('addNewUser', [ManageAdminController::class, 'addNewUser'])->middleware('admin');
 Route::post('addNewUser', [ManageAdminController::class, 'doNewUserRecord'])->middleware('admin');
 
+Route::get(
+    '/admin/earner-statistics/badges',
+    [ManageAdminController::class, 'loadEarnerBadges']
+)->name('admin.earner-statistics.badges');
+
 Route::get('users/{id}/editbyadmin', [ManageAdminController::class, 'editUserByAdmin'])->middleware('admin');
 Route::post('updateUserByAdmin', [ManageAdminController::class, 'updateUser'])->middleware('admin');
 Route::get('users/{id}/senddatabyadmin', [ManageAdminController::class, 'sendLoginDataByEmail'])->middleware('admin');

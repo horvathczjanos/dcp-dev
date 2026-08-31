@@ -29,7 +29,8 @@ class ManageAdminController extends Controller
         return view('adminDashboard');
     }
 
-    public function showEarnerStatistics()
+
+    public function showEarnerStatistics_old20260831()
     {
 
         //ddd(EarnerBadge::first()->badge_name);
@@ -91,6 +92,107 @@ class ManageAdminController extends Controller
             ->with('numberofbadges', sizeof($users))
             ->with('statistics', $statistics);
     }
+
+    public function showEarnerStatistics()
+    {
+
+
+        $statistics['allissuerNum'] = Issuer::count();
+
+        $statistics['allbadgeclassNum'] = Badgeclass::count();
+
+        $statistics['alluploaderearnerNum'] =
+            EarnerBadge::where('status', '=', '1')
+            ->distinct()
+            ->count('earnerID');
+
+        $statistics['alluploadedearnerbadgeNum'] =
+            EarnerBadge::where('status', '=', '1')->count();
+
+        $statistics['allissuedassertionNum'] =
+            Assertion::count();
+
+        $statistics['allexpiringassertionNum'] =
+            Assertion::where('neverexpires', '=', 'off')->count();
+
+        $statistics['allrevokedassertionNum'] =
+            Assertion::where('revoked', '=', 'on')->count();
+
+
+        $statistics['earnerNum'] = User::all()->filter(function ($user) {
+            return in_array('earner', $user->roles);
+        })->count();
+
+
+
+        $maxBadges = DB::table('earner_badges')
+            ->where('status', '=', '1')
+            ->selectRaw('earnerID, COUNT(*) AS badge_count')
+            ->groupBy('earnerID')
+            ->orderByDesc('badge_count')
+            ->first();
+
+        $statistics['maxuploadedbyearnerbadgeNum'] =
+            $maxBadges ? $maxBadges->badge_count : 0;
+
+
+        $statistics['allnotDCPbadgeNum'] =
+            EarnerBadge::where('status', '=', '1')
+            ->get()
+            ->filter(function ($item) {
+                return !$item->is_dcp_badge;
+            })
+            ->count();
+
+
+        return view('earnerBadgeStatistics')
+            ->with('statistics', $statistics);
+    }
+
+
+    public function loadEarnerBadges(Request $request)
+    {
+        $badges = EarnerBadge::query()
+            ->join(
+                'users',
+                'users.id',
+                '=',
+                'earner_badges.earnerID'
+            )
+            ->where('earner_badges.status', '=', '1')
+
+            ->select([
+                'earner_badges.earnerbadgeID',
+                'earner_badges.cachedBadgeReport',
+                'earner_badges.created_at',
+                'users.name as earner_name',
+                'users.email as earner_email',
+            ])
+
+            ->orderByDesc('earner_badges.created_at')
+            ->orderByDesc('earner_badges.earnerbadgeID')
+
+            ->cursorPaginate(30);
+
+
+        $html = view(
+            'parts.earnerBadgeStatisticsItems',
+            [
+                'badges' => $badges
+            ]
+        )->render();
+
+
+        return response()->json([
+            'html' => $html,
+
+            'next_url' =>
+            $badges->hasMorePages()
+                ? $badges->nextPageUrl()
+                : null,
+        ]);
+    }
+
 
     public function manageIssuers()
     {
