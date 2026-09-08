@@ -110,6 +110,8 @@ Route::post('deleteVerifierEndorsement', [ManageVerifierController::class, 'dele
 Route::get('showAssertions', [ManageAssertionController::class, 'showAllAssertions']);
 Route::get('createAssertion', [ManageAssertionController::class, 'beginCreateNewAssertion']);
 Route::post('doAssertion', [ManageAssertionController::class, 'processCreateNewAssertion']);
+Route::get('/issuerAssertionsInfiniteLoad', [ManageAssertionController::class, 'loadIssuerAssertionsInfinite'])->name('issuer.assertions.infinite.load');
+
 
 Route::get('createPreAssertion', [ManageAssertionController::class, 'beginCreatePreAssertion'])->middleware('issuer');
 Route::get('showPreAssertions', [ManageAssertionController::class, 'showAllPreAssertion'])->middleware('issuer');

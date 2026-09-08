@@ -5,171 +5,447 @@
 
 @section('content')
 
-    <h2 class="section-title"><span>{{ __('issuerAllAssertions.aa_page-title') }}</span></h2>
+    <h2 class="section-title">
+        <span>
+            {{ __('issuerAllAssertions.aa_page-title') }}
+        </span>
+    </h2>
+
+    {{-- Header --}}
+
     <div class="container">
         <div class="alert alert-success mt-5" role="alert">
-            <p class="text-center"><b>{{ __('issuerAllAssertions.aa_num-o-a') }}:</b> {{ $numberofassertions }}</p>
-            <div style="display: flex; margin-right: 5px;" class="checkboxBar" hidden>
-                <button style=" margin-right: 5px;" class="btn btn-primary resetChecking" type="button"
-                    id="resetCheckingButton">{{ __('issuerAllAssertions.aa_btn-clear-sel') }}</button>
-                <button style=" margin-right: 5px;" class="btn btn-primary multipleSendByEmail" type="button"
-                    id="multipleSendByEmailButton">{{ __('issuerAllAssertions.aa_btn-send-multi-notif') }}</button>
+            <p class="text-center">
+                <b>
+                    {{ __('issuerAllAssertions.aa_num-o-a') }}:
+                </b>
+                {{ $numberofassertions }}
+            </p>
+
+
+            <div id="issuerAssertionSelectionBar" class="checkboxBar" style="display: none; margin-right: 5px;">
+                <button style="margin-right: 5px;" class="btn btn-primary" type="button" id="issuerAssertionResetSelection">
+                    {{ __('issuerAllAssertions.aa_btn-clear-sel') }}
+                </button>
+
+                <button style="margin-right: 5px;" class="btn btn-primary" type="button" id="issuerAssertionMultipleSend">
+                    {{ __('issuerAllAssertions.aa_btn-send-multi-notif') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Assertions --}}
+
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            #
+                        </th>
+                        <th scope="col">
+                            {{ __('issuerAllAssertions.aa_th-date') }}
+                        </th>
+                        <th scope="col">
+                            {{ __('issuerAllAssertions.aa_th-awardee-id') }}
+                        </th>
+                        <th scope="col">
+                            {{ __('issuerAllAssertions.aa_th-image') }}
+                        </th>
+                        <th scope="col">
+                            {{ __('issuerAllAssertions.aa_th-func') }}
+                        </th>
+                    </tr>
+                </thead>
+
+
+
+                <tbody id="issuerAssertionInfiniteBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {{-- Loading part --}}
+
+        <div id="issuerAssertionInfiniteLoading" class="text-center my-4" style="display: none;">
+
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">
+                    Loading...
+                </span>
+            </div>
+            <div class="mt-2">
+                Loading assertions...
             </div>
         </div>
 
+        {{-- End part --}}
+
+        <div id="issuerAssertionInfiniteEnd" class="text-center text-muted my-4" style="display: none;">No more assertions.
+        </div>
+
+        {{-- Error part --}}
+
+        <div id="issuerAssertionInfiniteError" class="alert alert-danger text-center my-4" style="display: none;">
+            Error while loading assertions.
+            <br>
+            <button type="button" id="issuerAssertionInfiniteRetry" class="btn btn-secondary btn-sm mt-2">
+                Retry
+            </button>
+        </div>
+
+        {{-- Sentinel part --}}
+
+        <div id="issuerAssertionInfiniteSentinel" style="height: 1px;"></div>
+
     </div>
 
-    <?php
-    $advancedIssuers = json_decode(env('ADVANCED_ISSUERS'), true)['advaced_issuers'];
-    ?>
+    {{-- Multiple e-mail sending --}}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">{{ __('issuerAllAssertions.aa_th-date') }}</th>
-                <th scope="col">{{ __('issuerAllAssertions.aa_th-awardee-id') }}</th>
-                <th scope="col">{{ __('issuerAllAssertions.aa_th-image') }}</th>
-                <th scope="col">{{ __('issuerAllAssertions.aa_th-func') }}</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($assertionlist as $item)
-                <tr>
-                    <td scope="col">{{ $loop->index + 1 }}
-
-                        @if (in_array($issuerID, $advancedIssuers))
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="{{ $item['assertionID'] }}"
-                                    id="flexCheckDefault" disabled>
-                            </div>
-                        @endif
-
-                       
-
-                    </td>
-                    <td scope="col">{{ $item['issuedOn'] }}</td>
-                    <td scope="col">
-                        @if ($item['originalIdentity'])
-                            {{ $item['originalIdentity'] }}
-                        @else
-                            NA
-                        @endif
-                    </td>
-                    <td scope="col">
-			<div class="bg-image position-relative" style="width: 75px; min-height: 75px; border: solid 1px #ededed;">
-			    <a href="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge"
-                            target="_blank" rel="noopener noreferrer"><img
-                                src="{{ env('APP_URL') }}/assertions/{{ $item['assertionID'] }}/badge" width="75px"
-                                alt="digital badge"></a>
-                                
-                        @if ($item['revoked'] == 'on')
-                        
-			     <div class="position-absolute" style="rotate: 45deg; top: 20px; left: -10px;"><p><small class="px-2 py-1 fw-semibold text-light bg-danger bg-opacity-80 border-start border-2 border-danger">{{ __('issuerAllAssertions.aa_flag-revoked')}}</small></p></div>
-
-                        @endif
-			</div>
-                    </td>
-
-                    <td> <a class="btn btn-primary" href="/assertions/{{ $item['assertionID'] }}/info"
-                            role="button">{{ __('issuerAllAssertions.aa_btn-info') }}&nbsp;&nbsp;<i class='bi-info-circle'></i></a>
-
-                        {{-- @if ($issuerID == 'f4c649072ff246a448513c1df6c530e75ae763fc69341d3ec57b7502de6ed794') --}}
-                        @if (in_array($issuerID, $advancedIssuers))
-
-                            <a class="btn btn-primary" href="/assertions/{{ $item['assertionID'] }}/send2"
-                                role="button">{{ __('issuerAllAssertions.aa_btn-sendby-plus') }}</a>
-                        @else
-                            <a class="btn btn-primary"href="/assertions/{{ $item['assertionID'] }}/send"
-                                role="button">{{ __('issuerAllAssertions.aa_btn-sendby') }}</a>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-
-        </tbody>
-    </table>
-
-    <form class="otherForm" method="POST" hidden>
+    <form id="issuerAssertionMultipleForm" method="POST" action="{{ url('/assertionsMultipleNotification') }}"
+        style="display: none;">
         @csrf
+        <textarea id="issuerAssertionMultipleInput" name="tmpinput"></textarea>
     </form>
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-        crossorigin="anonymous"></script>
 
-    <script type="application/javascript">
-    $( document ).ready(function() {
-    
-        
-        function areThereCheckedBoxes(){
-            var retData = false;
-            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
-                retData = true;
-                return false;
-            });
-            return retData;
+    {{-- Back to Company page --}}
+
+    <h2 class="section-title">
+        <span>
+            <p class="text-center">
+                <a href="{{ url('/backtocompany') }}" class="btn btn-action">
+                    {{ __('issuerAllAssertions.aa_back-2-inst') }}
+                </a>
+            </p>
+        </span>
+    </h2>
+
+    {{-- Counting rows with CSS, interesting attempt :-)  --}}
+
+    <style>
+        #issuerAssertionInfiniteBody {
+            counter-reset: issuer-assertion-row;
         }
 
+        #issuerAssertionInfiniteBody>tr {
+            counter-increment: issuer-assertion-row;
+        }
 
-        
-        $('.form-check-input').change(function() {
+        #issuerAssertionInfiniteBody>tr>td.issuer-assertion-number>span.issuer-assertion-number-value::before {
+            content: counter(issuer-assertion-row);
+        }
+    </style>
 
-            if(areThereCheckedBoxes()){
-                $( document ).find('div.checkboxBar').prop('hidden',false);
-            }else{
-                $( document ).find('div.checkboxBar').prop('hidden',true);
+    {{-- -Let's script them all! :-) --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const assertionBody =
+                document.getElementById(
+                    'issuerAssertionInfiniteBody'
+                );
+
+            const loadingElement =
+                document.getElementById(
+                    'issuerAssertionInfiniteLoading'
+                );
+
+            const endElement =
+                document.getElementById(
+                    'issuerAssertionInfiniteEnd'
+                );
+
+            const errorElement =
+                document.getElementById(
+                    'issuerAssertionInfiniteError'
+                );
+
+            const retryButton =
+                document.getElementById(
+                    'issuerAssertionInfiniteRetry'
+                );
+
+            const sentinel =
+                document.getElementById(
+                    'issuerAssertionInfiniteSentinel'
+                );
+
+            const selectionBar =
+                document.getElementById(
+                    'issuerAssertionSelectionBar'
+                );
+
+            const resetSelectionButton =
+                document.getElementById(
+                    'issuerAssertionResetSelection'
+                );
+
+            const multipleSendButton =
+                document.getElementById(
+                    'issuerAssertionMultipleSend'
+                );
+
+            const multipleForm =
+                document.getElementById(
+                    'issuerAssertionMultipleForm'
+                );
+
+            const multipleInput =
+                document.getElementById(
+                    'issuerAssertionMultipleInput'
+                );
+
+
+
+            let nextUrl = "{{ route('issuer.assertions.infinite.load') }}";
+
+            let isLoading = false;
+
+            let finished = false;
+
+
+
+            // Loading assertions
+
+            async function loadIssuerAssertions() {
+
+                // Watching conditions for loading
+
+                if (
+                    isLoading ||
+                    finished ||
+                    !nextUrl
+                ) {
+                    return;
+                }
+
+
+                isLoading = true;
+                loadingElement.style.display = 'block';
+                errorElement.style.display = 'none';
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            nextUrl, {
+                                method: 'GET',
+
+                                headers: {
+
+                                    'Accept': 'application/json',
+
+                                    'X-Requested-With': 'XMLHttpRequest'
+
+                                }
+                            }
+                        );
+
+                    if (!response.ok) {
+
+                        const errorText =
+                            await response.text();
+
+                        console.error(
+                            'Assertion AJAX server response:',
+                            errorText
+                        );
+
+                        throw new Error(
+                            'HTTP error: ' +
+                            response.status
+                        );
+                    }
+
+                    const data = await response.json();
+
+                    // Inserting new rows into assertion table
+
+                    if (data.html) {
+
+                        assertionBody.insertAdjacentHTML(
+                            'beforeend',
+                            data.html
+                        );
+
+                    }
+
+
+                    nextUrl = data.next_url;
+
+                    if (!nextUrl) {
+
+                        finished = true;
+                        observer.disconnect();
+                        endElement.style.display = 'block';
+
+                    }
+
+
+                } catch (error) {
+
+
+                    console.error(
+                        'Assertion loading error:',
+                        error
+                    );
+
+
+                    errorElement.style.display = 'block';
+
+
+                } finally {
+
+                    loadingElement.style.display = 'none';
+                    isLoading = false;
+
+                }
+
             }
 
-            var selectedBoxes = [];
+            // Observing sentinel
 
-            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
-                selectedBoxes.push(this.value);
+            const observer =
+                new IntersectionObserver(
+
+                    function(entries) {
+
+                        const entry = entries[0];
+
+                        if (
+                            entry.isIntersecting &&
+                            !isLoading &&
+                            !finished
+                        ) {
+
+                            loadIssuerAssertions();
+
+                        }
+
+                    },
+
+                    {
+                        root: null,
+                        rootMargin: '700px 0px 700px 0px',
+                        threshold: 0
+
+                    }
+
+                );
+
+            observer.observe(sentinel);
+
+
+            retryButton.addEventListener(
+                'click',
+                function() {
+
+                    errorElement.style.display =
+                        'none';
+
+
+                    loadIssuerAssertions();
+
+                }
+            );
+
+            // Helper functions for checkboxes
+
+            function getSelectedAssertions() {
+
+                return Array.from(
+
+                    document.querySelectorAll(
+                        '.issuer-assertion-checkbox:checked'
+                    )
+
+                );
+
+            }
+
+            function updateSelectionBar() {
+
+                const selected =
+                    getSelectedAssertions();
+
+                if (selected.length > 0) {
+
+                    selectionBar.style.display =
+                        'flex';
+                } else {
+
+                    selectionBar.style.display =
+                        'none';
+                }
+            }
+
+            document.addEventListener('change', function(event) {
+
+                if (
+                    event.target.classList.contains(
+                        'issuer-assertion-checkbox'
+                    )
+                ) {
+                    updateSelectionBar();
+                }
             });
-  
-            //alert(areThereCheckedBoxes());
 
-        });
+            resetSelectionButton.addEventListener(
+                'click',
+                function() {
 
-        $('button.resetChecking').click(function() {
-            $( document ).find('input.form-check-input[type=checkbox]').prop('checked',false);
-            $( document ).find('div.checkboxBar').prop('hidden',true);
-            
-        });
+                    const checkboxes =
+                        document.querySelectorAll(
+                            '.issuer-assertion-checkbox'
+                        );
 
-        $('button.multipleSendByEmail').click(function() {
-           //alert('Multiple notification sending');
+                    checkboxes.forEach(
+                        function(checkbox) {
+                            checkbox.checked =
+                                false;
+                        }
+                    );
 
-           var selectedBoxes = [];
+                    updateSelectionBar();
 
-            $( document ).find('input.form-check-input[type=checkbox]:checked').each(function(){
-                selectedBoxes.push(this.value);
+                }
+            );
+
+            // Multiple e-mail sending
+
+            multipleSendButton.addEventListener('click', function() {
+
+                const selected = getSelectedAssertions();
+
+                if (selected.length === 0) {
+                    return;
+                }
+
+                const assertionIDs =
+                    selected.map(
+                        function(checkbox) {
+                            return checkbox.value;
+                        }
+                    );
+
+                multipleInput.value = assertionIDs.join(',');
+                multipleForm.submit();
             });
 
-            var thisForm = $( document ).find('form.otherForm');
-            thisForm.prop('action', 'https://dcp-live-copy.mti.bme.hu/assertionsMultipleNotification' );
+            // Starting with first block of assertions
 
-            var tmpInput = $('<textarea />');
-            tmpInput.prop('id', 'tmpinput');
-            tmpInput.prop('name', 'tmpinput');
-            tmpInput.val(selectedBoxes);          
-            thisForm.append(tmpInput);
+            loadIssuerAssertions();
 
-            thisForm.submit();
 
-            //alert(tmpInput.val());
-            
         });
-
-
-        $( document ).find('input.form-check-input[type=checkbox]').prop('disabled',false);
-
-
-    });
-</script>
-
-
-    <h2 class="section-title"><span>
-            <p class="text-center"><a href="{{ env('APP_URL') }}/backtocompany" class="btn btn-action">{{ __('issuerAllAssertions.aa_back-2-inst') }}</a></p>
-        </span></h2>
+    </script>
 
 @endsection

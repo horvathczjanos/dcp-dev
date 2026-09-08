@@ -29,7 +29,7 @@ class ManageAssertionController extends Controller
 
 
 
-    public function showAllAssertions()
+    public function showAllAssertions_old20260908()
     {
         $issuerID = session()->get('issuerID');
         $badgeclassIDs = Badgeclass::select('badgeclassID')->where('status', '=', '1')->where('issuerID', $issuerID)->get()->toArray();
@@ -40,6 +40,93 @@ class ManageAssertionController extends Controller
             ->with('assertionlist', Assertion::whereIn('badgeclassID', $badgeclassIDs)->orderBy('created_at', 'DESC')->get())
             ->with('issuerID', $issuerID);
     }
+
+    public function showAllAssertions()
+    {
+        $issuerID = session()->get('issuerID');
+
+        $badgeclassIDs = Badgeclass::where('status', '=', '1')->where('issuerID', '=', $issuerID)->pluck('badgeclassID');
+        $numberofassertions = Assertion::whereIn('badgeclassID', $badgeclassIDs)->count();
+
+        return view('allAssertions')
+            ->with('numberofassertions', $numberofassertions)
+            ->with('issuerID', $issuerID);
+    }
+
+    public function loadIssuerAssertionsInfinite(Request $request)
+    {
+
+        $issuerID = session()->get('issuerID');
+
+        if (!$issuerID) {
+
+            return response()->json(
+                [
+                    'error' =>
+                    'Issuer session not found.'
+                ],
+                403
+            );
+        }
+
+        $badgeclassIDs = Badgeclass::where('status', '=', '1')->where('issuerID', '=', $issuerID)->pluck('badgeclassID');
+
+        $advancedIssuerConfig =
+            json_decode(
+                env('ADVANCED_ISSUERS'),
+                true
+            );
+
+        $advancedIssuers = $advancedIssuerConfig['advaced_issuers'] ?? [];
+
+        $isAdvancedIssuer = in_array($issuerID, $advancedIssuers, true);
+
+        $assertions = Assertion::whereIn('badgeclassID', $badgeclassIDs)->select(
+            [
+                'assertionID',
+                'badgeclassID',
+                'issuedOn',
+                'originalIdentity',
+                'revoked',
+                'created_at',
+            ]
+        )
+            ->orderByDesc('created_at')
+            ->orderByDesc('assertionID')
+            ->cursorPaginate(30);
+
+
+
+        $html =
+            view(
+                'parts.issuerAssertionInfiniteRows',
+                [
+                    'assertions' =>
+                    $assertions,
+
+                    'issuerID' =>
+                    $issuerID,
+
+                    'isAdvancedIssuer' =>
+                    $isAdvancedIssuer,
+                ]
+            )
+            ->render();
+
+        return response()->json(
+            [
+                'html' =>
+                $html,
+
+                'next_url' =>
+                $assertions->hasMorePages()
+                    ? $assertions->nextPageUrl()
+                    : null,
+            ]
+        );
+    }
+
+
 
     public function showAllPreAssertion()
     {
