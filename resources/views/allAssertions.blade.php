@@ -140,6 +140,15 @@
         #issuerAssertionInfiniteBody>tr>td.issuer-assertion-number>span.issuer-assertion-number-value::before {
             content: counter(issuer-assertion-row);
         }
+
+
+        #issuerAssertionInfiniteBody>tr.issuer-assertion-active>td {
+            background-color: rgba(13, 110, 253, 0.10);
+        }
+
+        #issuerAssertionInfiniteBody>tr.issuer-assertion-active>td:first-child {
+            box-shadow: inset 4px 0 0 #0d6efd;
+        }
     </style>
 
     {{-- -Let's script them all! :-) --}}
@@ -209,6 +218,295 @@
             let isLoading = false;
 
             let finished = false;
+
+
+            // Watching up and down arrow buttons to select assertions in bulk
+
+            let activeAssertionIndex = -1;
+
+
+            function getAssertionRows() {
+
+                return Array.from(
+                    document.querySelectorAll(
+                        '#issuerAssertionInfiniteBody .issuer-assertion-row'
+                    )
+                );
+
+            }
+
+
+            function setActiveAssertion(index) {
+
+                const rows = getAssertionRows();
+
+
+                if (rows.length === 0) {
+                    activeAssertionIndex = -1;
+                    return;
+                }
+
+
+                if (index < 0) {
+                    index = 0;
+                }
+
+                if (index >= rows.length) {
+                    index = rows.length - 1;
+                }
+
+
+                rows.forEach(function(row) {
+
+                    row.classList.remove(
+                        'issuer-assertion-active'
+                    );
+
+                });
+
+                activeAssertionIndex = index;
+
+                const activeRow =
+                    rows[activeAssertionIndex];
+
+                activeRow.classList.add(
+                    'issuer-assertion-active'
+                );
+
+
+                activeRow.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+
+            }
+
+
+            function toggleActiveAssertionCheckbox() {
+
+                const rows = getAssertionRows();
+
+
+                if (
+                    activeAssertionIndex < 0 ||
+                    activeAssertionIndex >= rows.length
+                ) {
+                    return;
+                }
+
+
+                const activeRow =
+                    rows[activeAssertionIndex];
+
+
+                const checkbox =
+                    activeRow.querySelector(
+                        '.issuer-assertion-checkbox'
+                    );
+
+
+                if (!checkbox) {
+                    return;
+                }
+
+
+                checkbox.checked = !checkbox.checked;
+
+
+                updateSelectionBar();
+
+            }
+
+
+
+            document.addEventListener(
+                'keydown',
+                function(event) {
+
+
+
+                    const tagName =
+                        event.target.tagName.toLowerCase();
+
+
+                    const inputType =
+                        event.target.type ?
+                        event.target.type.toLowerCase() :
+                        '';
+
+
+                    if (
+                        tagName === 'textarea' ||
+                        tagName === 'select' ||
+                        (
+                            tagName === 'input' &&
+                            inputType !== 'checkbox'
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    /*
+                     * LE NYÍL
+                     */
+                    if (event.key === 'ArrowDown') {
+
+                        /*
+                         * Megakadályozzuk a böngésző normál
+                         * lefelé görgetését.
+                         */
+                        event.preventDefault();
+
+
+                        const rows = getAssertionRows();
+
+
+                        if (rows.length === 0) {
+                            return;
+                        }
+
+
+                        /*
+                         * Ha még nincs aktív sor,
+                         * az első legyen aktív.
+                         */
+                        if (activeAssertionIndex === -1) {
+
+                            setActiveAssertion(0);
+
+                        } else {
+
+                            setActiveAssertion(
+                                activeAssertionIndex + 1
+                            );
+
+                        }
+
+
+                        return;
+                    }
+
+
+                    /*
+                     * FEL NYÍL
+                     */
+                    if (event.key === 'ArrowUp') {
+
+                        event.preventDefault();
+
+
+                        const rows = getAssertionRows();
+
+
+                        if (rows.length === 0) {
+                            return;
+                        }
+
+
+                        /*
+                         * Ha még nincs aktív sor,
+                         * az első legyen aktív.
+                         */
+                        if (activeAssertionIndex === -1) {
+
+                            setActiveAssertion(0);
+
+                        } else {
+
+                            setActiveAssertion(
+                                activeAssertionIndex - 1
+                            );
+
+                        }
+
+
+                        return;
+                    }
+
+
+                    /*
+                     * X BILLENTYŰ
+                     */
+                    if (
+                        event.key === 'x' ||
+                        event.key === 'X'
+                    ) {
+
+                        event.preventDefault();
+
+                        toggleActiveAssertionCheckbox();
+
+                        return;
+                    }
+
+                }
+            );
+
+
+            assertionBody.addEventListener(
+                'click',
+                function(event) {
+
+                    const clickedRow =
+                        event.target.closest(
+                            '.issuer-assertion-row'
+                        );
+
+                    if (!clickedRow) {
+                        return;
+                    }
+
+                    const rows =
+                        getAssertionRows();
+
+                    const clickedIndex =
+                        rows.indexOf(clickedRow);
+
+                    if (clickedIndex === -1) {
+                        return;
+                    }
+
+                    setActiveAssertion(
+                        clickedIndex
+                    );
+
+                }
+            );
+
+
+            /*
+             * Ezután jöhet a checkbox kapcsolása
+             */
+
+            function toggleActiveAssertionCheckbox() {
+
+                const rows = getAssertionRows();
+
+                if (
+                    activeAssertionIndex < 0 ||
+                    activeAssertionIndex >= rows.length
+                ) {
+                    return;
+                }
+
+                const activeRow =
+                    rows[activeAssertionIndex];
+
+                const checkbox =
+                    activeRow.querySelector(
+                        '.issuer-assertion-checkbox'
+                    );
+
+                if (!checkbox) {
+                    return;
+                }
+
+                checkbox.checked = !checkbox.checked;
+
+                updateSelectionBar();
+
+            }
 
 
 

@@ -1,5 +1,5 @@
 @foreach ($assertions as $item)
-    <tr>
+    <tr class="issuer-assertion-row" data-assertion-id="{{ $item->assertionID }}">
 
 
         {{-- ===================================================== --}}
