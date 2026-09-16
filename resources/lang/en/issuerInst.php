@@ -14,7 +14,7 @@ return [
     'inst_create-pre-assrt-btn' => 'Create pre-assertion',
     'inst_show-pre-assrt-btn' => 'Show all pre-assertions',
     'inst_show-assrt-btn' => 'Show all assertion',
-    'inst_badge-classes-title' => 'Badge classes (latest)',
+    'inst_badge-classes-title' => 'Badge classes',
     'inst_bc-sum-th-name' => 'Name',
     'inst_bc-sum-th-date' => 'Created at',
     'inst_bc-sum-th-func' => 'Functions',

@@ -1,0 +1,218 @@
+@extends('layouts.general')
+
+@section('title', __('issuerInst.inst_title'))
+
+
+@section('content')
+<h2 class="section-title"><span>{{ __('issuerInst.inst_title') }}</span></h2>
+
+<h3>{{ __('issuerInst.inst_issuer-name') }}{{ $company->name }}</h3>
+<p>{{ __('issuerInst.inst_issuer-url') }}: <a href="{{ $company->url }}" target="_blank">{{ $company->url }}</a><br />
+    {{ __('issuerInst.inst_issuer-email') }}: {{ $company->email }}<br />
+    {{ __('issuerInst.inst_issuer-id') }}: <span style="font-size: 0.75em;">[{{ $company->issuerID }}]</span>
+
+</p>
+
+{{-- custom fields --}}
+
+@if ($customFields && $customFields['header']['name'] == 'issuerCustomFileds')
+<div class="bd-callout bd-callout-info">
+    <p>{{ __('issuerInst.inst_issuer-custom-fields') }}</p>
+</div>
+<p>
+    @foreach ($customFields['form'] as $field)
+    @if ($field['type'] == 'text')
+    {{ $field['name'] }}: {{ $field['content'] }}<br />
+    @endif
+    @endforeach
+</p>
+@endif
+
+<div class="container">
+    <div class="alert alert-success mt-5" role="alert">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                <a class="btn btn-primary" href="{{ env('APP_URL') }}/createBadgeclass"
+                    role="button">{{ __('issuerInst.inst_new-class-btn') }}</a>
+            </div>
+            {{-- <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="./../createAssertion" role="button">{{ __('issuerInst.inst_new-assrt-btn') }}</a>
+        </div> --}}
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/bulkPreAssertionUpload"
+                role="button">{{ __('issuerInst.inst_bulk-upload-btn') }}</a>
+        </div>
+
+        @if ($company->issuerID == '3062aef14c677cc98f068cef3afe3add686d419837e42b81ba0d44195072a776')
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/greencertAssertionUpload"
+                role="button">{{ __('issuerInst.inst_greencert-upload-btn') }}</a>
+        </div>
+        @endif
+
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/createPreAssertion"
+                role="button">{{ __('issuerInst.inst_create-pre-assrt-btn') }}</a>
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/showPreAssertions"
+                role="button">{{ __('issuerInst.inst_show-pre-assrt-btn') }}</a>
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/showAssertions"
+                role="button">{{ __('issuerInst.inst_show-assrt-btn') }}</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="alert alert-success mt-5" role="alert">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/runIssuerMetabadgeRules" role="button">Run
+                Metabadge Assertion Rules</a>
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/setIssuerMetabadgeRules" role="button">Set
+                Metabadge Assertion Rules</a>
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-6 flex-fill">
+            <a class="btn btn-primary" href="{{ env('APP_URL') }}/newIssuerMetabadgeRules" role="button">Add new
+                Metabadge Assertion Rules</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+</div>
+
+<h3>{{ __('issuerInst.inst_badge-classes-title') }}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            {{-- <th scope="col">Badge Class ID</th> --}}
+            <th scope="col">{{ __('issuerInst.inst_bc-sum-th-name') }}</th>
+            <th scope="col">{{ __('issuerInst.inst_bc-sum-th-date') }}</th>
+            <th scope="col">{{ __('issuerInst.inst_bc-sum-th-func') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($badgeclasses as $badgeclass)
+        <tr>
+            <th scope="row">{{ $loop->index + 1 }}</th>
+            {{-- <td>{{ $badgeclass->badgeclassID }}</td> --}}
+            <td style="width: 43%">
+                <strong>{{ $badgeclass->name }}</strong><br />
+                <?php
+                if (strlen($badgeclass->description) < 80) {
+                    $bcd = $badgeclass->description;
+                } else {
+                    $bcd = substr($badgeclass->description, 0, 80) . ' ...';
+                }
+                ?>
+                {{ $bcd }}
+            </td>
+
+            <td>{{ $badgeclass->created_at }}</td>
+            <td>
+                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/info"
+                    role="button">{{ __('issuerInst.inst_bc_btn-info') }}&nbsp;&nbsp;<i
+                        class="bi-info-circle"></i></a>
+                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/stack"
+                    role="button">{{ __('issuerInst.inst_bc_btn-stack') }}&nbsp;&nbsp;<i
+                        class="bi-diagram-2-fill"></i></a>
+
+                <?php
+
+                $tmpAssertion = App\Models\Assertion::where('badgeclassID', '=', $badgeclass->badgeclassID)->count();
+                $tmpPreAssertion = App\Models\Preassertion::where('badgeclassID', '=', $badgeclass->badgeclassID)
+                    ->where('status', '>', '0')
+                    ->count();
+
+                //ddd($tmpPreAssertion);
+
+                ?>
+
+                @if (!($tmpAssertion || $tmpPreAssertion))
+                <br /><br />
+
+                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/settype"
+                    role="button">{{ __('issuerInst.inst_bc_btn-set-type') }}&nbsp;&nbsp;<i
+                        class="bi-file-earmark-check-fill"></i></a>
+
+                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/delete"
+                    role="button">{{ __('issuerInst.inst_bc_btn-delete') }}&nbsp;&nbsp;<i
+                        class="bi-eraser-fill"></i></a>
+
+                <br /><br />
+
+                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/edit"
+                    role="button">{{ __('issuerInst.inst_bc_btn-edit') }}&nbsp;&nbsp;<i
+                        class="bi-pencil-fill"></i></a>
+                <a class="btn btn-primary"
+                    href="/issuerbadges/{{ $badgeclass->badgeclassID }}/multilangSettings"
+                    role="button">{{ __('issuerInst.inst_bc_btn-multilangsettings') }}&nbsp;&nbsp;<i
+                        class="bi-translate"></i></a>
+                @endif
+
+
+
+
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+{{-- <p><a class="btn btn-primary" href="./../createBadgeclass" role="button">Create new badge class</a></p> --}}
+
+<h3>{{ __('issuerInst.inst_assrt-title') }}</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{{ __('issuerInst.inst_assrt-sum-th-name') }}</th>
+            <th scope="col">{{ __('issuerInst.inst_assrt-sum-th-rcp') }}</th>
+            <th scope="col">{{ __('issuerInst.inst_assrt-sum-th-date') }}</th>
+            <th scope="col">{{ __('issuerInst.inst_assrt_sum-th-ids') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($assertions as $assertion)
+        <tr>
+            <th scope="row">{{ $loop->index + 1 }}</th>
+            <td>{{ App\Models\Badgeclass::where('badgeclassID', '=', $assertion->badgeclassID)->first()->name }}
+            </td>
+            <td>
+                @if (!$assertion->originalIdentity)
+                NA
+                @else
+                {{ $assertion->originalIdentity }}
+                @endif
+            </td>
+            <td>{{ $assertion->issuedOn }}</td>
+            <td><span style="font-size: 0.75em;">{{ __('issuerInst.inst_assrt_bc-id-lbl') }}:
+                    {{ $assertion->badgeclassID }}<br />
+                    {{ __('issuerInst.inst_assrt_assrt-id-lbl') }}: {{ $assertion->assertionID }}</span>
+            </td>
+        </tr>
+        @endforeach
+
+    </tbody>
+</table>
+
+{{-- <p><a class="btn btn-primary" href="./../createAssertion" role="button">Create new assertion</a><span> </span></span><a
+            class="btn btn-primary" href="./../showAssertions" role="button">Show all assertions</a></p> --}}
+
+<h2 class="section-title"><span>
+        <p class="text-center"><a href="{{ env('APP_URL') }}/issuerMain"
+                class="btn btn-action">{{ __('issuerInst.inst_back') }}</a></p>
+    </span></h2>
+
+@endsection

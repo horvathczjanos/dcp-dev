@@ -6,6 +6,7 @@ use App\Models\Assertion;
 use App\Models\Badgeclass;
 use App\Models\Badgeimage;
 use App\Models\Issuer;
+use App\Models\Preassertion;
 use App\Models\Stackorder;
 use App\Models\Stackmember;
 use App\Models\Stackrole;
@@ -44,21 +45,54 @@ class ManageIssuerController extends Controller
         session()->forget('whatRole');
         session()->forget('editingBadgeclassID');
 
-        $badgeclassIDs = Badgeclass::select('badgeclassID')->where('status', '=', '1')->where('issuerID', $id)->get()->toArray();
-        //ddd(Assertion::whereIn('badgeclassID', $badgeclassIDs)->get('badgeclassID'));
-        session()->put('issuerID', $id);
 
-        //ddd(session()->all());
-        //ddd(Assertion::where('badgeclassID',$badgeclassIDs)->get());
+        session()->put('issuerID', $id);
 
         $issuer = Issuer::where('issuerID', $id)->first();
         $customFields = json_decode($issuer->customfield, true);
 
-        return view('company')->with('company', Issuer::where('issuerID', $id)->first())
+        $badgeclasses = Badgeclass::where('issuerID', $id)
+            ->where('status', '=', '1')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $badgeclassIDs = $badgeclasses->pluck('badgeclassID');
+
+        $badgeclassAssertionCounts = Assertion::whereIn('badgeclassID', $badgeclassIDs)
+            ->selectRaw('badgeclassID, COUNT(*) AS aggregate')
+            ->groupBy('badgeclassID')
+            ->pluck('aggregate', 'badgeclassID');
+
+        $badgeclassPreassertionCounts = Preassertion::whereIn('badgeclassID', $badgeclassIDs)
+            ->where('status', '>', '0')
+            ->selectRaw('badgeclassID, COUNT(*) AS aggregate')
+            ->groupBy('badgeclassID')
+            ->pluck('aggregate', 'badgeclassID');
+
+        $assertions = Assertion::whereIn('badgeclassID', $badgeclassIDs)
+            ->orderBy('issuedOn', 'DESC')
+            ->take(10)
+            ->get();
+
+        $assertionBadgeclassNames = Badgeclass::whereIn(
+            'badgeclassID',
+            $assertions->pluck('badgeclassID')->unique()
+        )->pluck('name', 'badgeclassID');
+
+
+        $numberOfBadgeclasses = $badgeclasses->count();
+        $numberOfAssertions = Assertion::whereIn('badgeclassID', $badgeclassIDs)->count();
+
+        return view('company')
+            ->with('company', $issuer)
             ->with('customFields', $customFields)
-            ->with('badgeclasses', Badgeclass::where('issuerID', $id)->where('status', '=', '1')->orderBy('created_at', 'desc')->get())
-            //->with('badgeclasses', Badgeclass::where('issuerID', $id)->latest()->take(5)->get())
-            ->with('assertions', Assertion::whereIn('badgeclassID', $badgeclassIDs)->orderBy('issuedOn', 'desc')->take(10)->get());
+            ->with('badgeclasses', $badgeclasses)
+            ->with('badgeclassAssertionCounts', $badgeclassAssertionCounts)
+            ->with('badgeclassPreassertionCounts', $badgeclassPreassertionCounts)
+            ->with('numberOfBadgeclasses', $numberOfBadgeclasses)
+            ->with('assertions', $assertions)
+            ->with('assertionBadgeclassNames', $assertionBadgeclassNames)
+            ->with('numberOfAssertions', $numberOfAssertions);
     }
 
 
@@ -366,21 +400,21 @@ class ManageIssuerController extends Controller
 
                 //$lang = ((array)$item)['lang'];
 
-//                $retvalue .= '<textarea style="resize: none;" name="' . $id .   $item['lang'] . '" class="langcontent form-control" id="' . $id . '"rows="1"' . $disabled . ' lang="' . $item['lang'] . '" hidden >' . $item['content'] . '</textarea>';
+                //                $retvalue .= '<textarea style="resize: none;" name="' . $id .   $item['lang'] . '" class="langcontent form-control" id="' . $id . '"rows="1"' . $disabled . ' lang="' . $item['lang'] . '" hidden >' . $item['content'] . '</textarea>';
                 $retvalue .= '<span name="' . $id .   $item['lang'] . '" class="langcontent" id="' . $id . '" lang="' . $item['lang'] . '" hidden >' . $item['content'] . '</span>';
             }
         } else {
 
 
 
-//            $retvalue = '<textarea style="resize: none;" name="' . $id . '" class="form-control" id="' . $id . '"rows="1"' . $disabled . '>' . $content . '</textarea>';
+            //            $retvalue = '<textarea style="resize: none;" name="' . $id . '" class="form-control" id="' . $id . '"rows="1"' . $disabled . '>' . $content . '</textarea>';
             $retvalue = '<span name="' . $id . '" id="' . $id . '" >' . $content . '</span>';
         }
         return ($retvalue);
     }
 
 
-/*    public static function getContentWithLangsTable($content, $id, $disabled)
+    /*    public static function getContentWithLangsTable($content, $id, $disabled)
     {
         $retvalue = '';
 
@@ -404,21 +438,21 @@ class ManageIssuerController extends Controller
     {
         $retvalue = '';
 
-        $header = '<table class="table" name="'.$id.'" id="'.$id.'"><tr>';
+        $header = '<table class="table" name="' . $id . '" id="' . $id . '"><tr>';
         $body = '<tr>';
-	$footer = '</tr></table>';
+        $footer = '</tr></table>';
 
         foreach ($content[0] as $key => $item) {
-            $header .= '<th scope="col">'. $item . '</th>';
+            $header .= '<th scope="col">' . $item . '</th>';
         }
-	$header .= '</tr>';
+        $header .= '</tr>';
         foreach ($content[1] as $key => $item) {
-            $body .= '<td>'. $item . '</td>';
+            $body .= '<td>' . $item . '</td>';
         }
-	
 
-//        $retvalue = '<textarea style="resize: none;" name="' . $id . '" class="form-control" id="' . $id . '"rows="3"' . $disabled . '>' . $header . "\n" . $body . '</textarea>';
-	$retvalue = $header . $body . $footer;
+
+        //        $retvalue = '<textarea style="resize: none;" name="' . $id . '" class="form-control" id="' . $id . '"rows="3"' . $disabled . '>' . $header . "\n" . $body . '</textarea>';
+        $retvalue = $header . $body . $footer;
         //nl2br($disabled ."\n".$body )
         return ($retvalue);
     }

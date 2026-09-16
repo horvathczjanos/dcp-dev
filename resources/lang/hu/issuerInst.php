@@ -14,7 +14,7 @@ return [
     'inst_create-pre-assrt-btn' => 'Kibocsátandó kitűzők jóváhagyásra',
     'inst_show-pre-assrt-btn' => 'Jóváhagyásra váró kibocsátandó kitűzők (mind)',
     'inst_show-assrt-btn' => 'Valamennyi kiállított kitűző mutatása',
-    'inst_badge-classes-title' => 'Kitűző sablonok (legutóbbi legelöl)',
+    'inst_badge-classes-title' => 'Kitűző sablonok',
     'inst_bc-sum-th-name' => 'Név',
     'inst_bc-sum-th-date' => 'Készítés időpontja',
     'inst_bc-sum-th-func' => 'Funkciók',
