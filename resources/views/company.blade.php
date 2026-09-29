@@ -321,16 +321,7 @@
                                 </a>
 
 
-                                <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/stack"
-                                    role="button">
 
-                                    {{ __('issuerInst.inst_bc_btn-stack') }}
-
-                                    &nbsp;&nbsp;
-
-                                    <i class="bi-diagram-2-fill"></i>
-
-                                </a>
 
 
                                 @php

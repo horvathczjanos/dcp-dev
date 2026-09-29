@@ -68,7 +68,7 @@
             </p>
 
 
-            @if ($badgetypeVersion == '1.1')
+            @if ($badgetypeVersion >= '1.1')
                 <table class="table">
                     <thead>
                         <tr>
