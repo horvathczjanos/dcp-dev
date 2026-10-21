@@ -208,11 +208,15 @@
                         class="btn btn-action">{{ __('issuerBadgeClassInfo.bci_back') }}</a>
             @endif
 
-            @if (str_contains(url()->previous(), 'company'))
+            @if (str_contains(url()->previous(), '/company'))
                 <p class="text-center"><a href="{{ env('APP_URL') }}/company/{{ session()->get('issuerID') }}"
                         class="btn btn-action">{{ __('issuerBadgeClassInfo.bci_back') }}</a>
             @endif
 
+            @if (str_contains(url()->previous(), 'assistant'))
+            <p class="text-center"><a href="{{ env('APP_URL') }}/assistantcompany/{{ session()->get('issuerID') }}"
+                    class="btn btn-action">{{ __('issuerBadgeClassInfo.bci_back') }}</a>
+        @endif
 
         </span></h2>
 

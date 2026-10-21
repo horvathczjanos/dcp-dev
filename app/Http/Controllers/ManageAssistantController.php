@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Assertion;
 use App\Models\Badgeclass;
+use App\Models\Badgeimage;
 use App\Models\Issuer;
 use App\Models\Preassertion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ManageAssistantController extends Controller
 {
@@ -45,18 +48,83 @@ class ManageAssistantController extends Controller
 
             return view('assistantCompany')->with('company', Issuer::where('issuerID', $id)->first())
                 ->with('customFields', $customFields)
-                ->with('badgeclasses', Badgeclass::where('issuerID', $id)->where('status','=', '1')->orderBy('created_at', 'DESC')->get());
+                ->with('badgeclasses', Badgeclass::where('issuerID', $id)->where('status', '=', '1')->orderBy('created_at', 'DESC')->get());
         }
 
         return redirect('assistantMain');
     }
-    
+
+    public function beginCreateBadgeclass()
+    {
+        return view('assistantNewBadgeclass');
+    }
+
+    public function recordCreateBadgeclass(Request $request)
+    {
+        $isValid = Validator::make($request->all(), [
+            'file' => 'required|mimes:png'
+        ]);
+
+        if ($isValid->fails()) {
+            return back()
+                ->withErrors($isValid);
+        } else {
+            if ($request->file()) {
+                $fileName = time() . '_' . $request->file->getClientOriginalName();
+                $filePath1 = $request->file('file')->storeAs('uploads', $fileName, 'public');
+                $filePath2 = $request->file('file')->storeAs('images', $fileName, 'public');
+
+                $badgeimage = new Badgeimage;
+
+
+                $nowTime = time();
+                $salt = hash('sha256', random_bytes(128) . $nowTime);
+                $identity = "sha256$" . hash('sha256', ($request->badgeclass_name) . ($salt));
+
+                $badgeclass = new Badgeclass;
+
+                $badgeclass->badgeclassID = $identity;
+
+                $badgeimage->badgeclassID = $identity;
+                $badgeimage->outputfilename = 'image.png';
+                $badgeimage->filepath = '/public/' . $filePath2;
+                $badgeimage->imgauthorname = $request->badgeclass_image_author_name;
+                $badgeimage->imgauthoremail = $request->badgeclass_image_author_email;
+                $badgeimage->imgauthorurl = $request->badgeclass_image_author_url;
+                $badgeimage->imgcaption = $request->badgeclass_image_caption;
+
+                $badgeclass->name = $request->badgeclass_name;
+                $badgeclass->description = str_replace(array("\n", "\r"), ' * ', $request->badgeclass_description);
+                $badgeclass->criteria = str_replace(array("\n", "\r"), ' * ', $request->badgeclass_criteria);
+                $badgeclass->issuerID = session()->get('issuerID');
+
+
+                $badgeclass->tags = json_encode(array_map('ltrim', explode(';', $request->badgeclass_tags)));
+
+                $badgeclass->type = Storage::get('public/badgeclasscustomfields.json');;
+
+                $badgeclass->status = '1';
+
+                //ddd($request->all());
+
+                $badgeclass->save();
+                $badgeimage->save();
+                return back()
+                    ->with('success', __('hello.ob_upload_success'));
+            }
+
+            return back()
+                ->withErrors('General error');
+        }
+    }
+
+
     public function assistantShowAssertions()
     {
         //ddd(session()->all());
 
         $issuerID = session()->get('issuerID');
-        $badgeclassIDs = Badgeclass::select('badgeclassID')->where('issuerID', $issuerID)->where('status','=', '1')->get()->toArray();
+        $badgeclassIDs = Badgeclass::select('badgeclassID')->where('issuerID', $issuerID)->where('status', '=', '1')->get()->toArray();
 
 
         return view('assistantShowAssertions')

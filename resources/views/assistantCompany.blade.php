@@ -31,6 +31,12 @@
     <div class="container">
         <div class="alert alert-success mt-5" role="alert">
             <div class="row d-flex justify-content-center align-items-center">
+
+
+                <div class="col-md-4 col-sm-4 col-xs-6 flex-fill">
+                    <a class="btn btn-primary" href="{{ env('APP_URL') }}/assistantCreateBadgeclass" role="button">{{ __('inst_create-badgeclass-btn') }}</a>
+                </div>
+
                 <div class="col-md-4 col-sm-4 col-xs-6 flex-fill">
                     <a class="btn btn-primary" href="{{ env('APP_URL') }}/assistantCreatePreAssertion" role="button">{{ __('assistantInst.inst_create-pre-assrt-btn') }}</a>
                 </div>
@@ -85,11 +91,11 @@
 
                         ?>
 
-                        @if (!($tmpAssertion || $tmpPreAssertion))
+                  {{--     @if (!($tmpAssertion || $tmpPreAssertion))
 			    <a class="btn btn-primary" href="/issuerbadges/{{ $badgeclass->badgeclassID }}/settype"
                                 role="button">{{ __('assistantInst.inst_bc_btn-set-type') }}&nbsp;&nbsp;<i class="bi-file-earmark-check-fill"></i></a>
                         @endif
-
+                    --}}  
 
 
                     </td>

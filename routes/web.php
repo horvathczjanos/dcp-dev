@@ -305,6 +305,9 @@ Route::get('assistantcompany/{id}', [ManageAssistantController::class, 'showComp
 Route::get('assistantCreatePreAssertion', [ManageAssistantController::class, 'beginCreatePreAssertion'])->middleware('assistant');
 Route::get('assistantShowPreAssertions', [ManageAssistantController::class, 'showAllPreAssertion'])->middleware('assistant');
 Route::post('assistantRecordPreAssertion', [ManageAssistantController::class, 'recordPreAssertion'])->middleware('assistant');
+Route::get('assistantCreateBadgeclass', [ManageAssistantController::class, 'beginCreateBadgeclass'])->middleware('assistant');
+Route::post('assistantCreateBadgeclass', [ManageAssistantController::class, 'recordCreateBadgeclass'])->middleware('assistant');
+
 
 Route::get('assistantPreAssertions/{id}/edit', [ManageAssistantController::class, 'editPreAssertion'])->middleware('assistant');
 

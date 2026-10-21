@@ -1,0 +1,133 @@
+@extends('layouts.general')
+
+@section('title', __('assistantNewBadgeClass.nbc_title'))
+
+
+@section('content')
+
+@php
+
+    //dd(Session::all());
+@endphp
+    <h2 class="section-title"><span>{{ __('assistantNewBadgeClass.nbc_title') }}</span></h2>
+
+    <form method="POST" action="assistantCreateBadgeclass" enctype="multipart/form-data">
+        @csrf
+
+
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <strong>{{ $message }}</strong>
+                <br />
+                {{ __('assistantNewBadgeClass.nbc_success-id') }}: {{ Session::get('id') }}
+                <br />
+                {{ __('assistantewBadgeClass.nbc_success-badge-info') }}: {{ Session::get('badge') }}
+                <br />
+                {{ __('assistantNewBadgeClass.nbc_success-issued-on') }}: {{ Session::get('issuedOn') }}
+            </div>
+        @endif
+
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantNewBadgeClass.nbc_name-lbl') }}</p>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_name" class="form-label" required>{{ __('assistantNewBadgeClass.nbc_name') }}</label>
+            <input type="text" name="badgeclass_name" class="form-control" id="badgeclass_name" required>
+        </div>
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantewBadgeClass.nbc_desc-lbl') }}</p>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_description" class="form-label" required>{{ __('assistantNewBadgeClass.nbc_desc') }}</label>
+            <textarea name="badgeclass_description" class="form-control" id="badgeclass_description" rows="3" required></textarea>
+        </div>
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantNewBadgeClass.nbc_criteria-lbl') }}</p>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_criteria" class="form-label"
+                required>{{ __('assistantNewBadgeClass.nbc_criteria') }}</label>
+            <textarea name="badgeclass_criteria" class="form-control" id="badgeclass_criteria" rows="3" required></textarea>
+        </div>
+
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantNewBadgeClass.nbc_tags-lbl') }}</p>
+        </div>
+        <div class="mb-3">
+            <label for="badgeclass_tags" class="form-label" required>{{ __('assistantNewBadgeClass.nbc_tags') }}</label>
+            <input type="text" name="badgeclass_tags" class="form-control" id="badgeclass_tags" required>
+        </div>
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantNewBadgeClass.nbc_badge-img-lbl') }}</p>
+        </div>
+        <div class="custom-file">
+            <input type="file" name="file" class="custom-file-input" id="chooseFile">
+            <label class="custom-file-label" for="chooseFile"
+                required>{{ __('assistantNewBadgeClass.nbc_badge-img') }}</label>
+            <p>&nbsp;</p>
+        </div>
+
+        {{-- Image author name --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_name"
+                class="form-label">{{ __('assistantNewBadgeClass.nbc_badge-img-auth-name') }}</label>
+            <input type="text" name="badgeclass_image_author_name" class="form-control"
+                id="badgeclass_image_author_name">
+        </div>
+
+        {{-- Image author email --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_email"
+                class="form-label">{{ __('assistantNewBadgeClass.nbc_badge-img-auth-email') }}</label>
+            <input type="text" name="badgeclass_image_author_email" class="form-control"
+                id="badgeclass_image_author_email">
+        </div>
+
+        {{-- Image author url --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_author_url"
+                class="form-label">{{ __('assistantNewBadgeClass.nbc_badge-img-auth-url') }}</label>
+            <input type="text" name="badgeclass_image_author_url" class="form-control" id="badgeclass_image_author_url">
+        </div>
+
+        {{-- Image caption --}}
+        <div class="mb-3">
+            <label for="badgeclass_image_caption"
+                class="form-label">{{ __('assistantNewBadgeClass.nbc_badge-img-capt') }}</label>
+            <input type="text" name="badgeclass_image_caption" class="form-control" id="badgeclass_image_caption">
+        </div>
+
+        <div class="bd-callout bd-callout-info">
+            <p>{{ __('assistantNewBadgeClass.nbc_btn-lbl') }}</p>
+        </div>
+        <p class="text-center ">
+            <button type="submit" class="btn btn-primary" value="create">
+                {{ __('assistantNewBadgeClass.nbc_btn') }}&nbsp;&nbsp;<i class="bi-save"></i>
+            </button>
+        </p>
+        </div>
+
+    </form>
+
+    <h2 class="section-title"><span>
+            <p class="text-center"><a href="./../assistantcompany/{{ Session::get('issuerID') }}"
+                    class="btn btn-action">{{ __('assistantNewBadgeClass.nbc_back-2-inst') }}</a></p>
+        </span></h2>
+
+@endsection
