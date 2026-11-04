@@ -1359,7 +1359,7 @@ class ManageAssertionController extends Controller
                     $subContent[] = $r[$lastnamePos];
 
 
-                    $isEmailValid = Validator::make(['Email' => $r[$emailPos]], [
+                    $isEmailValid = Validator::make(['Email' => trim($r[$emailPos])], [
                         'Email' => 'email:rfc,dns'
                     ]);
 
@@ -1370,7 +1370,7 @@ class ManageAssertionController extends Controller
                     }
 
                     //2
-                    $subContent[] = $r[$emailPos];
+                    $subContent[] = trim($r[$emailPos]);
 
                     $numberOfBadgeclass = Badgeclass::where('badgeclassID', '=', $r[$badgeclassIDPos])->count();
 
